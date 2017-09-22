@@ -12,7 +12,6 @@ public class DBException extends Exception {
     private String CLASS;
     private String METHOD;
 
-
     public DBException(AppSession session, String CLASS, String METHOD, Throwable ex){
         this(session, CLASS, METHOD, ex, null);
     }
