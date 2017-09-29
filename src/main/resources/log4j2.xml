@@ -2,20 +2,67 @@
 <configuration status="WARN">
     <appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
         </Console>
+        <RollingFile name="Root" fileName="../logs/Root-Log.log" filePattern="../logs/Root-Log-%i.log" immediateFlush="true">
+        <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
+        <Policies>
+            <SizeBasedTriggeringPolicy size="6144 KB"/>
+        </Policies>
+        <DefaultRolloverStrategy max="10"/>
+    </RollingFile>
 
-        <RollingFile name="AMTLogger" fileName="../logs/AMT-App.log" filePattern="../logs/AMT-App-%i.log" immediateFlush="true">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        <RollingFile name="AppLogger" fileName="../logs/AMT-Log.log" filePattern="../logs/AMT-Log-%i.log" immediateFlush="true">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="6144 KB"/>
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
 
-        <RollingFile name="AMLogger" fileName="../logs/AM-Resources.log" filePattern="../logs/AM-Resources-%i.log"
+        <RollingFile name="AMLibLogger" fileName="../logs/AM-Library.log" filePattern="../logs/AM-Library-%i.log"
                      immediateFlush="true">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="6144 KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+        <RollingFile name="RESTLogger" fileName="../logs/AM-REST.log" filePattern="../logs/AM-REST-%i.log"
+                     immediateFlush="true">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="6144 KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+        <RollingFile name="SOAPLogger" fileName="../logs/AM-DB.log" filePattern="../logs/AM-DB-%i.log"
+                     immediateFlush="true">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="6144 KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+        <RollingFile name="JMSLogger" fileName="../logs/AM-DB.log" filePattern="../logs/AM-DB-%i.log"
+                     immediateFlush="true">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="6144 KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+        <RollingFile name="ServiceLogger" fileName="../logs/AM-DB.log" filePattern="../logs/AM-DB-%i.log"
+                     immediateFlush="true">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="6144 KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+        <RollingFile name="DBLogger" fileName="../logs/AM-DB.log" filePattern="../logs/AM-DB-%i.log"
+                     immediateFlush="true">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="6144 KB"/>
             </Policies>
@@ -26,13 +73,29 @@
     <Loggers>
         <Root level="debug">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="Root"/>
         </Root>
-        <Logger name="AMT" level="debug">
-            <AppenderRef ref="AMTLogger"/>
+        <Logger name="App" level="debug">
+            <AppenderRef ref="AppLogger"/>
         </Logger>
 
-        <Logger name="AM" level="debug">
-            <AppenderRef ref="AMLogger"/>
+        <Logger name="AMLibrary" level="debug">
+            <AppenderRef ref="AMLibLogger"/>
+        </Logger>
+        <Logger name="REST" level="debug">
+            <AppenderRef ref="RESTLogger"/>
+        </Logger>
+        <Logger name="SOAP" level="debug">
+            <AppenderRef ref="SOAPLogger"/>
+        </Logger>
+        <Logger name="JMS" level="debug">
+            <AppenderRef ref="JMSLogger"/>
+        </Logger>
+        <Logger name="Service" level="debug">
+            <AppenderRef ref="ServiceLogger"/>
+        </Logger>
+        <Logger name="DB" level="debug">
+            <AppenderRef ref="DBLogger"/>
         </Logger>
     </Loggers>
 </configuration>

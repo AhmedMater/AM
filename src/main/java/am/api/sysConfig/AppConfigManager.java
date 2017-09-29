@@ -1,15 +1,18 @@
 package am.api.sysConfig;
 
+import am.api.logger.AppLogger;
 import am.common.ConfigParam;
 import am.common.ConfigParam.COMPONENT;
 import am.common.ConfigParam.FILE;
 import am.common.ConfigUtils;
 import am.core.config.AMConfigurationManager;
 import am.core.config.AM_CC;
-import am.core.logger.AME;
-import am.core.logger.AMI;
-import am.core.logger.AMLogger;
+import am.common.enums.AME;
+import am.common.enums.AMI;
 import am.exception.GeneralException;
+import am.session.AppSession;
+import am.session.Phase;
+import am.session.Source;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -24,6 +27,7 @@ import java.util.Properties;
 @Singleton
 public class AppConfigManager {
     @Inject private AMConfigurationManager amConfigManager;
+    @Inject private AppLogger logger;
     private static final String CLASS = "AppConfigManager";
     private static Properties APP_CONFIGURATION = new Properties();
     private static AppConfigManager instance;
@@ -47,27 +51,31 @@ public class AppConfigManager {
 
     @PostConstruct
     private void load(){
-        FILE_NAME = amConfigManager.getConfigValue(AM_CC.APP_CONFIG);
+        String FN_NAME = "load";
+        AppSession session = new AppSession(Phase.INITIAL_APP, Source.AM, CLASS, FN_NAME);
+
+        FILE_NAME = amConfigManager.getConfigValue(session, AM_CC.APP_CONFIG);
         FILE.APP_CONFIG_PROPERTIES = ConfigParam.APP_CONFIG_PATH + FILE_NAME;
-        APP_CONFIGURATION = ConfigUtils.loadSystemComponent(FILE.APP_CONFIG_PROPERTIES, COMPONENT.APP_CONFIG_MANAGER);
+        APP_CONFIGURATION = ConfigUtils.loadSystemComponent(session, FILE.APP_CONFIG_PROPERTIES, COMPONENT.APP_CONFIG_MANAGER);
 
         //TODO: Check if the File Not Found Log Message that it has to be with the name in the Property File
     }
 
-    public <T> T getConfigValue(App_CC systemProperty, Class<T> className) throws Exception {
+    public <T> T getConfigValue(AppSession appSession, App_CC systemProperty, Class<T> className) throws Exception {
         String FN_NAME = "getConfigValue";
+        AppSession session = appSession.updateSession(Phase.CONFIGURATION, Source.AM, CLASS, FN_NAME);
         try {
-            AMLogger.startDebug(CLASS, FN_NAME, systemProperty, className.getSimpleName());
+            logger.startDebug(session, systemProperty, className.getSimpleName());
 
             if(systemProperty == null || systemProperty.toString() == null || systemProperty.toString().isEmpty())
-                throw new GeneralException(CLASS, FN_NAME, AME.SYS_007, "App Config Property");
+                throw new GeneralException(session, AME.SYS_007, "App Config Property");
             else if(APP_CONFIGURATION == null || APP_CONFIGURATION.isEmpty())
-                throw new GeneralException(CLASS, FN_NAME, AME.IO_005, FILE_NAME);
+                throw new GeneralException(session, AME.IO_005, FILE_NAME);
             else if(className == null)
-                throw new GeneralException(CLASS, FN_NAME, AME.SYS_008);
+                throw new GeneralException(session, AME.SYS_008);
 
             T retValue;
-            String value = ConfigUtils.readValueFromPropertyFile(APP_CONFIGURATION, systemProperty.value(), FILE_NAME);
+            String value = ConfigUtils.readValueFromPropertyFile(session, APP_CONFIGURATION, systemProperty.value(), FILE_NAME);
 //                    APP_CONFIGURATION.getProperty(systemProperty.value());
 
             if (className == String.class) {
@@ -79,16 +87,16 @@ public class AppConfigManager {
             else if (className == Boolean.class)
                 retValue = (T) new Boolean(Boolean.parseBoolean(value));
             else
-                throw new GeneralException(CLASS, FN_NAME, AME.SYS_009, className.getSimpleName());
+                throw new GeneralException(session, AME.SYS_009, className.getSimpleName());
 
-            AMLogger.info(CLASS, FN_NAME, AMI.IO_003, "App Config Property", systemProperty);
-            AMLogger.endDebug(CLASS, FN_NAME, retValue);
+            logger.info(session, AMI.IO_003, "App Config Property", systemProperty);
+            logger.endDebug(session, retValue);
             return retValue;
         }catch (Exception ex){
             if(ex instanceof GeneralException)
                 throw ex;
             else
-                throw new GeneralException(CLASS, FN_NAME, AME.IO_008, "App Config Property", systemProperty, ex.getMessage());
+                throw new GeneralException(session, AME.IO_008, "App Config Property", systemProperty, ex.getMessage());
         }
     }
 }

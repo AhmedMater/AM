@@ -7,10 +7,15 @@ import am.common.ConfigParam.FILE;
 import am.common.ConfigUtils;
 import am.core.config.AMConfigurationManager;
 import am.core.config.AM_CC;
+import am.session.AppSession;
+import am.session.Phase;
+import am.session.Source;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -44,14 +49,17 @@ public class Validator {
 
     @PostConstruct
     private void load(){
-        FILE_NAME = amConfigManager.getConfigValue(AM_CC.VALIDATION_HANDLER);
+        String FN_NAME = "load";
+        AppSession session = new AppSession(Phase.INITIAL_APP, Source.AM, CLASS, FN_NAME);
+
+        FILE_NAME = amConfigManager.getConfigValue(session, AM_CC.VALIDATION_HANDLER);
         FILE.VALIDATOR_CONFIG = ConfigParam.APP_CONFIG_PATH + FILE_NAME;
-        VALIDATOR_CONFIGURATION = ConfigUtils.loadSystemComponent(FILE.VALIDATOR_CONFIG, COMPONENT.VALIDATION_HANDLER);
+        VALIDATOR_CONFIGURATION = ConfigUtils.loadSystemComponent(session, FILE.VALIDATOR_CONFIG, COMPONENT.VALIDATION_HANDLER);
 
         //TODO: Check if the File Not Found Log Message that it has to be with the name in the Property File
     }
 
-//    public static List<String> validateForm(AppSession session, String formID, List<Field> fields) throws Exception{
-//
-//    }
+    public List<String> validateForm() throws Exception{
+        return new ArrayList<>();
+    }
 }

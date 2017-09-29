@@ -1,7 +1,10 @@
 package am.exception;
 
 import am.api.error.EC;
+import am.common.enums.AME;
 import am.session.AppSession;
+
+import java.text.MessageFormat;
 
 /**
  * Created by Ahmed on 3/14/2016.
@@ -12,16 +15,27 @@ public class DBException extends Exception {
     private String CLASS;
     private String METHOD;
 
-    public DBException(AppSession session, String CLASS, String METHOD, Throwable ex){
-        this(session, CLASS, METHOD, ex, null);
+    public DBException(AppSession session, Throwable ex){
+        super(session.toString(), ex);
+        this.CLASS = session.getCLASS();
+        this.METHOD = session.getMethod();
     }
-    public DBException(AppSession session, String CLASS, String METHOD, EC errorCode, Object ...args){
-        this(session, CLASS, METHOD, null, errorCode, args);
+    public DBException(AppSession session, EC errorCode, Object ...args){
+        this(session, null, errorCode, args);
     }
-    public DBException(AppSession session, String CLASS, String METHOD, Throwable ex, EC errorCode, Object ...args){
-        super(CLASS + "." + METHOD + "(): \n" + session.getErrorHandler().getMsg(errorCode, args), ex);
+    public DBException(AppSession session, Throwable ex, EC errorCode, Object ...args){
+        super(session.toString() + session.getErrorMsg(errorCode, args), ex);
         this.errorCode = errorCode;
-        this.CLASS = CLASS;
-        this.METHOD = METHOD;
+        this.CLASS = session.getCLASS();
+        this.METHOD = session.getMethod();
+    }
+
+    public DBException(AppSession session, AME errorCode, Object ... args){
+        this(session, null, errorCode, args);
+    }
+    public DBException(AppSession session, Throwable ex, AME errorCode, Object ... args){
+        super(session.toString() + MessageFormat.format(errorCode.value(), args), ex);
+        this.CLASS = session.getCLASS();
+        this.METHOD = session.getMethod();
     }
 }

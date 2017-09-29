@@ -7,8 +7,9 @@ public enum Source {
     SOAP("SOAP"),
     JMS("JMS"),
     REST("REST"),
-    JOB("Backend Job"),
-    AM_API("AM");
+    DB("DB"),
+    Service("Service"),
+    AM("AM");
 
     private String value;
 

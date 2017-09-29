@@ -1,15 +1,18 @@
 package am.api.error;
 
+import am.api.logger.AppLogger;
 import am.common.ConfigParam;
 import am.common.ConfigParam.COMPONENT;
 import am.common.ConfigParam.FILE;
 import am.common.ConfigUtils;
 import am.core.config.AMConfigurationManager;
 import am.core.config.AM_CC;
-import am.core.logger.AME;
-import am.core.logger.AMI;
-import am.core.logger.AMLogger;
+import am.common.enums.AME;
+import am.common.enums.AMI;
 import am.exception.GeneralException;
+import am.session.AppSession;
+import am.session.Phase;
+import am.session.Source;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -19,6 +22,7 @@ import java.util.Properties;
 @Singleton
 public class ErrorHandler {
     @Inject AMConfigurationManager amConfigManager;
+    @Inject private AppLogger logger;
     private static String FILE_NAME;
     private static final String CLASS = "ErrorHandler";
     private static Properties ERROR_MESSAGES = new Properties();
@@ -41,33 +45,38 @@ public class ErrorHandler {
 
     @PostConstruct
     private void load(){
-        FILE_NAME = amConfigManager.getConfigValue(AM_CC.ERROR_HANDLER);
+        String FN_NAME = "load";
+        AppSession session = new AppSession(Phase.INITIAL_APP, Source.AM, CLASS, FN_NAME);
+
+        FILE_NAME = amConfigManager.getConfigValue(session, AM_CC.ERROR_HANDLER);
         FILE.ERROR_MESSAGES = ConfigParam.APP_CONFIG_PATH + FILE_NAME;
-        ERROR_MESSAGES = ConfigUtils.loadSystemComponent(FILE.ERROR_MESSAGES, COMPONENT.ERROR_HANDLER);
+        ERROR_MESSAGES = ConfigUtils.loadSystemComponent(session, FILE.ERROR_MESSAGES, COMPONENT.ERROR_HANDLER);
 
         //TODO: Check if the File Not Found Log Message that it has to be with the name in the Property File
     }
 
-    public String getMsg(EC errorCode, Object ... arguments){
+    public String getMsg(AppSession appSession, EC errorCode, Object ... arguments){
         String FN_NAME = "getMsg";
+        AppSession session = appSession.updateSession(Phase.ERROR_LOGGING, Source.AM, CLASS, FN_NAME);
+//        AppSession session = new AppSession(Phase.ERROR_LOGGING, Source.AM);
         try {
-            AMLogger.startDebug(CLASS, FN_NAME, errorCode, arguments);
+            logger.startDebug(session, errorCode, arguments);
 
             if(ERROR_MESSAGES == null || ERROR_MESSAGES.isEmpty()) {
                 load();
-                throw new GeneralException(CLASS, FN_NAME, AME.IO_005, FILE_NAME);
+                throw new GeneralException(session, AME.IO_005, FILE_NAME);
             }else if(errorCode == null)
-                throw new GeneralException(CLASS, FN_NAME, AME.SYS_007, "Error Message");
+                throw new GeneralException(session, AME.SYS_007, "Error Message");
 
             String message = "";
-            message = ConfigUtils.readValueFromPropertyFile(ERROR_MESSAGES, errorCode.toString(), FILE_NAME);
-            message = ConfigUtils.formatMsg(message, arguments);
+            message = ConfigUtils.readValueFromPropertyFile(session, ERROR_MESSAGES, errorCode.toString(), FILE_NAME);
+            message = ConfigUtils.formatMsg(session, message, arguments);
 
-            AMLogger.info(CLASS, FN_NAME, AMI.IO_003, "Error Message", errorCode.toString());
-            AMLogger.endDebug(CLASS, FN_NAME, message);
+            logger.info(session, AMI.IO_003, "Error Message", errorCode.toString());
+            logger.endDebug(session, message);
             return message;
         }catch (Exception ex){
-            AMLogger.error(CLASS, FN_NAME, AME.IO_008, "Error Message", errorCode.toString(), ex.getMessage());
+            logger.error(session, AME.IO_008, "Error Message", errorCode.toString(), ex.getMessage());
             return null;
         }
     }

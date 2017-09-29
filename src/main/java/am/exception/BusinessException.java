@@ -13,25 +13,28 @@ public class BusinessException extends WebApplicationException {
     private String CLASS;
     private String METHOD;
 
-    public BusinessException(AppSession session, String CLASS, String METHOD, Throwable ex) {
-        this(session, CLASS, METHOD, ex, Status.BAD_REQUEST, null);
+    public BusinessException(AppSession session, Throwable ex) {
+        this(session, ex, Status.BAD_REQUEST, null);
     }
-    public BusinessException(AppSession session, String CLASS, String METHOD, Throwable ex, Status status) {
-        this(session, CLASS, METHOD, ex, status, null);
+    public BusinessException(AppSession session, Throwable ex, Status status) {
+        this(session, ex, status, null);
     }
-    public BusinessException(AppSession session, String CLASS, String METHOD, Throwable ex, EC errorCode, Object ... args) {
-        this(session, CLASS, METHOD, ex, Status.BAD_REQUEST, errorCode, args);
+    public BusinessException(AppSession session, EC errorCode, Object ... args) {
+        this(session, null, Status.BAD_REQUEST, errorCode, args);
     }
-    public BusinessException(AppSession session, String CLASS, String METHOD, Status status, EC errorCode, Object ... args) {
-        this(session, CLASS, METHOD, null, status, errorCode, args);
+    public BusinessException(AppSession session, Throwable ex, EC errorCode, Object ... args) {
+        this(session, ex, Status.BAD_REQUEST, errorCode, args);
     }
-    public BusinessException(AppSession session, String CLASS, String METHOD, Throwable ex, Status status, EC errorCode, Object ... args) {
+    public BusinessException(AppSession session, Status status, EC errorCode, Object ... args) {
+        this(session, null, status, errorCode, args);
+    }
+    public BusinessException(AppSession session, Throwable ex, Status status, EC errorCode, Object ... args) {
         super(ex, Response.status(status)
-                .entity(CLASS + "." + METHOD + "(): \n" + session.getErrorHandler().getMsg(errorCode, args))
+                .entity(session.toString() + session.getErrorMsg(errorCode, args))
                 .type(MediaType.TEXT_PLAIN_TYPE)
                 .build());
         this.errorCode = errorCode;
-        this.CLASS = CLASS;
-        this.METHOD = METHOD;
+        this.CLASS = session.getCLASS();
+        this.METHOD = session.getMethod();
     }
 }
