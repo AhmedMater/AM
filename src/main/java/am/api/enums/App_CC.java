@@ -1,4 +1,4 @@
-package am.api.sysConfig;
+package am.api.enums;
 
 /**
  * Created by ahmed.motair on 9/9/2017.

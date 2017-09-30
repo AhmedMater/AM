@@ -1,6 +1,6 @@
 package am.exception;
 
-import am.api.error.EC;
+import am.api.enums.EC;
 import am.session.AppSession;
 
 import javax.ws.rs.WebApplicationException;

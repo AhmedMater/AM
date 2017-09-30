@@ -1,4 +1,4 @@
-package am.api.validation;
+package am.api.dto;
 
 import java.util.List;
 

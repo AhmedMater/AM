@@ -1,13 +1,12 @@
-package am.api.database;
+package am.api.components;
 
-import am.api.logger.AppLogger;
 import am.common.ConfigParam;
 import am.common.enums.AME;
 import am.common.enums.AMI;
 import am.core.config.AMConfigurationManager;
 import am.exception.DBException;
 import am.session.AppSession;
-import am.session.Source;
+import am.session.Phase;
 import org.hibernate.annotations.QueryHints;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -55,7 +54,7 @@ public class DBManager implements Serializable {
     @Transactional
     public <T> T persist(AppSession appSession, T toBeInserted, Boolean usingCache) throws Exception {
         String FN_NAME = "persist";
-        AppSession session = appSession.updateSession(Source.DB, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(Phase.DATABASE, CLASS, FN_NAME);
         try {
             logger.startDebug(session, toBeInserted);
             try {
@@ -95,13 +94,13 @@ public class DBManager implements Serializable {
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, ex, AME.DB_008, toBeInserted, ex.getMessage());
+                throw new DBException(session, ex, AME.DB_008, toBeInserted);
         }
     }
 
     public <T> T find(AppSession appSession, Class<T> className, Object identifier, Boolean usingCache)throws DBException {
         String FN_NAME = "find";
-        AppSession session = appSession.updateSession(Source.DB, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(Phase.DATABASE, CLASS, FN_NAME);
         try {
             logger.startDebug(session, className, identifier);
 
@@ -127,14 +126,14 @@ public class DBManager implements Serializable {
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, AME.DB_009, className.getSimpleName(), identifier, ex.getMessage());
+                throw new DBException(session, AME.DB_009, className.getSimpleName(), identifier);
         }
     }
 
     @Transactional
     public <T> T merge(AppSession appSession, T toBeUpdated, Boolean usingCache)throws DBException{
         String FN_NAME = "merge";
-        AppSession session = appSession.updateSession(Source.DB, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(Phase.DATABASE, CLASS, FN_NAME);
         try {
             logger.startDebug(session, toBeUpdated);
 
@@ -165,14 +164,14 @@ public class DBManager implements Serializable {
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, AME.DB_010, toBeUpdated, ex.getMessage());
+                throw new DBException(session, ex, AME.DB_010, toBeUpdated);
         }
     }
 
     @Transactional
     public void remove(AppSession appSession, Object toBeRemoved, Boolean usingCache)throws DBException {
         String FN_NAME = "remove";
-        AppSession session = appSession.updateSession(Source.DB, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(Phase.DATABASE, CLASS, FN_NAME);
         EntityManager em = null;
         try {
             logger.startDebug(session, toBeRemoved);
@@ -213,13 +212,13 @@ public class DBManager implements Serializable {
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, AME.DB_011, toBeRemoved, ex.getMessage());
+                throw new DBException(session, ex, AME.DB_011, toBeRemoved);
         }
     }
 
     public boolean checkIsFound(AppSession appSession, Query query) throws DBException {
         String FN_NAME = "checkIsFound";
-        AppSession session = appSession.updateSession(Source.DB, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(Phase.DATABASE, CLASS, FN_NAME);
         logger.startDebug(session, query);
 
         int numOfRows = query.getResultList().size();
@@ -235,7 +234,7 @@ public class DBManager implements Serializable {
     public boolean checkIsFound(AppSession appSession, Boolean usingCache, String selectAttribute,
                 Class entity, String conditionAttribute, String value) throws DBException {
         String FN_NAME = "checkIsFound";
-        AppSession session = appSession.updateSession(Source.DB, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(Phase.DATABASE, CLASS, FN_NAME);
         EntityManager em = null;
         try {
             logger.startDebug(session);
@@ -285,14 +284,14 @@ public class DBManager implements Serializable {
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, AME.DB_023, entity.getSimpleName(), ex.getMessage());
+                throw new DBException(session, ex, AME.DB_023, entity.getSimpleName());
         }
     }
 
     public <T> T getSingleResult(AppSession appSession, Boolean usingCache,
                              Class<T> entity, String attribute, String value) throws Exception {
         String FN_NAME = "getSingleResult";
-        AppSession session = appSession.updateSession(Source.DB, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(Phase.DATABASE, CLASS, FN_NAME);
         EntityManager em = null;
         try {
             logger.startDebug(session, usingCache, entity.getSimpleName(), attribute, value);
@@ -339,7 +338,7 @@ public class DBManager implements Serializable {
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, AME.DB_024, entity.getSimpleName(), ex.getMessage());
+                throw new DBException(session, ex, AME.DB_024, entity.getSimpleName());
         }
     }
 }

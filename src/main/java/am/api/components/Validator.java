@@ -1,4 +1,4 @@
-package am.api.validation;
+package am.api.components;
 
 
 import am.common.ConfigParam;
@@ -8,6 +8,7 @@ import am.common.ConfigUtils;
 import am.core.config.AMConfigurationManager;
 import am.core.config.AM_CC;
 import am.session.AppSession;
+import am.session.Interface;
 import am.session.Phase;
 import am.session.Source;
 
@@ -29,7 +30,6 @@ public class Validator {
     private static String FILE_NAME;
 
     private static Validator instance;
-    private static Validations validator;
     private Validator() {
 
     }
@@ -39,7 +39,6 @@ public class Validator {
             synchronized(Validator.class){
                 if (instance == null){
                     instance = new Validator();
-                    validator = new Validations();
                     instance.load();
                 }
             }
@@ -50,7 +49,7 @@ public class Validator {
     @PostConstruct
     private void load(){
         String FN_NAME = "load";
-        AppSession session = new AppSession(Phase.INITIAL_APP, Source.AM, CLASS, FN_NAME);
+        AppSession session = new AppSession(Source.AM, Interface.INITIALIZING, Phase.VALIDATION, CLASS, FN_NAME);
 
         FILE_NAME = amConfigManager.getConfigValue(session, AM_CC.VALIDATION_HANDLER);
         FILE.VALIDATOR_CONFIG = ConfigParam.APP_CONFIG_PATH + FILE_NAME;
@@ -59,7 +58,9 @@ public class Validator {
         //TODO: Check if the File Not Found Log Message that it has to be with the name in the Property File
     }
 
-    public List<String> validateForm() throws Exception{
+    public List<String> validateForm(AppSession appSession) throws Exception{
+        String FN_NAME = "validateForm";
+        AppSession session = appSession.updateSession(Phase.VALIDATION, CLASS, FN_NAME);
         return new ArrayList<>();
     }
 }

@@ -1,6 +1,6 @@
 package am.core.config;
 
-import am.api.logger.AppLogger;
+import am.api.components.AppLogger;
 import am.common.ConfigParam.COMPONENT;
 import am.common.ConfigParam.FILE;
 import am.common.ConfigUtils;
@@ -8,6 +8,7 @@ import am.common.enums.AME;
 import am.common.enums.AMI;
 import am.exception.GeneralException;
 import am.session.AppSession;
+import am.session.Interface;
 import am.session.Phase;
 import am.session.Source;
 
@@ -21,7 +22,7 @@ import java.util.Properties;
 @Singleton
 public class AMConfigurationManager {
     private static final String CLASS = "AMConfigurationManager";
-    private static Properties AM_CONFIG_FILE = new Properties();
+    private Properties AM_CONFIG_FILE = new Properties();
     public static AMConfigurationManager instance;
     private AppLogger logger = new AppLogger();
 
@@ -44,19 +45,19 @@ public class AMConfigurationManager {
     @PostConstruct
     private void load(){
         String FN_NAME = "load";
-        AppSession session = new AppSession(Phase.INITIAL_APP, Source.AM, CLASS, FN_NAME);
+        AppSession session = new AppSession(Source.AM, Interface.INITIALIZING, Phase.AM_CONFIG, CLASS, FN_NAME);
         try {
             logger.startDebug(session);
             AM_CONFIG_FILE = ConfigUtils.readResourceFiles(session, FILE.AM_CONFIG_PROPERTIES, COMPONENT.AM_CONFIG_MANAGER);
             logger.endDebug(session);
         }catch (Exception ex){
-            logger.error(session, ex);
+            logger.failureLogger.error(session, ex);
         }
     }
 
     public String getConfigValue(AppSession appSession, AM_CC code){
         String FN_NAME = "getConfigValue";
-        AppSession session = appSession.updateSession(Phase.CONFIGURATION, Source.AM, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(Phase.AM_CONFIG, CLASS, FN_NAME);
         try {
             logger.startDebug(session, code);
 
@@ -72,8 +73,15 @@ public class AMConfigurationManager {
             logger.endDebug(session, value);
             return value;
         }catch (Exception ex){
-            logger.error(session, AME.IO_008, "AM Config Property", code, ex.getMessage());
+            logger.error(session, ex, AME.IO_008, "AM Config Property", code);
             return "";
         }
+    }
+
+    public Properties getAmConfigFile() {
+        return AM_CONFIG_FILE;
+    }
+    public void setAmConfigFile(Properties amConfigFile) {
+        AM_CONFIG_FILE = amConfigFile;
     }
 }

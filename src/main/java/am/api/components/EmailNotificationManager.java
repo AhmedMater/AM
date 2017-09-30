@@ -1,6 +1,7 @@
-package am.api.notification;
+package am.api.components;
 
-import am.api.logger.AppLogger;
+import am.api.dto.MailData;
+import am.api.enums.ENMC;
 import am.common.ConfigParam;
 import am.common.ConfigParam.COMPONENT;
 import am.common.ConfigParam.FILE;
@@ -11,6 +12,7 @@ import am.common.enums.AME;
 import am.common.enums.AMI;
 import am.exception.GeneralException;
 import am.session.AppSession;
+import am.session.Interface;
 import am.session.Phase;
 import am.session.Source;
 
@@ -53,7 +55,8 @@ public class EmailNotificationManager {
     @PostConstruct
     private void load(){
         String FN_NAME = "load";
-        AppSession session = new AppSession(Phase.INITIAL_APP, Source.AM, CLASS, FN_NAME);
+        AppSession session = new AppSession(Source.AM, Interface.INITIALIZING, Phase.EMAIL_NOTIFICATION, CLASS, FN_NAME);
+
         try {
             logger.startDebug(session, AM_CC.EMAIL_NOTIFICATION_MANAGER, COMPONENT.EMAIL_NOTIFICATION_MANAGER);
 
@@ -81,13 +84,14 @@ public class EmailNotificationManager {
             logger.info(session, AMI.SYS_002, COMPONENT.EMAIL_NOTIFICATION_MANAGER);
             logger.endDebug(session, EMAIL_NOTIFICATION_CONFIG);
         }catch (Exception ex){
-            logger.error(session, ex, AME.SYS_006, COMPONENT.EMAIL_NOTIFICATION_MANAGER, ex.getMessage());
+            logger.error(session, ex, AME.SYS_006, COMPONENT.EMAIL_NOTIFICATION_MANAGER);
         }
     }
 
     private void checkEmailPropertyFile(AppSession appSession) throws Exception{
         String FN_NAME = "checkEmailPropertyFile";
         AppSession session = appSession.updateSession(FN_NAME);
+
         if(!EMAIL_NOTIFICATION_CONFIG.containsKey(ENMC.MAIL_SMTP_AUTH.value()))
             throw new GeneralException(session, AME.IO_009, ENMC.MAIL_SMTP_AUTH.value(), AM_CC.EMAIL_NOTIFICATION_MANAGER);
         else if(!EMAIL_NOTIFICATION_CONFIG.containsKey(ENMC.MAIL_SMTP_START_TLS_EN.value()))
@@ -111,13 +115,12 @@ public class EmailNotificationManager {
 
     public void sendEmail(AppSession appSession, MailData mailData) throws Exception {
         String FN_NAME = "sendEmail";
-        AppSession session = appSession.updateSession(Phase.NOTIFICATION, Source.AM, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(Phase.EMAIL_NOTIFICATION, CLASS, FN_NAME);
         logger.startDebug(session, mailData);
         try {
 
             String mailTo = mailData.getTo();
             String mailFrom = ConfigUtils.readValueFromPropertyFile(session, EMAIL_NOTIFICATION_CONFIG, ENMC.MAIL_FROM.value(), FILE_NAME);
-//                    EMAIL_NOTIFICATION_CONFIG.getProperty(ENMC.MAIL_FROM.value());
 
             Message message = new MimeMessage(mailSession);
 
@@ -145,12 +148,10 @@ public class EmailNotificationManager {
 
             logger.endDebug(session);
         }catch (Exception ex){
-            logger.error(session, AME.ENM_003, mailData.getSubject(), mailData.getTo(), ex.getMessage());
-
             if(ex instanceof GeneralException)
                 throw ex;
             else
-                throw new GeneralException(session, ex, AME.ENM_003, mailData.getSubject(), mailData.getTo(), ex.getMessage());
+                throw new GeneralException(session, ex, AME.ENM_003, mailData.getSubject(), mailData.getTo());
         }
     }
 }

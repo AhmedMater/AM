@@ -1,4 +1,4 @@
-package am.api.validation;
+package am.api.enums;
 
 /**
  * Created by ahmed.motair on 9/14/2017.

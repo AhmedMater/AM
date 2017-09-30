@@ -4,17 +4,20 @@ package am.session;
  * Created by ahmed.motair on 9/20/2017.
  */
 public enum Phase {
-    INITIAL_APP("Initializing Application"),
+    DATABASE("Database"),
+    ERROR("ErrorHandler"),
+    INFO("InfoHandler"),
+    VALIDATION("Validation"),
+    EMAIL_NOTIFICATION("Email-Notification"),
     SECURITY("Security"),
-    AUTHORIZATION("Authorization"),
+    APP_CONFIG("App-Config"),
+    AM_CONFIG("AM-Config"),
+
+    REGISTRATION("Registration"),
+    LOGIN("Login"),
     AUTHENTICATION("Authentication"),
-    URL_LOGGING("REST-URL-Log"),
-    ERROR_LOGGING("Error-Log"),
-    INFO_LOGGING("Info-Log"),
-    CONFIGURATION("Configuration"),
-    NOTIFICATION("Notification"),
-    DATABASE("Database")
-    ;
+    AUTHORIZATION("Authorization"),
+    URL_LOGGING("URLLogging");
 
     private String value;
 
@@ -22,4 +25,5 @@ public enum Phase {
         this.value = value;
     }
     public String value(){return value;}
+
 }

@@ -1,6 +1,6 @@
-package am.api.info;
+package am.api.components;
 
-import am.api.logger.AppLogger;
+import am.api.enums.IC;
 import am.common.ConfigParam;
 import am.common.ConfigParam.COMPONENT;
 import am.common.ConfigParam.FILE;
@@ -11,6 +11,7 @@ import am.common.enums.AME;
 import am.common.enums.AMI;
 import am.exception.GeneralException;
 import am.session.AppSession;
+import am.session.Interface;
 import am.session.Phase;
 import am.session.Source;
 
@@ -50,7 +51,7 @@ public class InfoHandler{
     @PostConstruct
     private void load(){
         String FN_NAME = "load";
-        AppSession session = new AppSession(Phase.INITIAL_APP, Source.AM, CLASS, FN_NAME);
+        AppSession session = new AppSession(Source.AM, Interface.INITIALIZING, Phase.INFO, CLASS, FN_NAME);
 
         FILE_NAME = amConfigManager.getConfigValue(session, AM_CC.INFO_HANDLER);
         FILE.INFO_MESSAGES = ConfigParam.APP_CONFIG_PATH + FILE_NAME;
@@ -59,32 +60,9 @@ public class InfoHandler{
         //TODO: Check if the File Not Found Log Message that it has to be with the name in the Property File
     }
 
-//    public String getMsg(IC infoCode, Object ... arguments){
-//        String FN_NAME = "getMsg";
-//        try {
-//            AMLogger.startDebug(CLASS, FN_NAME, infoCode, arguments);
-//
-//            if(infoCode == null)
-//                throw new GeneralException(session, EC.IO_0019);
-//            else if(INFO_MESSAGES == null || INFO_MESSAGES.isEmpty())
-//                throw errorHandler.generalException(session, EC.IO_0030, FILE.INFO_MESSAGES);
-//
-//            String infoMsg = "";
-//            infoMsg = ConfigUtils.readValueFromPropertyFile(session, INFO_MESSAGES, infoCode.toString(), FILE.INFO_MESSAGES);
-//            infoMsg = ConfigUtils.formatMsg(session, infoMsg, arguments);
-//
-//            AMLogger.info(session, SystemMsg.AM_I_0006, ConfigParam.INFO_MESSAGE, infoCode.toString());
-//            AMLogger.endDebugLog(session, infoMsg);
-//            return infoMsg;
-//        }catch (Exception ex){
-//            AMLogger.log(session, EC.IO_0015, infoCode.toString(), ex.getMessage());
-//            return "";
-//        }
-//    }
-
     public String getMsg(AppSession appSession, IC infoCode, Object ... arguments){
         String FN_NAME = "getMsg";
-        AppSession session = appSession.updateSession(Phase.INFO_LOGGING, Source.AM, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(Phase.INFO, CLASS, FN_NAME);
         try {
             logger.startDebug(session, infoCode, arguments);
 
@@ -102,20 +80,8 @@ public class InfoHandler{
             logger.endDebug(session, message);
             return message;
         }catch (Exception ex){
-            logger.error(session, AME.IO_008, "Info Message", infoCode.toString(), ex.getMessage());
+            logger.error(session, ex, AME.IO_008, "Info Message", infoCode.toString());
             return null;
         }
-    }
-//
-//    public void log(AppSession session, String className, String fnName, IC errorCode, Object ... args) {
-//        String message = getMsg(session, errorCode, args);
-//        appLogger.info(session, className, fnName, message);
-//    }
-//    public void log(AppSession session, String className, String fnName, IC errorCode) {
-//        log(session, className, fnName, errorCode, null);
-//    }
-
-    public String getMM(){
-        return "Ahmed";
     }
 }

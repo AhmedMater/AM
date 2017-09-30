@@ -1,4 +1,6 @@
-package am.api.validation;
+package am.api.dto;
+
+import am.api.enums.VC;
 
 /**
  * Created by ahmed.motair on 9/14/2017.

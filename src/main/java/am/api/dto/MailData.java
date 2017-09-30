@@ -1,4 +1,4 @@
-package am.api.notification;
+package am.api.dto;
 
 /**
  * Created by ahmed.motair on 5/28/2017.

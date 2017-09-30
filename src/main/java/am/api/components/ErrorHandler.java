@@ -1,6 +1,6 @@
-package am.api.error;
+package am.api.components;
 
-import am.api.logger.AppLogger;
+import am.api.enums.EC;
 import am.common.ConfigParam;
 import am.common.ConfigParam.COMPONENT;
 import am.common.ConfigParam.FILE;
@@ -11,6 +11,7 @@ import am.common.enums.AME;
 import am.common.enums.AMI;
 import am.exception.GeneralException;
 import am.session.AppSession;
+import am.session.Interface;
 import am.session.Phase;
 import am.session.Source;
 
@@ -46,7 +47,7 @@ public class ErrorHandler {
     @PostConstruct
     private void load(){
         String FN_NAME = "load";
-        AppSession session = new AppSession(Phase.INITIAL_APP, Source.AM, CLASS, FN_NAME);
+        AppSession session = new AppSession(Source.AM, Interface.INITIALIZING, Phase.ERROR, CLASS, FN_NAME);
 
         FILE_NAME = amConfigManager.getConfigValue(session, AM_CC.ERROR_HANDLER);
         FILE.ERROR_MESSAGES = ConfigParam.APP_CONFIG_PATH + FILE_NAME;
@@ -57,8 +58,8 @@ public class ErrorHandler {
 
     public String getMsg(AppSession appSession, EC errorCode, Object ... arguments){
         String FN_NAME = "getMsg";
-        AppSession session = appSession.updateSession(Phase.ERROR_LOGGING, Source.AM, CLASS, FN_NAME);
-//        AppSession session = new AppSession(Phase.ERROR_LOGGING, Source.AM);
+        AppSession session = appSession.updateSession(Phase.ERROR, CLASS, FN_NAME);
+
         try {
             logger.startDebug(session, errorCode, arguments);
 
@@ -76,7 +77,7 @@ public class ErrorHandler {
             logger.endDebug(session, message);
             return message;
         }catch (Exception ex){
-            logger.error(session, AME.IO_008, "Error Message", errorCode.toString(), ex.getMessage());
+            logger.error(session, ex, AME.IO_008, "Error Message", errorCode.toString());
             return null;
         }
     }

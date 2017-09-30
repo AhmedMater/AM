@@ -1,6 +1,6 @@
 package am.common;
 
-import am.api.logger.AppLogger;
+import am.api.components.AppLogger;
 import am.common.enums.AME;
 import am.common.enums.AMI;
 import am.exception.GeneralException;
@@ -44,7 +44,7 @@ public class ConfigUtils {
             } catch (FileNotFoundException e) {
                 throw new GeneralException(session, e, AME.IO_002, file);
             } catch (IOException e) {
-                throw new GeneralException(session, AME.IO_003, file, e.getMessage());
+                throw new GeneralException(session, e, AME.IO_003, file);
             }
 
             logger.info(session, AMI.IO_001, file);
@@ -55,7 +55,7 @@ public class ConfigUtils {
             if(ex instanceof GeneralException)
                 throw ex;
             else
-                throw new GeneralException(session, AME.IO_004, file, ex.getMessage());
+                throw new GeneralException(session, ex, AME.IO_004, file);
         }
     }
 
@@ -81,7 +81,7 @@ public class ConfigUtils {
             } catch (FileNotFoundException e) {
                 throw new GeneralException(session, e, AME.IO_002, filePath);
             } catch (IOException e) {
-                throw new GeneralException(session, e, AME.IO_003, filePath, e.getMessage());
+                throw new GeneralException(session, e, AME.IO_003, filePath);
             }
 
             logger.info(session, AMI.IO_001, filePath);
@@ -92,7 +92,7 @@ public class ConfigUtils {
             if(ex instanceof GeneralException)
                 throw ex;
             else
-                throw new GeneralException(session, ex, AME.IO_003, filePath, ex.getMessage());
+                throw new GeneralException(session, ex, AME.IO_003, filePath);
         }
     }
 
@@ -142,7 +142,7 @@ public class ConfigUtils {
             if(ex instanceof GeneralException)
                 throw ex;
             else
-                throw new GeneralException(session, ex, AME.SYS_005, message, ex.getMessage());
+                throw new GeneralException(session, ex, AME.SYS_005, message);
         }
     }
 
@@ -169,6 +169,9 @@ public class ConfigUtils {
             else
                 value = propertyFile.getProperty(property);
 
+            if(value.isEmpty())
+                throw new GeneralException(session, AME.IO_010, property, fileName);
+
             logger.info(session, AMI.IO_002, property, fileName);
             logger.endDebug(session, value);
             return value;
@@ -176,7 +179,7 @@ public class ConfigUtils {
             if(ex instanceof GeneralException)
                 throw ex;
             else
-                throw new GeneralException(session, ex, AME.IO_007, property, fileName, ex.getMessage());
+                throw new GeneralException(session, ex, AME.IO_007, property, fileName);
         }
     }
 
@@ -192,7 +195,7 @@ public class ConfigUtils {
             logger.endDebug(session);
             return properties;
         }catch (Exception ex){
-            logger.error(session, ex, AME.SYS_006, componentName, ex.getMessage());
+            logger.error(session, ex, AME.SYS_006, componentName);
             return null;
         }
     }

@@ -1,11 +1,9 @@
-package am.api.security;
+package am.api.components;
 
-import am.api.logger.AppLogger;
 import am.common.enums.AME;
 import am.exception.GeneralException;
 import am.session.AppSession;
 import am.session.Phase;
-import am.session.Source;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -14,7 +12,7 @@ import java.security.MessageDigest;
 import java.util.Base64;
 
 /**
- * Created by mohamed.elewa on 5/8/2016.
+ * Created by ahmed.motair on 9/26/2017.
  */
 public class AMSecurityManager {
     @Inject private AppLogger logger;
@@ -27,7 +25,7 @@ public class AMSecurityManager {
 
     public String generateToken(AppSession appSession, String userName, String password, long ticks) throws Exception {
         String FN_NAME = "generateToken";
-        AppSession session = appSession.updateSession(Phase.SECURITY, Source.AM, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(Phase.SECURITY, CLASS, FN_NAME);
         logger.startDebug(session, userName, ticks);
         Mac sha256_HMAC;
 
@@ -61,7 +59,7 @@ public class AMSecurityManager {
 
     public byte[] getHashedPassword(AppSession appSession, String password) throws Exception{
         String FN_NAME = "getHashedPassword";
-        AppSession session = appSession.updateSession(Phase.SECURITY, Source.AM, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(Phase.SECURITY, CLASS, FN_NAME);
         logger.startDebug(session);
 
         String key = String.join(":", new String[]{password, _salt});
@@ -88,7 +86,7 @@ public class AMSecurityManager {
 
     public String dm5Hash(AppSession appSession, String password) throws Exception{
         String FN_NAME = "dm5Hash";
-        AppSession session = appSession.updateSession(Phase.SECURITY, Source.AM, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(Phase.SECURITY, CLASS, FN_NAME);
         logger.startDebug(session);
         MessageDigest md;
 

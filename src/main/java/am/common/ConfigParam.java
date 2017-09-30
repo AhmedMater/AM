@@ -7,7 +7,7 @@ public class ConfigParam {
     public static String APP_CONFIG_PATH;
 
     public static class FILE{
-        public static final String AM_CONFIG_PROPERTIES = "AM_Configuration.properties";
+        public static final String AM_CONFIG_PROPERTIES = "AM-Config.properties";
         public static String ERROR_MESSAGES;
         public static String INFO_MESSAGES;
         public static String EMAIL_NOTIFICATION;

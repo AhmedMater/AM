@@ -1,6 +1,6 @@
 package am.exception;
 
-import am.api.error.EC;
+import am.api.enums.EC;
 import am.common.enums.AME;
 import am.session.AppSession;
 

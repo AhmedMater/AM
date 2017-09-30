@@ -1,6 +1,6 @@
-package am.api.sysConfig;
+package am.api.components;
 
-import am.api.logger.AppLogger;
+import am.api.enums.App_CC;
 import am.common.ConfigParam;
 import am.common.ConfigParam.COMPONENT;
 import am.common.ConfigParam.FILE;
@@ -11,6 +11,7 @@ import am.common.enums.AME;
 import am.common.enums.AMI;
 import am.exception.GeneralException;
 import am.session.AppSession;
+import am.session.Interface;
 import am.session.Phase;
 import am.session.Source;
 
@@ -52,7 +53,7 @@ public class AppConfigManager {
     @PostConstruct
     private void load(){
         String FN_NAME = "load";
-        AppSession session = new AppSession(Phase.INITIAL_APP, Source.AM, CLASS, FN_NAME);
+        AppSession session = new AppSession(Source.AM, Interface.INITIALIZING, Phase.APP_CONFIG, CLASS, FN_NAME);
 
         FILE_NAME = amConfigManager.getConfigValue(session, AM_CC.APP_CONFIG);
         FILE.APP_CONFIG_PROPERTIES = ConfigParam.APP_CONFIG_PATH + FILE_NAME;
@@ -63,7 +64,7 @@ public class AppConfigManager {
 
     public <T> T getConfigValue(AppSession appSession, App_CC systemProperty, Class<T> className) throws Exception {
         String FN_NAME = "getConfigValue";
-        AppSession session = appSession.updateSession(Phase.CONFIGURATION, Source.AM, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(Phase.APP_CONFIG, CLASS, FN_NAME);
         try {
             logger.startDebug(session, systemProperty, className.getSimpleName());
 
@@ -96,7 +97,7 @@ public class AppConfigManager {
             if(ex instanceof GeneralException)
                 throw ex;
             else
-                throw new GeneralException(session, AME.IO_008, "App Config Property", systemProperty, ex.getMessage());
+                throw new GeneralException(session, ex, AME.IO_008, "App Config Property", systemProperty);
         }
     }
 }

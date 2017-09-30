@@ -4,12 +4,9 @@ package am.session;
  * Created by mohamed.elewa on 13/05/2017.
  */
 public enum Source {
-    SOAP("SOAP"),
-    JMS("JMS"),
-    REST("REST"),
-    DB("DB"),
-    Service("Service"),
-    AM("AM");
+    AM("AM-Library"),
+    APP_SERVICES("App-Services"),
+    JOB("Job-Source");
 
     private String value;
 
@@ -17,4 +14,5 @@ public enum Source {
         this.value = value;
     }
     public String value(){return value;}
+
 }

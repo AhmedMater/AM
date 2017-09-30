@@ -1,4 +1,4 @@
-package am.api.notification;
+package am.api.enums;
 
 /**
  * Created by ahmed.motair on 16/09/2017.
