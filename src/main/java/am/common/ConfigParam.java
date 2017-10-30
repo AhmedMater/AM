@@ -27,6 +27,4 @@ public class ConfigParam {
         public static final String SYSTEM_LOGGER = "System Logger";
         public static final String AM_CONFIG_MANAGER = "AM Configuration Manger";
     }
-
-    public static final String PERSISTENCE_UNIT = "amt";
 }

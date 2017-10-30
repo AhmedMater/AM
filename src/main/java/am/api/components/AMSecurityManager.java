@@ -21,7 +21,7 @@ public class AMSecurityManager {
     // Generated at https://www.random.org/strings
     private final static String _salt = "rz8LuOtFBXphj9WQfvFh";
     private final static String SHA_256_ALGORITHM = "HmacSHA256";
-    private final static String MD5_ALGORITHM = "MD5_ALGORITHM";
+    private final static String MD5_ALGORITHM = "MD5";
 
     public String generateToken(AppSession appSession, String userName, String password, long ticks) throws Exception {
         String FN_NAME = "generateToken";
@@ -53,7 +53,7 @@ public class AMSecurityManager {
         else
             throw new GeneralException(session, AME.SEQ_001);
 
-        logger.endDebug(session, result);
+        logger.endDebug(session, "User Token");
         return result;
     }
 
@@ -103,7 +103,7 @@ public class AMSecurityManager {
         for (int i = 0; i < byteData.length; i++)
             sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
 
-        logger.endDebug(session, sb.toString());
+        logger.endDebug(session, "Hashed Password");
         return sb.toString();
     }
 

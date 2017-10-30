@@ -12,6 +12,7 @@ public class BusinessException extends WebApplicationException {
     private EC errorCode;
     private String CLASS;
     private String METHOD;
+    private String fullErrMsg;
 
     public BusinessException(AppSession session, Throwable ex) {
         this(session, ex, Status.BAD_REQUEST, null);
@@ -30,11 +31,40 @@ public class BusinessException extends WebApplicationException {
     }
     public BusinessException(AppSession session, Throwable ex, Status status, EC errorCode, Object ... args) {
         super(ex, Response.status(status)
-                .entity(session.toString() + session.getErrorMsg(errorCode, args))
+                .entity(session.getErrorMsg(errorCode, args))
                 .type(MediaType.TEXT_PLAIN_TYPE)
                 .build());
         this.errorCode = errorCode;
+        this.fullErrMsg = session.toString() + session.getErrorMsg(errorCode, args);
         this.CLASS = session.getCLASS();
         this.METHOD = session.getMethod();
+    }
+
+    public EC getErrorCode() {
+        return errorCode;
+    }
+    public void setErrorCode(EC errorCode) {
+        this.errorCode = errorCode;
+    }
+
+    public String getCLASS() {
+        return CLASS;
+    }
+    public void setCLASS(String CLASS) {
+        this.CLASS = CLASS;
+    }
+
+    public String getMETHOD() {
+        return METHOD;
+    }
+    public void setMETHOD(String METHOD) {
+        this.METHOD = METHOD;
+    }
+
+    public String getFullErrMsg() {
+        return fullErrMsg;
+    }
+    public void setFullErrMsg(String fullErrMsg) {
+        this.fullErrMsg = fullErrMsg;
     }
 }

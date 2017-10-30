@@ -1,6 +1,7 @@
-package am.api.components;
+package am.api.components.db;
 
-import am.common.ConfigParam;
+import am.api.components.AppLogger;
+import am.common.SharedParam;
 import am.common.enums.AME;
 import am.common.enums.AMI;
 import am.core.config.AMConfigurationManager;
@@ -16,9 +17,7 @@ import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -33,10 +32,10 @@ public class DBManager implements Serializable {
     private final static String DB_UPDATE = "Update";
     private final static String DB_DELETE = "Delete";
 
-    @PersistenceUnit(unitName = ConfigParam.PERSISTENCE_UNIT)
+    @PersistenceUnit(unitName = SharedParam.PERSISTENCE_UNIT)
     private EntityManagerFactory emf;
 
-    @PersistenceContext(name = ConfigParam.PERSISTENCE_UNIT)
+    @PersistenceContext(name = SharedParam.PERSISTENCE_UNIT)
     private EntityManager unCachedEM;
 
     public EntityManager getCachedEM() {
@@ -216,21 +215,6 @@ public class DBManager implements Serializable {
         }
     }
 
-    public boolean checkIsFound(AppSession appSession, Query query) throws DBException {
-        String FN_NAME = "checkIsFound";
-        AppSession session = appSession.updateSession(Phase.DATABASE, CLASS, FN_NAME);
-        logger.startDebug(session, query);
-
-        int numOfRows = query.getResultList().size();
-
-        boolean isFound = false;
-
-        if(numOfRows >= 1)
-            isFound = true;
-        logger.endDebug(session);
-        return isFound;
-    }
-
     public boolean checkIsFound(AppSession appSession, Boolean usingCache, String selectAttribute,
                 Class entity, String conditionAttribute, String value) throws DBException {
         String FN_NAME = "checkIsFound";
@@ -275,6 +259,8 @@ public class DBManager implements Serializable {
                 throw new DBException(session, ex, AME.DB_022, queryStr);
             }
 
+            if(usingCache && em != null)
+                em.close();
             logger.endDebug(session);
             return isFound;
         }catch (Exception ex){
@@ -289,22 +275,51 @@ public class DBManager implements Serializable {
     }
 
     public <T> T getSingleResult(AppSession appSession, Boolean usingCache,
-                             Class<T> entity, String attribute, String value) throws Exception {
+                                 Class<T> entity, Map<String, Object> parameters) throws Exception {
         String FN_NAME = "getSingleResult";
         AppSession session = appSession.updateSession(Phase.DATABASE, CLASS, FN_NAME);
         EntityManager em = null;
         try {
-            logger.startDebug(session, usingCache, entity.getSimpleName(), attribute, value);
+            logger.startDebug(session, usingCache, entity.getSimpleName(), parameters);
 
             if (usingCache)
                 em = getCachedEM();
             else
                 em = getUnCachedEM();
 
-            String queryStr = "FROM " + entity.getSimpleName() + " WHERE " + attribute + " = :AttributeValue";
-            TypedQuery<T> query = em
-                    .createQuery(queryStr, entity)
-                    .setParameter("AttributeValue", value);
+            String queryStr = "FROM " + entity.getSimpleName() + " WHERE ";
+
+            if(parameters.size() == 0)
+                throw new DBException(session, AME.DB_014);
+
+            int count = 1;
+
+            Map<String, Object> placeHolders = new HashMap<>();
+            Iterator<String> iterator = parameters.keySet().iterator();
+
+            String attribute = iterator.next();
+            Object value =  parameters.get(attribute);
+            String placeHolder = "Parameter" + count;
+            queryStr += attribute + " = :" + placeHolder;
+            placeHolders.put(placeHolder, value);
+
+            if(parameters.size() > 1){
+                while (iterator.hasNext()){
+                    count++;
+                    attribute = iterator.next();
+                    value =  parameters.get(attribute);
+                    placeHolder = "Parameter" + count;
+                    queryStr += " AND " + attribute + " = :" + placeHolder;
+                    placeHolders.put(placeHolder, value);
+                }
+            }
+
+            TypedQuery<T> query = em.createQuery(queryStr, entity);
+
+            Set<String> keys = placeHolders.keySet();
+            for (String key : keys) {
+                query.setParameter(key, placeHolders.get(key));
+            }
 
             if (usingCache)
                 query.setHint(QueryHints.CACHEABLE, Boolean.TRUE);
@@ -328,6 +343,9 @@ public class DBManager implements Serializable {
             } catch (PersistenceException ex) {
                 throw new DBException(session, ex, AME.DB_022, queryStr);
             }
+
+            if(usingCache && em != null)
+                em.close();
 
             logger.endDebug(session);
             return result;

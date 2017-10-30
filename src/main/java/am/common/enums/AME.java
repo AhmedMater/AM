@@ -53,7 +53,7 @@ public enum AME {
     DB_011("AM-DB-011: Removing record ''{0}'' from Database failed"),
     DB_012("AM-DB-012: Invalid HQL Query Parameter or Parameter Type ''{0}''"),
     DB_013("AM-DB-013: Invalid HQL Query Hint ''{0}''"),
-//    DB_014("AM-DB-014: Executing Query: ''{0}'' failed"),
+    DB_014("AM-DB-014: No Parameters provided for the Query"),
     DB_015("AM-DB-015: More than one record returned from ''{0}'' table with attribute ''{1}'' = ''{2}''"),
     DB_016("AM-DB-016: No records return from ''{0}'' table with attribute ''{1}'' = ''{2}''"),
     DB_017("AM-DB-017: Invalid Function with the hibernate operation with Query ''{0}''"),
