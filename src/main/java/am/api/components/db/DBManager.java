@@ -128,6 +128,39 @@ public class DBManager implements Serializable {
                 throw new DBException(session, AME.DB_009, className.getSimpleName(), identifier);
         }
     }
+    public <T> List<T> findAll(AppSession appSession, Class<T> className, Boolean usingCache)throws DBException {
+        String FN_NAME = "find";
+        AppSession session = appSession.updateSession(Phase.DATABASE, CLASS, FN_NAME);
+        try {
+            logger.startDebug(session, className);
+
+            List<T> result;
+            try {
+                EntityManager em;
+                if(usingCache) {
+                    em = getCachedEM();
+                    result = em.createQuery("FROM " + className.getSimpleName(), className)
+                            .setHint(QueryHints.CACHEABLE, true).getResultList();
+                    em.close();
+                }else {
+                    em = getUnCachedEM();
+                    result = em.createQuery("FROM " + className.getSimpleName(), className).getResultList();
+                }
+                //TODO: Logging AMI and AME Check here need Change
+                logger.info(session, AMI.DB_002, className);
+            } catch (IllegalArgumentException ex) {
+                throw new DBException(session, ex, AME.DB_006, className.toString(), className.getSimpleName());
+            }
+
+            logger.endDebug(session, result);
+            return result;
+        }catch (Exception ex){
+            if(ex instanceof DBException)
+                throw ex;
+            else
+                throw new DBException(session, AME.DB_009, className.getSimpleName());
+        }
+    }
 
     @Transactional
     public <T> T merge(AppSession appSession, T toBeUpdated, Boolean usingCache)throws DBException{
