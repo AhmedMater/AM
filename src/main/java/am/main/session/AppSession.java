@@ -1,7 +1,9 @@
 package am.main.session;
 
-import am.main.api.components.ErrorHandler;
-import am.main.api.components.InfoHandler;
+import am.main.api.ErrorHandler;
+import am.main.api.InfoHandler;
+import am.main.data.enums.Interface;
+import am.main.data.enums.Source;
 import am.shared.enums.EC;
 import am.shared.enums.IC;
 import am.shared.session.Phase;
@@ -13,9 +15,10 @@ import java.io.Serializable;
  */
 public class AppSession implements Serializable{
     private Source source;
-    private Interface INTERFACE;
+    private Interface _interface;
     private Phase phase;
-    private String userName;
+    private String ip;
+    private String username;
     private String id;
     private String CLASS;
     private String method;
@@ -23,32 +26,44 @@ public class AppSession implements Serializable{
     private InfoHandler infoHandler;
 
     public AppSession(){}
-    public AppSession(Source source, Interface INTERFACE, Phase phase, String CLASS, String method, ErrorHandler errorHandler, InfoHandler infoHandler) {
-        this(source, INTERFACE, phase, null, null, CLASS, method, errorHandler, infoHandler);
+    public AppSession(Source source, Interface _interface, Phase phase, String CLASS, String method, ErrorHandler errorHandler, InfoHandler infoHandler) {
+        this(source, _interface, phase, null, null, CLASS, method, errorHandler, infoHandler, null);
     }
-    public AppSession(Source source, Interface INTERFACE, Phase phase, String CLASS, String method) {
-        this(source, INTERFACE, phase, null, null, CLASS, method, null, null);
+    public AppSession(Source source, Interface _interface, Phase phase, String CLASS, String method) {
+        this(source, _interface, phase, null, null, CLASS, method, null, null, null);
     }
-    public AppSession(Source source, Interface INTERFACE, Phase phase, String id, String CLASS, String method, ErrorHandler errorHandler, InfoHandler infoHandler) {
-        this(source, INTERFACE, phase, null, id, CLASS, method, errorHandler, infoHandler);
+    public AppSession(Source source, Interface _interface, Phase phase, String id, String CLASS, String method, ErrorHandler errorHandler, InfoHandler infoHandler, String ip) {
+        this(source, _interface, phase, null, id, CLASS, method, errorHandler, infoHandler, ip);
     }
-    public AppSession(Source source, Interface INTERFACE, Phase phase, String userName, String id, String CLASS, String method, ErrorHandler errorHandler, InfoHandler infoHandler) {
+    public AppSession(Source source, Interface _interface, Phase phase, String username, String id, String CLASS, String method, ErrorHandler errorHandler, InfoHandler infoHandler, String ip) {
         this.source = source;
-        this.INTERFACE = INTERFACE;
+        this._interface = _interface;
         this.phase = phase;
-        this.userName = userName;
+        this.username = username;
         this.id = id;
         this.CLASS = CLASS;
         this.method = method;
         this.errorHandler = errorHandler;
         this.infoHandler = infoHandler;
+        this.ip = ip;
+    }
+    public AppSession(Source source, Interface _interface, String CLASS, String method) {
+        this(source, _interface, null, null, null, CLASS, method, null, null, null);
     }
 
-    public String getUserName() {
-        return userName;
+    public AppSession(Source source, Phase phase, String CLASS, String method) {
+        this(source, null, phase, null, null, CLASS, method, null, null, null);
     }
-    public void setUserName(String userName) {
-        this.userName = userName;
+
+    public AppSession(Source source, Interface _interface, Phase phase, String CLASS, String method, ErrorHandler errorHandler, InfoHandler infoHandler, String ip) {
+        this(source, _interface, phase, null, null, CLASS, method, errorHandler, infoHandler, ip);
+    }
+
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getId() {
@@ -99,11 +114,11 @@ public class AppSession implements Serializable{
         this.source = source;
     }
 
-    public Interface getINTERFACE() {
-        return INTERFACE;
+    public Interface getInterface() {
+        return _interface;
     }
-    public void setINTERFACE(Interface INTERFACE) {
-        this.INTERFACE = INTERFACE;
+    public void setInterface(Interface _interface) {
+        this._interface = _interface;
     }
 
     public Phase getPhase() {
@@ -113,13 +128,31 @@ public class AppSession implements Serializable{
         this.phase = phase;
     }
 
+    public String getIp() {
+        return ip;
+    }
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
     @Override
     public String toString() {
-        String st = "[" + source.value() + "] [" + INTERFACE.value() + "] [" + phase.value();
-        if(userName != null)
-            st += "] [" + userName;
+        String st = "[SRC: " + source.value();
+
+        if(username != null)
+            st += "] [Interface: " + _interface.value();
+
+        st += "] [Phase: " + phase.value();
+
+        if(ip != null)
+            st += "] [IP: " + ip;
+
+        if(username != null)
+            st += "] [User: " + username;
+
         if(id !=null)
-            st += "] [" + id;
+            st += "] [ID: " + id;
+
         st += "]\n " + CLASS + "." + method + "(): ";
         return st;
     }
@@ -130,8 +163,8 @@ public class AppSession implements Serializable{
         session.CLASS = CLASS;
         session.method = method;
         session.source = this.source;
-        session.INTERFACE = this.INTERFACE;
-        session.userName = this.userName;
+        session._interface = this._interface;
+        session.username = this.username;
         session.id = this.id;
         session.errorHandler = this.errorHandler;
         session.infoHandler = this.infoHandler;
