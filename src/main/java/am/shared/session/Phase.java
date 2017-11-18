@@ -4,20 +4,22 @@ package am.shared.session;
  * Created by ahmed.motair on 9/20/2017.
  */
 public enum Phase {
-    DATABASE("Database"),
-    ERROR("ErrorHandler"),
-    INFO("InfoHandler"),
-    VALIDATION("Validation"),
-    EMAIL_NOTIFICATION("Email-Notification"),
-    SECURITY("Security"),
-    APP_CONFIG("App-Config"),
-    AM_CONFIG("AM-Config"),
+    AM_INITIALIZING("AM-Initializing"),
 
-    REGISTRATION("Registration"),
-    LOGIN("Login"),
     AUTHENTICATION("Authentication"),
     AUTHORIZATION("Authorization"),
-    URL_LOGGING("URLLogging");
+    URL_LOGGING("URLLogging"),
+
+    COURSE_CREATE("Course-Create"),
+    COURSE_VIEW("Course-View"),
+    COURSE_UPDATE("Course-Update"),
+
+    ARTICLE_CREATE("Article-Create"),
+    ARTICLE_VIEW("Article-View"),
+    ARTICLE_UPDATE("Article-Update"),
+
+    REGISTRATION("Registration"),
+    LOGIN("Login");
 
     private String value;
 

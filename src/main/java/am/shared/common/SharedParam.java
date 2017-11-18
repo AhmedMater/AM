@@ -6,4 +6,5 @@ package am.shared.common;
 public class SharedParam {
 
     public static final String PERSISTENCE_UNIT = "amt";
+    public static final String LOGGER_FOLDER = "AMT";
 }
