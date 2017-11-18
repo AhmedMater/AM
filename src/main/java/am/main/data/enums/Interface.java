@@ -1,4 +1,4 @@
-package am.main.session;
+package am.main.data.enums;
 
 /**
  * Created by ahmed.motair on 9/29/2017.
@@ -8,7 +8,7 @@ public enum Interface {
     SOAP("SOAP"),
     JMS("JMS"),
     JOB("Job-Interface"),
-    INITIALIZING("Initializing");
+    QUARTZ("Quartz");
 
     private String value;
 

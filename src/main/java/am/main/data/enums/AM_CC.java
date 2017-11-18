@@ -1,4 +1,4 @@
-package am.main.core.config;
+package am.main.data.enums;
 
 /**
  * Created by ahmed.motair on 9/21/2017.
@@ -8,7 +8,7 @@ public enum AM_CC {
     INFO_HANDLER("InfoHandler"),
     APP_CONFIG("ApplicationConfiguration"),
     EMAIL_NOTIFICATION_MANAGER("EMailNotificationManager"),
-    VALIDATION_HANDLER("ValidationHandler");
+    LOGGERS_CONFIG("LoggerConfiguration");
 
     private String value;
     AM_CC(String value){

@@ -1,4 +1,4 @@
-package am.main.session;
+package am.main.data.enums;
 
 /**
  * Created by mohamed.elewa on 13/05/2017.
