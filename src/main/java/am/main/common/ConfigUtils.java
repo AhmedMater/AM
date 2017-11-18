@@ -1,8 +1,8 @@
 package am.main.common;
 
-import am.main.api.components.AppLogger;
-import am.main.common.enums.AME;
-import am.main.common.enums.AMI;
+import am.main.api.AppLogger;
+import am.main.data.enums.AME;
+import am.main.data.enums.AMI;
 import am.main.exception.GeneralException;
 import am.main.session.AppSession;
 
@@ -199,4 +199,5 @@ public class ConfigUtils {
             return null;
         }
     }
+
 }
