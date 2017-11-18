@@ -1,6 +1,6 @@
 package am.main.exception;
 
-import am.main.common.enums.AME;
+import am.main.data.enums.AME;
 import am.main.session.AppSession;
 import am.shared.enums.EC;
 

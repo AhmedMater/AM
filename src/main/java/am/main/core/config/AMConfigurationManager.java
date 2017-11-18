@@ -1,16 +1,16 @@
 package am.main.core.config;
 
-import am.main.api.components.AppLogger;
+import am.main.api.AppLogger;
 import am.main.common.ConfigParam.COMPONENT;
 import am.main.common.ConfigParam.FILE;
 import am.main.common.ConfigUtils;
-import am.main.common.enums.AME;
-import am.main.common.enums.AMI;
+import am.main.data.enums.AME;
+import am.main.data.enums.AMI;
+import am.main.data.enums.AM_CC;
 import am.main.exception.GeneralException;
 import am.main.session.AppSession;
-import am.main.session.Interface;
+import am.main.data.enums.Source;
 import am.shared.session.Phase;
-import am.main.session.Source;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
@@ -45,7 +45,7 @@ public class AMConfigurationManager {
     @PostConstruct
     private void load(){
         String FN_NAME = "load";
-        AppSession session = new AppSession(Source.AM, Interface.INITIALIZING, Phase.AM_CONFIG, CLASS, FN_NAME);
+        AppSession session = new AppSession(Source.AM, Phase.AM_INITIALIZING, CLASS, FN_NAME);
         try {
             logger.startDebug(session);
             AM_CONFIG_FILE = ConfigUtils.readResourceFiles(session, FILE.AM_CONFIG_PROPERTIES, COMPONENT.AM_CONFIG_MANAGER);
@@ -57,7 +57,7 @@ public class AMConfigurationManager {
 
     public String getConfigValue(AppSession appSession, AM_CC code){
         String FN_NAME = "getConfigValue";
-        AppSession session = appSession.updateSession(Phase.AM_CONFIG, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
         try {
             logger.startDebug(session, code);
 
