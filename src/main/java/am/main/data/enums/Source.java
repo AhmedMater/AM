@@ -6,7 +6,8 @@ package am.main.data.enums;
 public enum Source {
     AM("AM-Library"),
     APP_SERVICES("App-Services"),
-    JOB("Job-Source");
+    JOB("Job Source"),
+    INTEGRATION_TEST("Integration-Test Module");
 
     private String value;
 

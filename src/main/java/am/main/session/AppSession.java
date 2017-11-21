@@ -50,13 +50,14 @@ public class AppSession implements Serializable{
     public AppSession(Source source, Interface _interface, String CLASS, String method) {
         this(source, _interface, null, null, null, CLASS, method, null, null, null);
     }
-
     public AppSession(Source source, Phase phase, String CLASS, String method) {
         this(source, null, phase, null, null, CLASS, method, null, null, null);
     }
-
     public AppSession(Source source, Interface _interface, Phase phase, String CLASS, String method, ErrorHandler errorHandler, InfoHandler infoHandler, String ip) {
         this(source, _interface, phase, null, null, CLASS, method, errorHandler, infoHandler, ip);
+    }
+    public AppSession(Source source, Interface _interface, Phase phase, ErrorHandler errorHandler, InfoHandler infoHandler) {
+        this(source, _interface, phase, null, null, null, null, errorHandler, infoHandler, null);
     }
 
     public String getUsername() {
@@ -137,12 +138,10 @@ public class AppSession implements Serializable{
 
     @Override
     public String toString() {
-        String st = "[SRC: " + source.value();
+        String st = "[Src: " + source.value();
 
         if(username != null)
-            st += "] [Interface: " + _interface.value();
-
-        st += "] [Phase: " + phase.value();
+            st += "] [Inter: " + _interface.value();
 
         if(ip != null)
             st += "] [IP: " + ip;

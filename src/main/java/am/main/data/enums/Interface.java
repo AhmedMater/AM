@@ -8,7 +8,8 @@ public enum Interface {
     SOAP("SOAP"),
     JMS("JMS"),
     JOB("Job-Interface"),
-    QUARTZ("Quartz");
+    QUARTZ("Quartz"),
+    ARQUILLIAN("Arquillian");
 
     private String value;
 

@@ -1,5 +1,6 @@
 package am.main.exception;
 
+import am.main.common.validation.FormValidation;
 import am.main.session.AppSession;
 import am.shared.enums.EC;
 
@@ -13,6 +14,7 @@ public class BusinessException extends WebApplicationException {
     private String CLASS;
     private String METHOD;
     private String fullErrMsg;
+    private FormValidation errorList;
 
     public BusinessException(AppSession session, Throwable ex) {
         this(session, ex, Status.BAD_REQUEST, null);
@@ -36,6 +38,17 @@ public class BusinessException extends WebApplicationException {
                 .build());
         this.errorCode = errorCode;
         this.fullErrMsg = session.toString() + session.getErrorMsg(errorCode, args);
+        this.CLASS = session.getCLASS();
+        this.METHOD = session.getMethod();
+    }
+    public BusinessException(AppSession session, FormValidation validation) {
+        super(Response.status(Status.BAD_REQUEST)
+                .entity(validation)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .build());
+        this.errorCode = validation.getCode();
+        this.fullErrMsg = session.toString() + validation.getMainError() + "\n" + validation.getErrorList();
+        this.errorList = validation;
         this.CLASS = session.getCLASS();
         this.METHOD = session.getMethod();
     }
