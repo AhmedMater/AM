@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response.Status;
 
 public class BusinessException extends WebApplicationException {
     private EC errorCode;
+    private String formattedError;
     private String CLASS;
     private String METHOD;
     private String fullErrMsg;
@@ -37,7 +38,8 @@ public class BusinessException extends WebApplicationException {
                 .type(MediaType.TEXT_PLAIN_TYPE)
                 .build());
         this.errorCode = errorCode;
-        this.fullErrMsg = session.toString() + session.getErrorMsg(errorCode, args);
+        this.formattedError = session.getErrorMsg(errorCode, args);
+        this.fullErrMsg = session.toString() + this.formattedError;
         this.CLASS = session.getCLASS();
         this.METHOD = session.getMethod();
     }
@@ -47,7 +49,8 @@ public class BusinessException extends WebApplicationException {
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .build());
         this.errorCode = validation.getCode();
-        this.fullErrMsg = session.toString() + validation.getMainError() + "\n" + validation.getErrorList();
+        this.formattedError = validation.getMainError() + "\n" + validation.getErrorList();
+        this.fullErrMsg = session.toString() + this.formattedError;
         this.errorList = validation;
         this.CLASS = session.getCLASS();
         this.METHOD = session.getMethod();
@@ -79,5 +82,12 @@ public class BusinessException extends WebApplicationException {
     }
     public void setFullErrMsg(String fullErrMsg) {
         this.fullErrMsg = fullErrMsg;
+    }
+
+    public String getFormattedError() {
+        return formattedError;
+    }
+    public void setFormattedError(String formattedError) {
+        this.formattedError = formattedError;
     }
 }

@@ -81,7 +81,10 @@ public class AppSession implements Serializable{
         this.errorHandler = errorHandler;
     }
     public String getErrorMsg(EC errorCode, Object ... args) {
-        return errorHandler.getMsg(this, errorCode, args);
+        String error = errorHandler.getMsg(this, errorCode, args);
+        if(error == null)
+            error = errorHandler.getMsg(this, EC.AMT_0000);
+        return error;
     }
 
     public InfoHandler getInfoHandler() {
@@ -91,7 +94,10 @@ public class AppSession implements Serializable{
         this.infoHandler = infoHandler;
     }
     public String getInfoMsg(IC infoCode, Object ... args) {
-        return infoHandler.getMsg(this, infoCode, args);
+        String info = infoHandler.getMsg(this, infoCode, args);
+        if(info == null)
+            info = infoHandler.getMsg(this, IC.AMT_0000);
+        return info;
     }
 
     public String getCLASS() {

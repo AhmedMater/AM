@@ -24,6 +24,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
+import static am.shared.session.Phase.AM_LIBRARY;
+
 
 @Singleton
 public class EmailNotificationManager {
@@ -114,7 +116,7 @@ public class EmailNotificationManager {
 
     public void sendEmail(AppSession appSession, MailData mailData) throws Exception {
         String FN_NAME = "sendEmail";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         logger.startDebug(session, mailData);
         try {
 

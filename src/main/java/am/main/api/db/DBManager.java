@@ -18,6 +18,8 @@ import javax.validation.ConstraintViolationException;
 import java.io.Serializable;
 import java.util.*;
 
+import static am.shared.session.Phase.AM_LIBRARY;
+
 
 /**
  * Created by ahmed.motair on 9/7/2017.
@@ -52,7 +54,7 @@ public class DBManager implements Serializable {
     @Transactional
     public <T> T persist(AppSession appSession, T toBeInserted, Boolean usingCache) throws Exception {
         String FN_NAME = "persist";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         try {
             logger.startDebug(session, toBeInserted);
             try {
@@ -98,7 +100,7 @@ public class DBManager implements Serializable {
 
     public <T> T find(AppSession appSession, Class<T> className, Object identifier, Boolean usingCache)throws DBException {
         String FN_NAME = "find";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         try {
             logger.startDebug(session, className, identifier);
 
@@ -129,7 +131,7 @@ public class DBManager implements Serializable {
     }
     public <T> List<T> findAll(AppSession appSession, Class<T> className, Boolean usingCache)throws DBException {
         String FN_NAME = "find";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         try {
             logger.startDebug(session, className);
 
@@ -164,7 +166,7 @@ public class DBManager implements Serializable {
     @Transactional
     public <T> T merge(AppSession appSession, T toBeUpdated, Boolean usingCache)throws DBException{
         String FN_NAME = "merge";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         try {
             logger.startDebug(session, toBeUpdated);
 
@@ -202,7 +204,7 @@ public class DBManager implements Serializable {
     @Transactional
     public void remove(AppSession appSession, Object toBeRemoved, Boolean usingCache)throws DBException {
         String FN_NAME = "remove";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         EntityManager em = null;
         try {
             logger.startDebug(session, toBeRemoved);
@@ -250,7 +252,7 @@ public class DBManager implements Serializable {
     public boolean checkIsFound(AppSession appSession, Boolean usingCache, String selectAttribute,
                 Class entity, String conditionAttribute, String value) throws DBException {
         String FN_NAME = "checkIsFound";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         EntityManager em = null;
         try {
             logger.startDebug(session);
@@ -309,7 +311,7 @@ public class DBManager implements Serializable {
     public <T> T getSingleResult(AppSession appSession, Boolean usingCache,
                                  Class<T> entity, Map<String, Object> parameters) throws Exception {
         String FN_NAME = "getSingleResult";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         EntityManager em = null;
         try {
             logger.startDebug(session, usingCache, entity.getSimpleName(), parameters);

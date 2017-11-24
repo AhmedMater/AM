@@ -10,6 +10,8 @@ import javax.inject.Inject;
 import java.security.MessageDigest;
 import java.util.Base64;
 
+import static am.shared.session.Phase.AM_LIBRARY;
+
 /**
  * Created by ahmed.motair on 9/26/2017.
  */
@@ -24,7 +26,7 @@ public class AMSecurityManager {
 
     public String generateToken(AppSession appSession, String userName, String password, long ticks) throws Exception {
         String FN_NAME = "generateToken";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         logger.startDebug(session, userName, ticks);
         Mac sha256_HMAC;
 
@@ -58,7 +60,7 @@ public class AMSecurityManager {
 
     public byte[] getHashedPassword(AppSession appSession, String password) throws Exception{
         String FN_NAME = "getHashedPassword";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         logger.startDebug(session);
 
         String key = String.join(":", new String[]{password, _salt});
@@ -85,7 +87,7 @@ public class AMSecurityManager {
 
     public String dm5Hash(AppSession appSession, String password) throws Exception{
         String FN_NAME = "dm5Hash";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         logger.startDebug(session);
         MessageDigest md;
 

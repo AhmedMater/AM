@@ -19,6 +19,7 @@ public enum AME {
     SYS_013("AM-SYS-013: Invalid Logger name: ''{0}'' attribute in the AM Config Property File"),
     SYS_014("AM-SYS-014: Invalid Logger value: ''{0}'' in the AM Config Property File, It has to be [Boolean], [Logger Name]"),
     SYS_015("AM-SYS-015: Both Exception and Error Code are null, Can't Log this Error"),
+    SYS_016("AM-SYS-016: Value of the System Config property can''t be null"),
 
     ENM_001("AM-ENM-001: Invalid ''{0}'' E-Mail Address"),
     ENM_002("AM-ENM-002: Failed to send the Message: ''{0}'', To: ''{1}''"),
@@ -34,6 +35,7 @@ public enum AME {
     IO_008("AM-IO-008: Reading ''{0}'' of Code: ''{1}'' failed"),
     IO_009("AM-IO-009: Parameter: ''{0}'' is missing from File: ''{1}''"),
     IO_010("AM-IO-010: Value of key: ''{0}'' in Property File: ''{1}'' is empty"),
+    IO_011("AM-IO-011: Changing value of ''{0}'' of Code: ''{1}'' failed"),
 
     SEQ_001("AMT-SEQ-001: Generating Hashed Password failed"),
     SEQ_002("AMT-SEQ-002: Request ''{0}'' isn't Authorized to Access our Services"),

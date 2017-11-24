@@ -19,6 +19,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Properties;
 
+import static am.shared.session.Phase.AM_LIBRARY;
+
 @Singleton
 public class ErrorHandler {
     @Inject AMConfigurationManager amConfigManager;
@@ -57,7 +59,7 @@ public class ErrorHandler {
 
     public String getMsg(AppSession appSession, EC errorCode, Object ... arguments){
         String FN_NAME = "getMsg";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
 
         try {
             logger.startDebug(session, errorCode, arguments);

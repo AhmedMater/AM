@@ -16,6 +16,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 import java.util.Properties;
 
+import static am.shared.session.Phase.AM_LIBRARY;
+
 /**
  * Created by ahmed.motair on 9/21/2017.
  */
@@ -57,7 +59,7 @@ public class AMConfigurationManager {
 
     public String getConfigValue(AppSession appSession, AM_CC code){
         String FN_NAME = "getConfigValue";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         try {
             logger.startDebug(session, code);
 

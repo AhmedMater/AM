@@ -19,6 +19,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Properties;
 
+import static am.shared.session.Phase.AM_LIBRARY;
+
 
 /**
  * Created by ahmed.motair on 9/9/2017.
@@ -63,7 +65,7 @@ public class AppConfigManager {
 
     public <T> T getConfigValue(AppSession appSession, App_CC systemProperty, Class<T> className) throws Exception {
         String FN_NAME = "getConfigValue";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         try {
             logger.startDebug(session, systemProperty, className.getSimpleName());
 
@@ -99,4 +101,33 @@ public class AppConfigManager {
                 throw new GeneralException(session, ex, AME.IO_008, "App Config Property", systemProperty);
         }
     }
+
+    public boolean updateConfigValue(AppSession appSession, App_CC systemProperty, String value) throws Exception {
+        String FN_NAME = "updateConfigValue";
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        try {
+            logger.startDebug(session, systemProperty, value);
+
+            if(systemProperty == null || systemProperty.toString() == null || systemProperty.toString().isEmpty())
+                throw new GeneralException(session, AME.SYS_007, "App Config Property");
+            else if(APP_CONFIGURATION == null || APP_CONFIGURATION.isEmpty())
+                throw new GeneralException(session, AME.IO_005, FILE_NAME);
+            else if(value == null)
+                throw new GeneralException(session, AME.SYS_016);
+
+            Object retValue = APP_CONFIGURATION.replace(systemProperty.value(), value);
+
+            boolean result = (retValue != null);
+
+            logger.info(session, AMI.IO_004, "App Config Property", systemProperty);
+            logger.endDebug(session, result);
+            return result;
+        }catch (Exception ex){
+            if(ex instanceof GeneralException)
+                throw ex;
+            else
+                throw new GeneralException(session, ex, AME.IO_011, "App Config Property", systemProperty);
+        }
+    }
+
 }

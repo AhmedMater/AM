@@ -5,6 +5,7 @@ package am.shared.session;
  */
 public enum Phase {
     AM_INITIALIZING("AM-Initializing"),
+    AM_LIBRARY("AM-Library"),
     INTEGRATION_TEST("Integration-Test"),
 
     AUTHENTICATION("Authentication"),

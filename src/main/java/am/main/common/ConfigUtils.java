@@ -1,23 +1,21 @@
 package am.main.common;
 
 import am.main.api.AppLogger;
-import am.main.common.validation.groups.FormValidation;
 import am.main.data.enums.AME;
 import am.main.data.enums.AMI;
 import am.main.exception.GeneralException;
 import am.main.session.AppSession;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Properties;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static am.shared.session.Phase.AM_LIBRARY;
 
 /**
  * Created by ahmed.motair on 9/7/2017.
@@ -33,7 +31,7 @@ public class ConfigUtils {
      */
     public static Properties readResourceFiles(AppSession appSession, String file, String component) throws Exception {
         String FN_NAME = "readResourceFiles";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         try {
             logger.startDebug(session, file, component);
             Properties properties = new Properties();
@@ -70,7 +68,7 @@ public class ConfigUtils {
      */
     public static Properties readRemoteFiles(AppSession appSession, String filePath, String component) throws Exception {
         String FN_NAME = "readResourceFiles";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         try {
             logger.startDebug(session, filePath, component);
             Properties properties = new Properties();
@@ -112,7 +110,7 @@ public class ConfigUtils {
      */
     public static String formatMsg(AppSession appSession, String message, Object ... args) throws Exception{
         String FN_NAME = "formatMsg";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         try {
             logger.startDebug(session, message, args);
 
@@ -160,7 +158,7 @@ public class ConfigUtils {
      */
     public static String readValueFromPropertyFile(AppSession appSession, Properties propertyFile, String property, String fileName) throws Exception{
         String FN_NAME = "readValueFromPropertyFile";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         try {
             logger.startDebug(session, property, fileName);
 
@@ -189,7 +187,7 @@ public class ConfigUtils {
 
     public static Properties loadSystemComponent(AppSession appSession, String fileName, String componentName){
         String FN_NAME = "loadSystemComponent";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         try {
             logger.startDebug(session, fileName, componentName);
 
