@@ -21,7 +21,9 @@ public enum Phase {
     ARTICLE_UPDATE("Article-Update"),
 
     REGISTRATION("Registration"),
-    LOGIN("Login");
+    LOGIN("Login"),
+    USER_VIEW("User-View"),
+    USER_UPDATE("User-Update");
 
     private String value;
 

@@ -32,6 +32,7 @@ public class DBManager implements Serializable {
     private final static String DB_INSERT = "Insert";
     private final static String DB_UPDATE = "Update";
     private final static String DB_DELETE = "Delete";
+    private final static String QUERY = "Query";
 
     @PersistenceUnit(unitName = SharedParam.PERSISTENCE_UNIT)
     private EntityManagerFactory emf;
@@ -98,6 +99,7 @@ public class DBManager implements Serializable {
         }
     }
 
+//    @Transactional
     public <T> T find(AppSession appSession, Class<T> className, Object identifier, Boolean usingCache)throws DBException {
         String FN_NAME = "find";
         AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
@@ -126,7 +128,7 @@ public class DBManager implements Serializable {
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, AME.DB_009, className.getSimpleName(), identifier);
+                throw new DBException(session, ex, AME.DB_009, className.getSimpleName(), identifier);
         }
     }
     public <T> List<T> findAll(AppSession appSession, Class<T> className, Boolean usingCache)throws DBException {
@@ -159,7 +161,7 @@ public class DBManager implements Serializable {
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, AME.DB_009, className.getSimpleName());
+                throw new DBException(session, ex, AME.DB_009, className.getSimpleName());
         }
     }
 
@@ -316,43 +318,18 @@ public class DBManager implements Serializable {
         try {
             logger.startDebug(session, usingCache, entity.getSimpleName(), parameters);
 
-            if (usingCache)
-                em = getCachedEM();
-            else
-                em = getUnCachedEM();
+            Map<String, Object> placeHolders = constructQuery(session, entity, parameters);
+            String queryStr = (String) placeHolders.remove(QUERY);
 
-            String queryStr = "FROM " + entity.getSimpleName() + " WHERE ";
-
-            if(parameters.size() == 0)
-                throw new DBException(session, AME.DB_014);
-
-            int count = 1;
-
-            Map<String, Object> placeHolders = new HashMap<>();
-            Iterator<String> iterator = parameters.keySet().iterator();
-
-            String attribute = iterator.next();
-            Object value =  parameters.get(attribute);
-            String placeHolder = "Parameter" + count;
-            queryStr += attribute + " = :" + placeHolder;
-            placeHolders.put(placeHolder, value);
-
-            if(parameters.size() > 1){
-                while (iterator.hasNext()){
-                    count++;
-                    attribute = iterator.next();
-                    value =  parameters.get(attribute);
-                    placeHolder = "Parameter" + count;
-                    queryStr += " AND " + attribute + " = :" + placeHolder;
-                    placeHolders.put(placeHolder, value);
-                }
-            }
-
+            em = (usingCache) ? getCachedEM() : getUnCachedEM();
             TypedQuery<T> query = em.createQuery(queryStr, entity);
 
             Set<String> keys = placeHolders.keySet();
+            String allValues = "";
+
             for (String key : keys) {
                 query.setParameter(key, placeHolders.get(key));
+                allValues += placeHolders.get(key) + ", ";
             }
 
             if (usingCache)
@@ -363,9 +340,9 @@ public class DBManager implements Serializable {
             try {
                 result = query.getSingleResult();
             } catch (NonUniqueResultException ex) {
-                throw new DBException(session, AME.DB_015, entity.getSimpleName(), attribute, value);
+                throw new DBException(session, AME.DB_015, entity.getSimpleName(), placeHolders.keySet().toString(), allValues.substring(0, allValues.length()-2));
             } catch (NoResultException ex) {
-                throw new DBException(session, AME.DB_016, entity.getSimpleName(), attribute, value);
+                throw new DBException(session, AME.DB_016, entity.getSimpleName(), placeHolders.keySet().toString(), allValues.substring(0, allValues.length()-2));
             } catch (QueryTimeoutException ex) {
                 throw new DBException(session, ex, AME.DB_018, queryStr);
             } catch (TransactionRequiredException ex) {
@@ -391,6 +368,103 @@ public class DBManager implements Serializable {
                 throw ex;
             else
                 throw new DBException(session, ex, AME.DB_024, entity.getSimpleName());
+        }
+    }
+
+    public <T> List<T> getList(AppSession appSession, Boolean usingCache,
+                                 Class<T> entity, Map<String, Object> parameters) throws Exception {
+        String FN_NAME = "getList";
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        EntityManager em = null;
+        try {
+            logger.startDebug(session, usingCache, entity.getSimpleName(), parameters);
+
+            Map<String, Object> placeHolders = constructQuery(session, entity, parameters);
+            String queryStr = (String) placeHolders.remove(QUERY);
+
+            em = (usingCache) ? getCachedEM() : getUnCachedEM();
+            TypedQuery<T> query = em.createQuery(queryStr, entity);
+
+            Set<String> keys = placeHolders.keySet();
+            for (String key : keys)
+                query.setParameter(key, placeHolders.get(key));
+
+            if (usingCache)
+                query.setHint(QueryHints.CACHEABLE, Boolean.TRUE);
+
+            List<T> result;
+
+            try {
+                result = query.getResultList();
+            } catch (IllegalStateException ex) {
+                throw new DBException(session, ex, AME.DB_017, queryStr);
+            } catch (QueryTimeoutException ex) {
+                throw new DBException(session, ex, AME.DB_018, queryStr);
+            } catch (TransactionRequiredException ex) {
+                throw new DBException(session, ex, AME.DB_021, queryStr);
+            } catch (PessimisticLockException ex) {
+                throw new DBException(session, ex, AME.DB_019, queryStr);
+            } catch (LockTimeoutException ex) {
+                throw new DBException(session, ex, AME.DB_020, queryStr);
+            } catch (PersistenceException ex) {
+                throw new DBException(session, ex, AME.DB_022, queryStr);
+            }
+
+            if(usingCache && em != null)
+                em.close();
+
+            logger.endDebug(session);
+            return result;
+        }catch (Exception ex){
+            if(usingCache && em != null)
+                em.close();
+
+            if(ex instanceof DBException)
+                throw ex;
+            else
+                throw new DBException(session, ex, AME.DB_024, entity.getSimpleName());
+        }
+    }
+
+    private Map<String, Object> constructQuery(AppSession appSession, Class entity, Map<String, Object> parameters) throws Exception{
+        String FN_NAME = "constructQuery";
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        try {
+            logger.startDebug(session, entity.getSimpleName(), parameters);
+            String queryStr = "FROM " + entity.getSimpleName() + " WHERE ";
+
+            if (parameters.size() == 0)
+                throw new DBException(session, AME.DB_014);
+
+            int count = 1;
+
+            Map<String, Object> placeHolders = new HashMap<>();
+            Iterator<String> iterator = parameters.keySet().iterator();
+
+            String attribute = iterator.next();
+            Object value = parameters.get(attribute);
+            String placeHolder = "Parameter" + count;
+            queryStr += attribute + " = :" + placeHolder;
+            placeHolders.put(placeHolder, value);
+
+            if (parameters.size() > 1) {
+                while (iterator.hasNext()) {
+                    count++;
+                    attribute = iterator.next();
+                    value = parameters.get(attribute);
+                    placeHolder = "Parameter" + count;
+                    queryStr += " AND " + attribute + " = :" + placeHolder;
+                    placeHolders.put(placeHolder, value);
+                }
+            }
+
+            placeHolders.put(QUERY, queryStr);
+            return placeHolders;
+        }catch (Exception ex){
+            if(ex instanceof DBException)
+                throw ex;
+            else
+                throw new DBException(session, ex, AME.DB_025, entity.getSimpleName());
         }
     }
 }

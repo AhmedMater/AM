@@ -8,6 +8,8 @@ import am.main.data.jaxb.log4jData.RollingFile;
 import am.main.data.jaxb.loggerData.AMLogger;
 import am.main.data.jaxb.loggerData.AMLoggers;
 import am.main.exception.BusinessException;
+import am.main.exception.DBException;
+import am.main.exception.GeneralException;
 import am.main.session.AppSession;
 import am.shared.enums.EC;
 import am.shared.enums.IC;
@@ -109,7 +111,6 @@ public class AppLogger implements Serializable{
         }
     }
 
-
     private Configuration readLog4J2File() throws Exception{
         InputStream stream = AppLogger.class.getResourceAsStream(LOG4J2_FILE_NAME);
         String xml = IOUtils.toString(stream, "UTF-8");
@@ -165,9 +166,12 @@ public class AppLogger implements Serializable{
             return;
         }
 
-        if (ex != null)
-            logMsg(session, ERROR_EX, errMsg + ",\nDue to: " + excMsg + "\n", ex);
-        else
+        if (ex != null) {
+            if(ex instanceof DBException || ex instanceof BusinessException || ex instanceof GeneralException)
+                logMsg(session, ERROR, errMsg + ",\nDue to: " + excMsg + "\n", null);
+            else
+                logMsg(session, ERROR_EX, errMsg + ",\nDue to: " + excMsg + "\n", ex);
+        }else
             logMsg(session, ERROR, errMsg, null);
     }
     public void error(AppSession session, AME errCode, Object ... args) {
@@ -191,9 +195,12 @@ public class AppLogger implements Serializable{
             return;
         }
 
-        if (ex != null)
-            logMsg(session, ERROR_EX, errMsg + ",\nDue to: " + excMsg + "\n", ex);
-        else
+        if (ex != null) {
+            if(ex instanceof DBException || ex instanceof BusinessException || ex instanceof GeneralException)
+                logMsg(session, ERROR, errMsg + ",\nDue to: " + excMsg + "\n", null);
+            else
+                logMsg(session, ERROR_EX, errMsg + ",\nDue to: " + excMsg + "\n", ex);
+        }else
             logMsg(session, ERROR, errMsg, null);
     }
 

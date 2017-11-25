@@ -56,7 +56,7 @@ public enum AME {
     DB_012("AM-DB-012: Invalid HQL Query Parameter or Parameter Type ''{0}''"),
     DB_013("AM-DB-013: Invalid HQL Query Hint ''{0}''"),
     DB_014("AM-DB-014: No Parameters provided for the Query"),
-    DB_015("AM-DB-015: More than one record returned from ''{0}'' table with attribute ''{1}'' = ''{2}''"),
+    DB_015("AM-DB-015: More than one record returned from ''{0}'' table with attributes [''{1}''] = [''{2}'']"),
     DB_016("AM-DB-016: No records return from ''{0}'' table with attribute ''{1}'' = ''{2}''"),
     DB_017("AM-DB-017: Invalid Function with the hibernate operation with Query ''{0}''"),
     DB_018("AM-DB-018: The Query ''{0}'' exceeds its timeout Limit, and Only this Query is rolled back"),
@@ -65,7 +65,8 @@ public enum AME {
     DB_021("AM-DB-021: This Query ''{0}'' needs to be Transactional"),
     DB_022("AM-DB-022: The Query ''{0}'' exceeds its timeout Limit, and The Transaction is rolled back"),
     DB_023("AM-DB-023: Checking record of Entity: ''{0}'' isn't found in Database failed"),
-    DB_024("AM-DB-024: Selecting single record from Entity: ''{0}'' failed");
+    DB_024("AM-DB-024: Selecting single record from Entity: ''{0}'' failed"),
+    DB_025("AM-DB-025: Constructing the Query failed");
 
     private String value;
 

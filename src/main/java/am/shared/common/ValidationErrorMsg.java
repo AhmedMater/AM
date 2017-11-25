@@ -4,6 +4,25 @@ package am.shared.common;
  * Created by ahmed.motair on 11/15/2017.
  */
 public class ValidationErrorMsg extends am.main.common.validation.ValidationErrorMsg{
+    public static final class OWNER_USER_ID {
+        private static final String FIELD_NAME = "Owner UserID";
+
+        public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
+        public static final String INVALID = AMT_VALID_003_ST + FIELD_NAME + AMT_VALID_003_EN + POSITIVE_NUM_REGEX_MSG;
+    }
+    public static final class VIEWER_USER_ID {
+        private static final String FIELD_NAME = "Viewer UserID";
+
+        public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
+        public static final String INVALID = AMT_VALID_003_ST + FIELD_NAME + AMT_VALID_003_EN + POSITIVE_NUM_REGEX_MSG;
+    }
+    public static final class USER_ROLE {
+        private static final String FIELD_NAME = "User Role";
+
+        public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
+        public static final String LENGTH = AMT_VALID_007_ST + FIELD_NAME + AMT_VALID_007_EN + " 2 char";
+        public static final String EMPTY_STR = AMT_VALID_004_ST + FIELD_NAME + AMT_VALID_004_EN;
+    }
     public static final class FIRST_NAME{
         private static final String FIELD_NAME = "First Name";
         

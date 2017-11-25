@@ -23,7 +23,7 @@ public class ValidationErrorMsg {
     public static final String AMT_VALID_006_EN = "' has to be of Max";
 
     public static final String AMT_VALID_007_ST = "AM-VALID-007: Length of Field '";
-    public static final String AMT_VALID_007_EN = "' has to be of ";
+    public static final String AMT_VALID_007_EN = "' has to be of";
 
     public static final String REAL_NAME_REGEX_MSG = "chars, hyphen, comma, period, and Apostrophe";
     public static final String CONTENT_NAME_REGEX_MSG = "chars, hyphen, comma, period, space and Apostrophe";
