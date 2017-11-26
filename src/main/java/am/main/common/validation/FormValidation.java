@@ -7,6 +7,7 @@ import am.shared.enums.Forms;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
+import javax.validation.Validator;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import java.util.Set;
 public class FormValidation<T> implements Serializable{
     private EC code;
     private String mainError;
+    private String formName;
     private List<String> formErrors;
 
     public FormValidation() {
@@ -29,12 +31,13 @@ public class FormValidation<T> implements Serializable{
 
     }
     public FormValidation(AppSession session, T object, EC code, Forms form) throws BusinessException {
-        javax.validation.Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<T>> errors = validator.validate(object, am.main.common.validation.groups.FormValidation.class);
 
         if(errors.size() > 0) {
             this.code = code;
             this.mainError = session.getErrorMsg(code, form);
+            this.formName = form.getName();
 
             this.formErrors = new ArrayList<>();
             for (ConstraintViolation<T> error : errors)
@@ -69,6 +72,13 @@ public class FormValidation<T> implements Serializable{
         this.code = code;
     }
 
+    public String getFormName() {
+        return formName;
+    }
+    public void setFormName(String formName) {
+        this.formName = formName;
+    }
+
     public String getErrorList() {
         String errorList = "\n";
         for (String error : this.formErrors)
@@ -85,6 +95,7 @@ public class FormValidation<T> implements Serializable{
 
         if (getCode() != that.getCode()) return false;
         if (getMainError() != null ? !getMainError().equals(that.getMainError()) : that.getMainError() != null) return false;
+        if (getFormName() != null ? !getFormName().equals(that.getFormName()) : that.getFormName() != null) return false;
         return getFormErrors() != null ? getFormErrors().equals(that.getFormErrors()) : that.getFormErrors() == null;
     }
 
@@ -93,6 +104,7 @@ public class FormValidation<T> implements Serializable{
         int result = getCode() != null ? getCode().hashCode() : 0;
         result = 31 * result + (getMainError() != null ? getMainError().hashCode() : 0);
         result = 31 * result + (getFormErrors() != null ? getFormErrors().hashCode() : 0);
+        result = 31 * result + (getFormName() != null ? getFormName().hashCode() : 0);
         return result;
     }
 
@@ -101,6 +113,7 @@ public class FormValidation<T> implements Serializable{
         return "FormValidation{" +
                 "code = " + code +
                 ", mainError = " + mainError +
+                ", formName = " + formName +
                 ", formErrors = " + formErrors +
                 "}\n";
     }
