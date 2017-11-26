@@ -9,7 +9,6 @@ import am.main.data.jaxb.loggerData.AMLogger;
 import am.main.data.jaxb.loggerData.AMLoggers;
 import am.main.exception.BusinessException;
 import am.main.exception.DBException;
-import am.main.exception.GeneralException;
 import am.main.session.AppSession;
 import am.shared.enums.EC;
 import am.shared.enums.IC;
@@ -167,7 +166,7 @@ public class AppLogger implements Serializable{
         }
 
         if (ex != null) {
-            if(ex instanceof DBException || ex instanceof BusinessException || ex instanceof GeneralException)
+            if(ex instanceof DBException || ex instanceof BusinessException)
                 logMsg(session, ERROR, errMsg + ",\nDue to: " + excMsg + "\n", null);
             else
                 logMsg(session, ERROR_EX, errMsg + ",\nDue to: " + excMsg + "\n", ex);
@@ -196,7 +195,7 @@ public class AppLogger implements Serializable{
         }
 
         if (ex != null) {
-            if(ex instanceof DBException || ex instanceof BusinessException || ex instanceof GeneralException)
+            if(ex instanceof DBException || ex instanceof BusinessException)
                 logMsg(session, ERROR, errMsg + ",\nDue to: " + excMsg + "\n", null);
             else
                 logMsg(session, ERROR_EX, errMsg + ",\nDue to: " + excMsg + "\n", ex);

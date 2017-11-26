@@ -33,9 +33,9 @@ public class BusinessException extends WebApplicationException {
         this(session, null, status, errorCode, args);
     }
     public BusinessException(AppSession session, Throwable ex, Status status, EC errorCode, Object ... args) {
-        super(ex, Response.status(status)
-                .entity(session.getErrorMsg(errorCode, args))
-                .type(MediaType.TEXT_PLAIN_TYPE)
+        super(session.getErrorMsg(errorCode, args), ex, Response.status(status)
+                .entity(new Error(session.getErrorMsg(errorCode, args)))
+                .type(MediaType.APPLICATION_JSON_TYPE)
                 .build());
         this.errorCode = errorCode;
         this.formattedError = session.getErrorMsg(errorCode, args);

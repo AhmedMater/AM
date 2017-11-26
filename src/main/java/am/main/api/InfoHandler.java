@@ -75,7 +75,7 @@ public class InfoHandler{
 
             String message = "";
             message = ConfigUtils.readValueFromPropertyFile(session, INFO_MESSAGES, infoCode.toString(), FILE_NAME);
-            message = ConfigUtils.formatMsg(session, message, arguments);
+            message = infoCode.toString() + ": " + ConfigUtils.formatMsg(session, message, arguments);
 
             logger.info(session, AMI.IO_003, "Info Message", infoCode.toString());
             logger.endDebug(session, message);

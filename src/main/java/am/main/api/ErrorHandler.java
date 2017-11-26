@@ -72,7 +72,7 @@ public class ErrorHandler {
 
             String message = "";
             message = ConfigUtils.readValueFromPropertyFile(session, ERROR_MESSAGES, errorCode.toString(), FILE_NAME);
-            message = ConfigUtils.formatMsg(session, message, arguments);
+            message = errorCode.toString() + ": " + ConfigUtils.formatMsg(session, message, arguments);
 
             logger.info(session, AMI.IO_003, "Error Message", errorCode.toString());
             logger.endDebug(session, message);

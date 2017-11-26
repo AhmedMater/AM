@@ -3,6 +3,7 @@ package am.main.common.validation;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;
 import am.shared.enums.EC;
+import am.shared.enums.Forms;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -19,8 +20,6 @@ public class FormValidation<T> implements Serializable{
     private EC code;
     private String mainError;
     private List<String> formErrors;
-    private String errorList = "\n";
-    private boolean valid;
 
     public FormValidation() {
     }
@@ -29,24 +28,20 @@ public class FormValidation<T> implements Serializable{
         this.formErrors = Arrays.asList(formErrors);
 
     }
-    public FormValidation(AppSession session, EC code, T object) throws BusinessException {
+    public FormValidation(AppSession session, T object, EC code, Forms form) throws BusinessException {
         javax.validation.Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<T>> errors = validator.validate(object, am.main.common.validation.groups.FormValidation.class);
 
         if(errors.size() > 0) {
-            this.valid = false;
             this.code = code;
-            this.mainError = session.getErrorMsg(code);
+            this.mainError = session.getErrorMsg(code, form);
 
             this.formErrors = new ArrayList<>();
-            for (ConstraintViolation<T> error : errors) {
-                errorList += error.getMessage() + "\n";
+            for (ConstraintViolation<T> error : errors)
                 formErrors.add(error.getMessage());
-            }
 
             throw new BusinessException(session, this);
-        }else
-            this.valid = true;
+        }
     }
     public FormValidation(String mainError, List<String> formErrors) {
         this.mainError = mainError;
@@ -75,17 +70,10 @@ public class FormValidation<T> implements Serializable{
     }
 
     public String getErrorList() {
+        String errorList = "\n";
+        for (String error : this.formErrors)
+            errorList += error + "\n";
         return errorList;
-    }
-    public void setErrorList(String errorList) {
-        this.errorList = errorList;
-    }
-
-    public boolean isValid() {
-        return valid;
-    }
-    public void setValid(boolean valid) {
-        this.valid = valid;
     }
 
     @Override
@@ -93,15 +81,17 @@ public class FormValidation<T> implements Serializable{
         if (this == o) return true;
         if (!(o instanceof FormValidation)) return false;
 
-        FormValidation that = (FormValidation) o;
+        FormValidation<?> that = (FormValidation<?>) o;
 
+        if (getCode() != that.getCode()) return false;
         if (getMainError() != null ? !getMainError().equals(that.getMainError()) : that.getMainError() != null) return false;
         return getFormErrors() != null ? getFormErrors().equals(that.getFormErrors()) : that.getFormErrors() == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getMainError() != null ? getMainError().hashCode() : 0;
+        int result = getCode() != null ? getCode().hashCode() : 0;
+        result = 31 * result + (getMainError() != null ? getMainError().hashCode() : 0);
         result = 31 * result + (getFormErrors() != null ? getFormErrors().hashCode() : 0);
         return result;
     }
@@ -109,7 +99,8 @@ public class FormValidation<T> implements Serializable{
     @Override
     public String toString() {
         return "FormValidation{" +
-                "mainError = " + mainError +
+                "code = " + code +
+                ", mainError = " + mainError +
                 ", formErrors = " + formErrors +
                 "}\n";
     }
