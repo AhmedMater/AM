@@ -33,8 +33,8 @@ public class BusinessException extends WebApplicationException {
         this(session, null, status, errorCode, args);
     }
     public BusinessException(AppSession session, Throwable ex, Status status, EC errorCode, Object ... args) {
-        super(session.getErrorMsg(errorCode, args), ex, Response.status(status)
-                .entity(new Error(session.getErrorMsg(errorCode, args)))
+        super(ex, Response.status(status)
+                .entity(new AMError(errorCode, session.getErrorMsg(errorCode, args)))
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .build());
         this.errorCode = errorCode;
@@ -45,7 +45,7 @@ public class BusinessException extends WebApplicationException {
     }
     public BusinessException(AppSession session, FormValidation validation) {
         super(Response.status(Status.BAD_REQUEST)
-                .entity(validation)
+                .entity(new AMError(validation))
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .build());
         this.errorCode = validation.getCode();
