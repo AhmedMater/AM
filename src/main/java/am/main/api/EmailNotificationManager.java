@@ -64,7 +64,7 @@ public class EmailNotificationManager {
             FILE_NAME = amConfigManager.getConfigValue(session, AM_CC.EMAIL_NOTIFICATION_MANAGER);
             FILE.EMAIL_NOTIFICATION = ConfigParam.APP_CONFIG_PATH + FILE_NAME;
 
-            EMAIL_NOTIFICATION_CONFIG = ConfigUtils.readRemoteFiles(session, FILE.EMAIL_NOTIFICATION, COMPONENT.EMAIL_NOTIFICATION_MANAGER);
+            EMAIL_NOTIFICATION_CONFIG = ConfigUtils.readRemotePropertyFiles(session, FILE.EMAIL_NOTIFICATION, COMPONENT.EMAIL_NOTIFICATION_MANAGER);
 
             checkEmailPropertyFile(session);
             logger.info(session, AMI.ENM_002, COMPONENT.EMAIL_NOTIFICATION_MANAGER);

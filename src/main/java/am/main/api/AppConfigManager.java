@@ -58,7 +58,7 @@ public class AppConfigManager {
 
         FILE_NAME = amConfigManager.getConfigValue(session, AM_CC.APP_CONFIG);
         FILE.APP_CONFIG_PROPERTIES = ConfigParam.APP_CONFIG_PATH + FILE_NAME;
-        APP_CONFIGURATION = ConfigUtils.loadSystemComponent(session, FILE.APP_CONFIG_PROPERTIES, COMPONENT.APP_CONFIG_MANAGER);
+        APP_CONFIGURATION = ConfigUtils.loadPropertySystemComponent(session, FILE.APP_CONFIG_PROPERTIES, COMPONENT.APP_CONFIG_MANAGER);
 
         //TODO: Check if the File Not Found Log Message that it has to be with the name in the Property File
     }

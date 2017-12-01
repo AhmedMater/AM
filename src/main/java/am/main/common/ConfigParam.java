@@ -16,6 +16,9 @@ public class ConfigParam {
         public static String APP_CONFIG_PROPERTIES;
         public static String SYSTEM_LOGGER;
         public static String LOGGERS_CONFIG;
+
+        public static String TIMER_CALCULATOR_CONFIG;
+        public static String PUBLIC_HOLIDAYS;
     }
 
     public static class COMPONENT{
@@ -25,6 +28,8 @@ public class ConfigParam {
         public static final String APP_CONFIG_MANAGER = "Application Configuration Manager";
         public static final String AM_CONFIG_MANAGER = "AM Configuration Manger";
         public static final String LOGGERS_MANAGER = "AM Loggers Manger";
+        public static final String TIMER_CALCULATOR = "Timer Calculator";
+        public static final String PUBLIC_HOLIDAYS = "Public Holidays";
     }
 
     public static final String LOG4J2_FILE_NAME = "/log4j2.xml";

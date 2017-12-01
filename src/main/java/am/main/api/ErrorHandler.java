@@ -52,7 +52,7 @@ public class ErrorHandler {
 
         FILE_NAME = amConfigManager.getConfigValue(session, AM_CC.ERROR_HANDLER);
         FILE.ERROR_MESSAGES = ConfigParam.APP_CONFIG_PATH + FILE_NAME;
-        ERROR_MESSAGES = ConfigUtils.loadSystemComponent(session, FILE.ERROR_MESSAGES, COMPONENT.ERROR_HANDLER);
+        ERROR_MESSAGES = ConfigUtils.loadPropertySystemComponent(session, FILE.ERROR_MESSAGES, COMPONENT.ERROR_HANDLER);
 
         //TODO: Check if the File Not Found Log Message that it has to be with the name in the Property File
     }

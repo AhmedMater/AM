@@ -5,7 +5,8 @@ package am.main.common.validation;
  */
 public class RegExp {
     public static final String REAL_NAME = "^[A-Za-z\\-\\.',]+$";
-    public static final String CONTENT_NAME = "^[A-Za-z\\-\\.', ]+$";
+    public static final String CONTENT_NAME = "^[A-Za-z0-9\\-\\.', ]+$";
+    public static final String LOOKUP_CHAR = "^[A-Za-z]+$";
     public static final String USERNAME = "^[A-Za-z][A-Za-z0-9\\.\\-_]+$";
     public static final String PASSWORD = "^[A-Za-z0-9\\.\\-_@]+$";
     public static final String POSITIVE_NUM = "^[0-9]+$";

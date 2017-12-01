@@ -72,7 +72,7 @@ public class ValidationErrorMsg extends am.main.common.validation.ValidationErro
         private static final String FIELD_NAME = "Course Name";
 
         public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
-        public static final String LENGTH = AMT_VALID_002_ST + FIELD_NAME + AMT_VALID_002_EN + " 10 to 100 char";
+        public static final String LENGTH = AMT_VALID_002_ST + FIELD_NAME + AMT_VALID_002_EN + " 5 to 100 char";
         public static final String INVALID = AMT_VALID_003_ST + FIELD_NAME + AMT_VALID_003_EN + CONTENT_NAME_REGEX_MSG;
         public static final String EMPTY_STR = AMT_VALID_004_ST + FIELD_NAME + AMT_VALID_004_EN;
     }
@@ -83,6 +83,7 @@ public class ValidationErrorMsg extends am.main.common.validation.ValidationErro
         public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
         public static final String LENGTH = AMT_VALID_007_ST + FIELD_NAME + AMT_VALID_007_EN + " 2 char";
         public static final String EMPTY_STR = AMT_VALID_004_ST + FIELD_NAME + AMT_VALID_004_EN;
+        public static final String INVALID = AMT_VALID_003_ST + FIELD_NAME + AMT_VALID_003_EN + LOOKUP_CHAR_REGEX_MSG;
     }
 
     public static final class COURSE_TYPE{
@@ -91,12 +92,13 @@ public class ValidationErrorMsg extends am.main.common.validation.ValidationErro
         public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
         public static final String LENGTH = AMT_VALID_007_ST + FIELD_NAME + AMT_VALID_007_EN + " 2 char";
         public static final String EMPTY_STR = AMT_VALID_004_ST + FIELD_NAME + AMT_VALID_004_EN;
+        public static final String INVALID = AMT_VALID_003_ST + FIELD_NAME + AMT_VALID_003_EN + LOOKUP_CHAR_REGEX_MSG;
     }
     
     public static final class COURSE_DESCRIPTION{
         private static final String FIELD_NAME = "Course Description";
 
-        public static final String LENGTH = AMT_VALID_006_ST + FIELD_NAME + AMT_VALID_006_EN + " 2 char";
+        public static final String LENGTH = AMT_VALID_006_ST + FIELD_NAME + AMT_VALID_006_EN + " 200 char";
         public static final String EMPTY_STR = AMT_VALID_004_ST + FIELD_NAME + AMT_VALID_004_EN;
     }
 
@@ -105,7 +107,23 @@ public class ValidationErrorMsg extends am.main.common.validation.ValidationErro
 
         public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
         public static final String INVALID = AMT_VALID_003_ST + FIELD_NAME + AMT_VALID_003_EN + POSITIVE_NUM_REGEX_MSG;
+        public static final String MIN_VALUE = AMT_VALID_008_ST + FIELD_NAME + AMT_VALID_008_EN + " 5 Hours";
+         }
+
+    public static final class MIN_PER_DAY{
+        private static final String FIELD_NAME = "Course Minutes-Per-Day";
+
+        public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
+        public static final String INVALID = AMT_VALID_003_ST + FIELD_NAME + AMT_VALID_003_EN + POSITIVE_NUM_REGEX_MSG;
+        public static final String MIN_VALUE = AMT_VALID_008_ST + FIELD_NAME + AMT_VALID_008_EN + " 10 Minutes per Day";
     }
+
+//    public static final class START_DATE{
+//        private static final String FIELD_NAME = "Course Start Date";
+//
+//        public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
+//        public static final String FUTURE = AMT_VALID_009_ST + FIELD_NAME + AMT_VALID_009_EN;
+//    }
 
     public static final class COURSE_REFERENCE{
         private static final String MAIN_FIELD = "Course Reference";
@@ -115,13 +133,14 @@ public class ValidationErrorMsg extends am.main.common.validation.ValidationErro
 
             public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
             public static final String INVALID = AMT_VALID_003_ST + FIELD_NAME + AMT_VALID_003_EN + POSITIVE_NUM_REGEX_MSG;
+            public static final String MIN_VALUE = AMT_VALID_008_ST + FIELD_NAME + AMT_VALID_008_EN + " 1";
         }
 
         public static final class NAME{
             private static final String FIELD_NAME = MAIN_FIELD + " Name";
 
             public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
-            public static final String LENGTH = AMT_VALID_002_ST + FIELD_NAME + AMT_VALID_002_EN + " 10 to 100 char";
+            public static final String LENGTH = AMT_VALID_002_ST + FIELD_NAME + AMT_VALID_002_EN + " 5 to 100 char";
             public static final String INVALID = AMT_VALID_003_ST + FIELD_NAME + AMT_VALID_003_EN + CONTENT_NAME_REGEX_MSG;
             public static final String EMPTY_STR = AMT_VALID_004_ST + FIELD_NAME + AMT_VALID_004_EN;
         }
@@ -132,6 +151,7 @@ public class ValidationErrorMsg extends am.main.common.validation.ValidationErro
             public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
             public static final String LENGTH = AMT_VALID_007_ST + FIELD_NAME + AMT_VALID_007_EN + " 2 char";
             public static final String EMPTY_STR = AMT_VALID_004_ST + FIELD_NAME + AMT_VALID_004_EN;
+            public static final String INVALID = AMT_VALID_003_ST + FIELD_NAME + AMT_VALID_003_EN + LOOKUP_CHAR_REGEX_MSG;
         }
 
         public static final class URL{
@@ -152,13 +172,14 @@ public class ValidationErrorMsg extends am.main.common.validation.ValidationErro
 
             public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
             public static final String INVALID = AMT_VALID_003_ST + FIELD_NAME + AMT_VALID_003_EN + POSITIVE_NUM_REGEX_MSG;
+            public static final String MIN_VALUE = AMT_VALID_008_ST + FIELD_NAME + AMT_VALID_008_EN + " 1";
         }
 
         public static final class NAME{
             private static final String FIELD_NAME = MAIN_FIELD + " Name";
 
             public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
-            public static final String LENGTH = AMT_VALID_002_ST + FIELD_NAME + AMT_VALID_002_EN + " 10 to 100 char";
+            public static final String LENGTH = AMT_VALID_002_ST + FIELD_NAME + AMT_VALID_002_EN + " 5 to 100 char";
             public static final String INVALID = AMT_VALID_003_ST + FIELD_NAME + AMT_VALID_003_EN + CONTENT_NAME_REGEX_MSG;
             public static final String EMPTY_STR = AMT_VALID_004_ST + FIELD_NAME + AMT_VALID_004_EN;
         }
@@ -169,6 +190,7 @@ public class ValidationErrorMsg extends am.main.common.validation.ValidationErro
             public static final String REQUIRED = AMT_VALID_001_ST + FIELD_NAME + AMT_VALID_001_EN;
             public static final String LENGTH = AMT_VALID_007_ST + FIELD_NAME + AMT_VALID_007_EN + " 2 char";
             public static final String EMPTY_STR = AMT_VALID_004_ST + FIELD_NAME + AMT_VALID_004_EN;
+            public static final String INVALID = AMT_VALID_003_ST + FIELD_NAME + AMT_VALID_003_EN + LOOKUP_CHAR_REGEX_MSG;
         }
 
         public static final class URL{

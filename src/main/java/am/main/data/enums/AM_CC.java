@@ -8,7 +8,9 @@ public enum AM_CC {
     INFO_HANDLER("InfoHandler"),
     APP_CONFIG("ApplicationConfiguration"),
     EMAIL_NOTIFICATION_MANAGER("EMailNotificationManager"),
-    LOGGERS_CONFIG("LoggerConfiguration");
+    LOGGERS_CONFIG("LoggerConfiguration"),
+    TIMER_CALCULATOR_CONFIG("TimerCalculatorConfig"),
+    PUBLIC_HOLIDAYS("PublicHolidays");
 
     private String value;
     AM_CC(String value){

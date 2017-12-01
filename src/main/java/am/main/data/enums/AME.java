@@ -36,6 +36,7 @@ public enum AME {
     IO_009("AM-IO-009: Parameter: ''{0}'' is missing from File: ''{1}''"),
     IO_010("AM-IO-010: Value of key: ''{0}'' in Property File: ''{1}'' is empty"),
     IO_011("AM-IO-011: Changing value of ''{0}'' of Code: ''{1}'' failed"),
+    IO_012("AM-IO-012: File path: ''{0}'' is invalid"),
 
     SEQ_001("AMT-SEQ-001: Generating Hashed Password failed"),
     SEQ_002("AMT-SEQ-002: Request ''{0}'' isn't Authorized to Access our Services"),

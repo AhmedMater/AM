@@ -56,7 +56,7 @@ public class InfoHandler{
 
         FILE_NAME = amConfigManager.getConfigValue(session, AM_CC.INFO_HANDLER);
         FILE.INFO_MESSAGES = ConfigParam.APP_CONFIG_PATH + FILE_NAME;
-        INFO_MESSAGES = ConfigUtils.loadSystemComponent(session, FILE.INFO_MESSAGES, COMPONENT.INFO_HANDLER);
+        INFO_MESSAGES = ConfigUtils.loadPropertySystemComponent(session, FILE.INFO_MESSAGES, COMPONENT.INFO_HANDLER);
 
         //TODO: Check if the File Not Found Log Message that it has to be with the name in the Property File
     }

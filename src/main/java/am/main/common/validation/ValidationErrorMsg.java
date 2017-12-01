@@ -25,9 +25,16 @@ public class ValidationErrorMsg {
     public static final String AMT_VALID_007_ST = "AM-VALID-007: Length of Field '";
     public static final String AMT_VALID_007_EN = "' has to be of";
 
+    public static final String AMT_VALID_008_ST = "AM-VALID-008: Value of Field '";
+    public static final String AMT_VALID_008_EN = "' has to be of Minimum";
+
+    public static final String AMT_VALID_009_ST = "AM-VALID-009: Value of Field '";
+    public static final String AMT_VALID_009_EN = "' has to be in the Future";
+
     public static final String REAL_NAME_REGEX_MSG = "chars, hyphen, comma, period, and Apostrophe";
-    public static final String CONTENT_NAME_REGEX_MSG = "chars, hyphen, comma, period, space and Apostrophe";
+    public static final String CONTENT_NAME_REGEX_MSG = "chars, numbers, hyphen, comma, period, space and Apostrophe";
     public static final String USERNAME_REGEX_MSG = "chars, numbers, period, hyphen, and Underscore";
     public static final String PASSWORD_REGEX_MSG = "chars, numbers, period, hyphen, Ampersand, and Underscore";
     public static final String POSITIVE_NUM_REGEX_MSG = "positive numbers";
+    public static final String LOOKUP_CHAR_REGEX_MSG = "chars";
 }

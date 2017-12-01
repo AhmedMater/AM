@@ -10,7 +10,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,12 +69,12 @@ public class ConfigUtils {
     }
 
     /**
-     * Reads Remote File into Properties Object
+     * Reads Remote Properties File into Properties Object
      * @param filePath Resource File Name
      * @return Properties Object
      */
-    public static Properties readRemoteFiles(AppSession appSession, String filePath, String component) throws Exception {
-        String FN_NAME = "readResourceFiles";
+    public static Properties readRemotePropertyFiles(AppSession appSession, String filePath, String component) throws Exception {
+        String FN_NAME = "readRemotePropertyFiles";
         AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         try {
             logger.startDebug(session, filePath, component);
@@ -95,6 +102,42 @@ public class ConfigUtils {
                 throw ex;
             else
                 throw new GeneralException(session, ex, AME.IO_003, filePath);
+        }
+    }
+
+    /**
+     * Reads Remote Text File into Properties Object
+     * @param filePathStr Resource File Name
+     * @return Properties Object
+     */
+    public static List<String> readRemoteTextFiles(AppSession appSession, String filePathStr, String component) throws Exception {
+        String FN_NAME = "readRemoteTextFiles";
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        try {
+            logger.startDebug(session, filePathStr, component);
+            List<String> fileLines = new ArrayList<>();
+
+            if(filePathStr == null || filePathStr.isEmpty())
+                throw new GeneralException(session, AME.IO_001, filePathStr, component);
+
+            try {
+                Path filePath = Paths.get(filePathStr);
+                fileLines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
+            } catch (FileNotFoundException e) {
+                throw new GeneralException(session, e, AME.IO_002, filePathStr);
+            } catch (InvalidPathException e) {
+                throw new GeneralException(session, e, AME.IO_012, filePathStr);
+            }
+
+            logger.info(session, AMI.IO_001, filePathStr);
+
+            logger.endDebug(session);
+            return fileLines;
+        } catch (Exception ex){
+            if(ex instanceof GeneralException)
+                throw ex;
+            else
+                throw new GeneralException(session, ex, AME.IO_003, filePathStr);
         }
     }
 
@@ -185,17 +228,43 @@ public class ConfigUtils {
         }
     }
 
-    public static Properties loadSystemComponent(AppSession appSession, String fileName, String componentName){
-        String FN_NAME = "loadSystemComponent";
+    public static Properties loadPropertySystemComponent(AppSession appSession, String fileName, String componentName){
+        String FN_NAME = "loadPropertySystemComponent";
         AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
         try {
             logger.startDebug(session, fileName, componentName);
 
-            Properties properties = ConfigUtils.readRemoteFiles(session, fileName, componentName);
+            Properties properties = new Properties();
+
+            if(fileName.endsWith(".properties"))
+                properties = ConfigUtils.readRemotePropertyFiles(session, fileName, componentName);
+            else if(fileName.endsWith(".txt")){
+                List<String> fileLines = ConfigUtils.readRemoteTextFiles(session, fileName, componentName);
+                properties.put("0", fileLines);
+            }
 
             logger.info(session, AMI.SYS_002, componentName);
             logger.endDebug(session);
+
             return properties;
+        }catch (Exception ex){
+            logger.error(session, ex, AME.SYS_006, componentName);
+            return null;
+        }
+    }
+
+    public static List<String> loadTextSystemComponent(AppSession appSession, String fileName, String componentName){
+        String FN_NAME = "loadTextSystemComponent";
+        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        try {
+            logger.startDebug(session, fileName, componentName);
+
+            List<String> fileLines = ConfigUtils.readRemoteTextFiles(session, fileName, componentName);
+
+            logger.info(session, AMI.SYS_002, componentName);
+            logger.endDebug(session);
+
+            return fileLines;
         }catch (Exception ex){
             logger.error(session, ex, AME.SYS_006, componentName);
             return null;
