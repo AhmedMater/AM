@@ -6,13 +6,12 @@ import am.shared.enums.EC;
 import am.shared.enums.Forms;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.Path;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * Created by ahmed.motair on 11/20/2017.
@@ -40,8 +39,76 @@ public class FormValidation<T> implements Serializable{
             this.formName = form.getName();
 
             this.formErrors = new ArrayList<>();
-            for (ConstraintViolation<T> error : errors)
-                formErrors.add(error.getMessage());
+            for (ConstraintViolation<T> error : errors) {
+                EC errorCode = EC.valueOf(error.getMessage().replaceAll("-", "_"));
+                String message = "";
+                String fieldName = "";
+                String fieldValue = "";
+
+                if(!errorCode.equals(EC.AMT_0003))
+                    fieldValue = error.getInvalidValue().toString();
+
+                //Get the Field Name
+                Path fieldPath = error.getPropertyPath();
+                for (Path.Node node : fieldPath) {
+                    if (!node.getName().isEmpty()) {
+//                        fieldName = node.getName();//object.getClass().getField("FIELDS").;
+                        try {
+                            Method method = object.getClass().getMethod("getFIELDS");
+                            Map<String, String> FIELDS = (Map<String, String>) method.invoke(object);
+                            fieldName = FIELDS.get(node.getName());
+                            break;
+                        }catch (Exception ex){
+                            throw new BusinessException(session, EC.AMT_0000);
+                        }
+                    }
+                }
+
+                if(fieldName.isEmpty())
+                    throw new BusinessException(session, EC.AMT_0000);
+
+                Map<String, Object> attributes = error.getConstraintDescriptor().getAttributes();
+                Integer maxLength, minLength, eqLength;
+                Long minMaxValue;
+
+                switch (errorCode){
+                    case AMT_0003: case AMT_0005:
+                        message = session.getErrorMsg(errorCode, fieldName);
+                        break;
+                    case AMT_0004:
+                        String regexError = RegExp.MESSAGES.get(attributes.get("regexp"));
+                        message = session.getErrorMsg(errorCode, fieldValue, fieldName, regexError);
+                        break;
+                    case AMT_0012: case AMT_0013:
+                        message = session.getErrorMsg(errorCode, fieldValue, fieldName);
+                        break;
+                    case AMT_0006:
+                        maxLength = (Integer) attributes.get("max");
+                        message = session.getErrorMsg(errorCode, fieldValue, fieldName, maxLength);
+                        break;
+                    case AMT_0007:
+                        minLength = (Integer) attributes.get("min");
+                        message = session.getErrorMsg(errorCode, fieldValue, fieldName, minLength);
+                        break;
+                    case AMT_0008: case AMT_0009:
+                        maxLength = (Integer) attributes.get("max");
+                        minLength = (Integer) attributes.get("min");
+
+                        if(errorCode.equals(EC.AMT_0009) && maxLength.equals(minLength))
+                            message = session.getErrorMsg(errorCode, fieldValue, fieldName, minLength);
+                        else if(errorCode.equals(EC.AMT_0008) && !maxLength.equals(minLength))
+                            message = session.getErrorMsg(errorCode, fieldValue, fieldName, minLength, maxLength);
+                        else
+                            throw new BusinessException(session, EC.AMT_0000);
+
+                        break;
+                    case AMT_0010: case AMT_0011:
+                        minMaxValue = (Long) attributes.get("value");
+                        message = session.getErrorMsg(errorCode, fieldValue, fieldName, minMaxValue);
+                        break;
+                }
+                formErrors.add(message);
+            }
 
             throw new BusinessException(session, this);
         }
