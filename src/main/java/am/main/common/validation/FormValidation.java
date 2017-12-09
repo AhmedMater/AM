@@ -52,14 +52,13 @@ public class FormValidation<T> implements Serializable{
                 Path fieldPath = error.getPropertyPath();
                 for (Path.Node node : fieldPath) {
                     if (!node.getName().isEmpty()) {
-//                        fieldName = node.getName();//object.getClass().getField("FIELDS").;
                         try {
                             Method method = object.getClass().getMethod("getFIELDS");
                             Map<String, String> FIELDS = (Map<String, String>) method.invoke(object);
                             fieldName = FIELDS.get(node.getName());
                             break;
                         }catch (Exception ex){
-                            throw new BusinessException(session, EC.AMT_0000);
+                            fieldName = node.getName();
                         }
                     }
                 }
