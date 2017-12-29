@@ -13,7 +13,6 @@ public class PaginationInfo implements Serializable {
 
     public PaginationInfo() {
     }
-
     public PaginationInfo(int total, int pageSize, int pageNum) {
         this.total = total;
         this.pageSize = pageSize;

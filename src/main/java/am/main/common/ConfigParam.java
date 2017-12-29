@@ -37,4 +37,8 @@ public class ConfigParam {
     public static final String LOGGER_FILE_NAME = "../logs/" + LOGGER_FOLDER + "/{0}.log";
     public static final String LOGGER_FILE_PATTERN = "../logs/" + LOGGER_FOLDER + "/{0}/{0}-%i-%d'{yyyy-MM-dd HH-mm-ss.SSS'}.log";
     public static final String TEMPLATE = "Template";
+
+
+    public static final String ASC_ORDER = "ASC";
+    public static final String DESC_ORDER = "DESC";
 }
