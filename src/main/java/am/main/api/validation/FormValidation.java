@@ -1,5 +1,6 @@
-package am.main.common.validation;
+package am.main.api.validation;
 
+import am.main.common.RegExp;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;
 import am.shared.enums.EC;
@@ -31,7 +32,7 @@ public class FormValidation<T> implements Serializable{
     }
     public FormValidation(AppSession session, T object, EC code, Forms form) throws BusinessException {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<T>> errors = validator.validate(object, am.main.common.validation.groups.FormValidation.class);
+        Set<ConstraintViolation<T>> errors = validator.validate(object, am.main.api.validation.groups.FormValidation.class);
 
         if(errors.size() > 0) {
             this.code = code;
@@ -46,7 +47,8 @@ public class FormValidation<T> implements Serializable{
                 String fieldValue = "";
 
                 if(!errorCode.equals(EC.AMT_0003))
-                    fieldValue = error.getInvalidValue().toString();
+                    fieldValue = (error.getInvalidValue() == null) ? "Null" : error.getInvalidValue().toString();
+
 
                 //Get the Field Name
                 Path fieldPath = error.getPropertyPath();
@@ -78,7 +80,7 @@ public class FormValidation<T> implements Serializable{
                         String regexError = RegExp.MESSAGES.get(attributes.get("regexp"));
                         message = session.getErrorMsg(errorCode, fieldValue, fieldName, regexError);
                         break;
-                    case AMT_0012: case AMT_0013:
+                    case AMT_0012: case AMT_0013: case AMT_0023:
                         message = session.getErrorMsg(errorCode, fieldValue, fieldName);
                         break;
                     case AMT_0006:

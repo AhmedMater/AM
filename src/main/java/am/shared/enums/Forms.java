@@ -7,7 +7,8 @@ public enum Forms {
     REGISTER("Register"),
     LOGIN("Login"),
     CHANGE_ROLE("Change Role"),
-    NEW_COURSE("New Course");
+    NEW_COURSE("New Course"),
+    COURSE_LIST_FILTERS("Course List Filters");
 
     private String name;
 

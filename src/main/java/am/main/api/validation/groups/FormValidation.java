@@ -1,4 +1,4 @@
-package am.main.common.validation.groups;
+package am.main.api.validation.groups;
 
 import javax.validation.GroupSequence;
 import javax.validation.groups.Default;
@@ -19,4 +19,5 @@ public interface FormValidation {
     String MIN_VALUE = "AMT_0011";
     String FUTURE_DATE = "AMT_0012";
     String POSITIVE_NUM = "AMT_0013";
+    String POSITIVE_NUM_AND_ZERO = "AMT_0023";
 }

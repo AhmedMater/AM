@@ -1,6 +1,6 @@
 package am.main.exception;
 
-import am.main.common.validation.FormValidation;
+import am.main.api.validation.FormValidation;
 import am.shared.enums.EC;
 
 import java.io.Serializable;

@@ -1,6 +1,6 @@
 package am.main.exception;
 
-import am.main.common.validation.FormValidation;
+import am.main.api.validation.FormValidation;
 import am.main.session.AppSession;
 import am.shared.enums.EC;
 
@@ -55,18 +55,7 @@ public class BusinessException extends WebApplicationException {
         this.CLASS = session.getCLASS();
         this.METHOD = session.getMethod();
     }
-//    public BusinessException(BusinessException ex) {
-//        super(Response.status(Status.BAD_REQUEST)
-//                .entity(new AMError(ex.read()))
-//                .type(MediaType.APPLICATION_JSON_TYPE)
-//                .build());
-//        this.errorCode = validation.getCode();
-//        this.formattedError = validation.getMainError() + "\n" + validation.getErrorList();
-//        this.fullErrMsg = session.toString() + this.formattedError;
-//        this.errorList = validation;
-//        this.CLASS = session.getCLASS();
-//        this.METHOD = session.getMethod();
-//    }
+
 
     public EC getErrorCode() {
         return errorCode;

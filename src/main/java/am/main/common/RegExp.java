@@ -1,4 +1,4 @@
-package am.main.common.validation;
+package am.main.common;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,7 +18,7 @@ public class RegExp {
     public static final String YOUTUBE_VIDEO = "^(https?\\:\\/\\/)?(www\\.youtube\\.com|youtu\\.?be)\\/.+$";
     public static final String YOUTUBE_PLAYLIST = "^http(s)?:\\/\\/(?:www\\.)?youtube\\.com\\/(playlist\\?|watch\\?v=[a-zA-Z0-9_\\-]+&)list=[a-zA-Z0-9_\\-]+$";
 
-    public static final String ORDER_BY = "^(Asc|Desc)$";
+    public static final String ORDER_DIRECTION = "^(Asc|Desc)$";
 
     public static final Map<String, String> MESSAGES = Collections.unmodifiableMap(
        new HashMap<String, String>(){{
@@ -29,7 +29,7 @@ public class RegExp {
            put(PASSWORD, "chars, numbers, period, hyphen, Ampersand, and Underscore");
            put(EMAIL, "valid Emails");
            put(URL, "valid URLs");
-           put(ORDER_BY, "Asc or Desc");
+           put(ORDER_DIRECTION, "Asc or Desc");
            put(YOUTUBE_VIDEO, "valid YouTube URLs");
            put(YOUTUBE_PLAYLIST, "valid YouTube List URLs");
        }}

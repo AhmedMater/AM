@@ -1,9 +1,10 @@
 package am.main.data.dto;
 
-import am.main.common.validation.RegExp;
-import am.main.common.validation.groups.*;
 
-import javax.validation.constraints.NotEmpty;
+import am.main.api.validation.groups.*;
+import am.main.common.RegExp;
+
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -24,17 +25,17 @@ public class SortingInfo {
             }}
     );
 
-    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
-    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
+    @Size(min = 3, max = 4, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.ORDER_DIRECTION, message = FormValidation.REGEX, groups = InvalidValidation.class)
+    @NotBlank(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String direction;
 
     @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
-    @Size(min = 3, max = 4, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
-    @Pattern(regexp = RegExp.ORDER_BY, message = FormValidation.REGEX, groups = InvalidValidation.class)
-    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
+    @NotBlank(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String by;
 
     public SortingInfo() {
+        this.direction = DESC_ORDER;
     }
     public SortingInfo(String by) {
         this.by = by;
@@ -60,6 +61,10 @@ public class SortingInfo {
 
     public String getSortStatement(){
         return "ORDER BY " + by + " " + direction;
+    }
+
+    public static Map<String, String> getFIELDS() {
+        return FIELDS;
     }
 
     @Override
