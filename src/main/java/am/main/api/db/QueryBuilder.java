@@ -1,8 +1,10 @@
 package am.main.api.db;
 
+import am.main.api.AppLogger;
 import am.main.data.dto.ListResultSet;
 import am.main.data.dto.SortingInfo;
 import am.main.data.vto.PaginationInfo;
+import am.main.session.AppSession;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -31,15 +33,25 @@ public class QueryBuilder<T> {
     private ListResultSet<T> resultSet;
     private Class<T> className;
 
-    public QueryBuilder(Class<T> className) {
+    private AppLogger logger;
+    private AppSession session;
+
+    private final String CLASS;
+
+    public QueryBuilder(Class<T> className, AppLogger logger, AppSession session) {
         this.className = className;
         this.conditions = new ArrayList<>();
         this.placeHolders = new ArrayList<>();
         this.where = "";
+        this.logger = logger;
+        this.CLASS = QueryBuilder.class.getSimpleName();
+        this.session = session.updateSession(CLASS, "Constructor");
     }
     public QueryBuilder(List<HQLCondition> conditions, String where) {
         this.conditions = conditions;
         this.where = where;
+        this.CLASS = QueryBuilder.class.getSimpleName();
+        this.session = session.updateSession(CLASS, "Constructor");
     }
 
     public List<HQLCondition> getConditions() {
@@ -50,12 +62,18 @@ public class QueryBuilder<T> {
     }
 
     public String constructWhere() {
+        String FN_NAME = "constructWhere";
+        session = session.updateSession(FN_NAME);
+        logger.startDebug(session);
+
         if(this.conditions.size()>0) {
             this.where += " WHERE " + conditions.get(0).getCondition();
 
             for (int i=1; i<conditions.size(); i++)
                 this.where += " AND " + conditions.get(i).getCondition();
         }
+
+        logger.endDebug(session, where);
         return where;
     }
     public void setWhere(String where) {
@@ -100,6 +118,10 @@ public class QueryBuilder<T> {
     }
 
     public void addCondition(HQLCondition condition) {
+        String FN_NAME = "addCondition";
+        session = session.updateSession(FN_NAME);
+        logger.startDebug(session, condition);
+
         if(condition.getApplicable()) {
             if(condition.getType().equals(Date.class)) {
                 if(condition.getFrom() != null && condition.getFromPH() == null) {
@@ -111,9 +133,16 @@ public class QueryBuilder<T> {
                 condition.setPlaceHolder(randomPlaceHolder());
             this.conditions.add(condition);
         }
+
+        logger.endDebug(session);
     }
 
+    @Transactional
     public void executeQuery(EntityManager em){
+        String FN_NAME = "executeQuery";
+        session = session.updateSession(FN_NAME);
+        logger.startDebug(session, em);
+
         this.constructWhere();
 
         String dataQueryStr = dataSelect + " " + from + " " + where + " " + sorting.getSortStatement();
@@ -139,9 +168,15 @@ public class QueryBuilder<T> {
         resultSet = new ListResultSet<T>();
         resultSet.setData(data);
         resultSet.setPagination(pagination);
+
+        logger.endDebug(session);
     }
 
     private <E> TypedQuery<E> addParameters(TypedQuery<E> query){
+        String FN_NAME = "addParameters";
+        session = session.updateSession(FN_NAME);
+        logger.startDebug(session, query);
+
         for (HQLCondition condition : conditions) {
             if(condition.getType().equals(Date.class)) {
                 query.setParameter(condition.getFromPH(), condition.getFrom());
@@ -151,6 +186,7 @@ public class QueryBuilder<T> {
             else
                 query.setParameter(condition.getPlaceHolder(), condition.getValue());
         }
+        logger.endDebug(session, query);
         return query;
     }
 

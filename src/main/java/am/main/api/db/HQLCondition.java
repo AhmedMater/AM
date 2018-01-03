@@ -21,6 +21,7 @@ public class HQLCondition<T>{
     private T from;
     private T to;
 
+    private String tableAlias;
     private String attribute;
     private Boolean isApplicable;
 
@@ -29,22 +30,28 @@ public class HQLCondition<T>{
 
     public HQLCondition() {
     }
-    public HQLCondition(T value, String attribute, Operators operators) {
+    public HQLCondition(T value, String attribute, Operators operator) {
+        this(value, null, attribute, operator);
+    }
+    public HQLCondition(T from, T to, String attribute) {
+        this(from, to, null, attribute);
+    }
+    public HQLCondition(T value, String tableAlias, String attribute, Operators operator) {
         this.value = value;
-        this.attribute = attribute;
-        this.operator = operators;
+        this.attribute = (tableAlias != null) ? tableAlias + "." + attribute : attribute;
+        this.operator = operator;
         if(value != null) {
             this.isApplicable = true;
             this.type = value.getClass();
         }else
             this.isApplicable = false;
     }
-    public HQLCondition(T from, T to, String attribute) {
+    public HQLCondition(T from, T to, String tableAlias, String attribute) {
         this.from = from;
         this.to = to;
-        this.attribute = attribute;
+        this.attribute = (tableAlias != null) ? tableAlias + "." + attribute : attribute;
         this.isApplicable = !(from == null && to == null);
-        this.type = from.getClass();
+        this.type = Date.class;
     }
 
     public String getPlaceHolder() {
