@@ -124,13 +124,14 @@ public class QueryBuilder<T> {
 
         if(condition.getApplicable()) {
             if(condition.getType().equals(Date.class)) {
-                if(condition.getFrom() != null && condition.getFromPH() == null) {
+                if(condition.getFrom() != null)
                     condition.setFromPH(randomPlaceHolder());
-                    addCondition(condition);
-                }else if(condition.getTo() != null && condition.getToPH() == null)
+
+                if(condition.getTo() != null)
                     condition.setToPH(randomPlaceHolder());
             }else
                 condition.setPlaceHolder(randomPlaceHolder());
+
             this.conditions.add(condition);
         }
 
@@ -179,8 +180,11 @@ public class QueryBuilder<T> {
 
         for (HQLCondition condition : conditions) {
             if(condition.getType().equals(Date.class)) {
-                query.setParameter(condition.getFromPH(), condition.getFrom());
-                query.setParameter(condition.getToPH(), condition.getTo());
+                if(condition.getFromPH() != null)
+                    query.setParameter(condition.getFromPH(), condition.getFrom());
+
+                if(condition.getToPH() != null)
+                    query.setParameter(condition.getToPH(), condition.getTo());
             }else if(condition.getOperator().equals(LIKE))
                 query.setParameter(condition.getPlaceHolder(), "%" + condition.getValue() + "%");
             else
