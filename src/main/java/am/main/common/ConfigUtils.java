@@ -22,7 +22,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static am.shared.session.Phase.AM_LIBRARY;
+import static am.shared.enums.Phase.AM_LIBRARY;
 
 /**
  * Created by ahmed.motair on 9/7/2017.

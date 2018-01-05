@@ -12,7 +12,7 @@ import am.main.exception.DBException;
 import am.main.session.AppSession;
 import am.shared.enums.EC;
 import am.shared.enums.IC;
-import am.shared.session.Phase;
+import am.shared.enums.Phase;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.unitils.thirdparty.org.apache.commons.io.IOUtils;

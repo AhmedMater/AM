@@ -13,7 +13,7 @@ import am.main.data.enums.AM_CC;
 import am.main.exception.GeneralException;
 import am.main.session.AppSession;
 import am.main.data.enums.Source;
-import am.shared.session.Phase;
+import am.shared.enums.Phase;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -24,7 +24,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
-import static am.shared.session.Phase.AM_LIBRARY;
+import static am.shared.enums.Phase.AM_LIBRARY;
 
 
 @Singleton

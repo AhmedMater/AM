@@ -18,7 +18,7 @@ import javax.validation.ConstraintViolationException;
 import java.io.Serializable;
 import java.util.*;
 
-import static am.shared.session.Phase.AM_LIBRARY;
+import static am.shared.enums.Phase.AM_LIBRARY;
 
 
 /**

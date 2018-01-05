@@ -109,5 +109,11 @@
             <version>5.2.4.Final</version>
         </dependency>
 
+        <!-- AMT-Shared-Resources -->
+        <dependency>
+            <groupId>com.amt.www</groupId>
+            <artifactId>AMT-Shared-Resources</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

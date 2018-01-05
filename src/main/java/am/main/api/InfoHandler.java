@@ -12,14 +12,14 @@ import am.main.exception.GeneralException;
 import am.main.session.AppSession;
 import am.main.data.enums.Source;
 import am.shared.enums.IC;
-import am.shared.session.Phase;
+import am.shared.enums.Phase;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Properties;
 
-import static am.shared.session.Phase.AM_LIBRARY;
+import static am.shared.enums.Phase.AM_LIBRARY;
 
 /**
  * Created by ahmed.motair on 9/8/2017.

@@ -10,7 +10,9 @@ import javax.inject.Inject;
 import java.security.MessageDigest;
 import java.util.Base64;
 
-import static am.shared.session.Phase.AM_LIBRARY;
+import static am.shared.enums.Phase.AM_LIBRARY;
+
+//import static am.shared.am.shared.enums.Phase.AM_LIBRARY;
 
 /**
  * Created by ahmed.motair on 9/26/2017.
