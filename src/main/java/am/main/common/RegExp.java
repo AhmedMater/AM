@@ -9,6 +9,7 @@ import java.util.Map;
  */
 public class RegExp {
     public static final String REAL_NAME = "^[A-Za-z\\-\\.',]+$";
+    public static final String FULL_NAME = "^[A-Za-z\\-\\.', ]+$";
     public static final String CONTENT_NAME = "^[A-Za-z0-9\\-\\.', ]+$";
     public static final String LOOKUP = "^[A-Za-z]+$";
     public static final String USERNAME = "^[A-Za-z][A-Za-z0-9\\.\\-_]+$";
@@ -23,6 +24,7 @@ public class RegExp {
     public static final Map<String, String> MESSAGES = Collections.unmodifiableMap(
        new HashMap<String, String>(){{
            put(REAL_NAME, "chars, hyphen, comma, period, and Apostrophe");
+           put(FULL_NAME, "chars, hyphen, comma, period, Apostrophe and space");
            put(CONTENT_NAME, "chars, numbers, hyphen, comma, period, space and Apostrophe");
            put(LOOKUP, "chars");
            put(USERNAME, "chars, numbers, period, hyphen, and Underscore");
