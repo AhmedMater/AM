@@ -1,10 +1,12 @@
 package am.main.api.validation;
 
+import am.main.api.AppLogger;
 import am.main.common.RegExp;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;
 import am.shared.enums.EC;
 import am.shared.enums.Forms;
+import am.shared.enums.IC;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
@@ -30,7 +32,9 @@ public class FormValidation<T> implements Serializable{
         this.formErrors = Arrays.asList(formErrors);
 
     }
-    public FormValidation(AppSession session, T object, EC code, Forms form) throws BusinessException {
+    public FormValidation(AppSession session, AppLogger logger, T object, EC code, Forms form) throws BusinessException {
+        logger.info(session, IC.AMT_0008, form.getName());
+
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<T>> errors = validator.validate(object, am.main.api.validation.groups.FormValidation.class);
 
@@ -48,7 +52,6 @@ public class FormValidation<T> implements Serializable{
 
                 if(!errorCode.equals(EC.AMT_0003))
                     fieldValue = (error.getInvalidValue() == null) ? "Null" : error.getInvalidValue().toString();
-
 
                 //Get the Field Name
                 Path fieldPath = error.getPropertyPath();
@@ -113,6 +116,7 @@ public class FormValidation<T> implements Serializable{
 
             throw new BusinessException(session, this);
         }
+        logger.info(session, IC.AMT_0001, form.getName());
     }
     public FormValidation(String mainError, List<String> formErrors) {
         this.mainError = mainError;
@@ -148,10 +152,10 @@ public class FormValidation<T> implements Serializable{
     }
 
     public String getErrorList() {
-        String errorList = "\n";
+        String errorList = "";
         for (String error : this.formErrors)
-            errorList += error + "\n";
-        return errorList;
+            errorList += "\t" + error + "\n";
+        return errorList.substring(0, errorList.length()-1);
     }
 
     @Override

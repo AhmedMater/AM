@@ -6,6 +6,7 @@ package am.main.data.enums;
 public enum AM_CC {
     ERROR_HANDLER("ErrorHandler"),
     INFO_HANDLER("InfoHandler"),
+    WARNING_HANDLER("WarningHandler"),
     APP_CONFIG("ApplicationConfiguration"),
     EMAIL_NOTIFICATION_MANAGER("EMailNotificationManager"),
     LOGGERS_CONFIG("LoggerConfiguration"),

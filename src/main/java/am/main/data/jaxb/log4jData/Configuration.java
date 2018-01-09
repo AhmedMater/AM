@@ -1,7 +1,7 @@
 
 package am.main.data.jaxb.log4jData;
 
-import am.main.data.jaxb.loggerData.AMLogger;
+import am.shared.enums.Phase;
 
 import javax.xml.bind.annotation.*;
 import java.text.MessageFormat;
@@ -209,7 +209,7 @@ public class Configuration implements Cloneable{
      * 
      * @param value
      *     allowed object is
-     *     {@link Configuration.Loggers }
+     *     {@link Loggers }
      *     
      */
     public void setLoggers(Loggers value) {
@@ -241,19 +241,19 @@ public class Configuration implements Cloneable{
     }
 
 
-    public void addNewLogger(AMLogger logger, Logger templateLogger, RollingFile templateRolling) throws Exception{
+    public void addNewLogger(Phase logger, Logger templateLogger, RollingFile templateRolling) throws Exception{
         RollingFile newRollingFile = templateRolling.clone();
 
-        newRollingFile.setName(logger.getName());
-        newRollingFile.setFileName(MessageFormat.format(LOGGER_FILE_NAME, logger.getName()));
-        newRollingFile.setFilePattern(MessageFormat.format(LOGGER_FILE_PATTERN, logger.getName()));
+        newRollingFile.setName(logger.value());
+        newRollingFile.setFileName(MessageFormat.format(LOGGER_FILE_NAME, logger.category().name(), logger.value()));
+        newRollingFile.setFilePattern(MessageFormat.format(LOGGER_FILE_PATTERN, logger.category().name(), logger.value()));
         this.getAppenders().getRollingFile().add(newRollingFile);
 
         Logger newLogger = templateLogger.clone();
 
-        newLogger.setName(logger.getName());
-        newLogger.setLevel(logger.getLevel());
-        newLogger.getAppenderRef().setRef(logger.getName());
+        newLogger.setName(logger.value());
+        newLogger.setLevel(logger.level().level());
+        newLogger.getAppenderRef().setRef(logger.value());
         this.getLoggers().getLogger().add(newLogger);
     }
     @Override

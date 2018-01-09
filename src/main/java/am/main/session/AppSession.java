@@ -1,63 +1,49 @@
 package am.main.session;
 
-import am.main.api.ErrorHandler;
-import am.main.api.InfoHandler;
-import am.main.data.enums.Interface;
-import am.main.data.enums.Source;
-import am.shared.enums.EC;
-import am.shared.enums.IC;
-import am.shared.enums.Phase;
+import am.main.api.MessageHandler;
+import am.main.data.enums.AME;
+import am.shared.enums.*;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 
 /**
  * Created by mohamed.elewa on 13/05/2017.
  */
 public class AppSession implements Serializable{
-    private Source source;
-    private Interface _interface;
-    private Phase phase;
+    private Source SOURCE;
+    private Interface INTERFACE;
+    private Phase PHASE;
     private String ip;
     private String username;
     private String id;
     private String CLASS;
-    private String method;
-    private ErrorHandler errorHandler;
-    private InfoHandler infoHandler;
+    private String METHOD;
+    private MessageHandler messageHandler;
 
     public AppSession(){}
-    public AppSession(Source source, Interface _interface, Phase phase, String CLASS, String method, ErrorHandler errorHandler, InfoHandler infoHandler) {
-        this(source, _interface, phase, null, null, CLASS, method, errorHandler, infoHandler, null);
+    public AppSession(Source SOURCE, Phase PHASE, String CLASS) {
+        this(SOURCE, null, PHASE, null, null, CLASS, null, null, null);
     }
-    public AppSession(Source source, Interface _interface, Phase phase, String CLASS, String method) {
-        this(source, _interface, phase, null, null, CLASS, method, null, null, null);
+    public AppSession(Source SOURCE, Interface INTERFACE, Phase PHASE){
+        this(SOURCE, INTERFACE, PHASE, null, null, null, null, null, null);
     }
-    public AppSession(Source source, Interface _interface, Phase phase, String id, String CLASS, String method, ErrorHandler errorHandler, InfoHandler infoHandler, String ip) {
-        this(source, _interface, phase, null, id, CLASS, method, errorHandler, infoHandler, ip);
+    public AppSession(Source SOURCE, Interface INTERFACE, Phase PHASE, String CLASS, String METHOD) {
+        this(SOURCE, INTERFACE, PHASE, null, null, CLASS, METHOD, null, null);
     }
-    public AppSession(Source source, Interface _interface, Phase phase, String username, String id, String CLASS, String method, ErrorHandler errorHandler, InfoHandler infoHandler, String ip) {
-        this.source = source;
-        this._interface = _interface;
-        this.phase = phase;
+    public AppSession(Source SOURCE, Interface INTERFACE, Phase PHASE, String id, String CLASS, String METHOD, String ip, MessageHandler messageHandler) {
+        this(SOURCE, INTERFACE, PHASE, null, id, CLASS, METHOD, ip, messageHandler);
+    }
+    public AppSession(Source SOURCE, Interface INTERFACE, Phase PHASE, String username, String id, String CLASS, String METHOD, String ip, MessageHandler messageHandler) {
+        this.SOURCE = SOURCE;
+        this.INTERFACE = INTERFACE;
+        this.PHASE = PHASE;
         this.username = username;
         this.id = id;
         this.CLASS = CLASS;
-        this.method = method;
-        this.errorHandler = errorHandler;
-        this.infoHandler = infoHandler;
+        this.METHOD = METHOD;
         this.ip = ip;
-    }
-    public AppSession(Source source, Interface _interface, String CLASS, String method) {
-        this(source, _interface, null, null, null, CLASS, method, null, null, null);
-    }
-    public AppSession(Source source, Phase phase, String CLASS, String method) {
-        this(source, null, phase, null, null, CLASS, method, null, null, null);
-    }
-    public AppSession(Source source, Interface _interface, Phase phase, String CLASS, String method, ErrorHandler errorHandler, InfoHandler infoHandler, String ip) {
-        this(source, _interface, phase, null, null, CLASS, method, errorHandler, infoHandler, ip);
-    }
-    public AppSession(Source source, Interface _interface, Phase phase, ErrorHandler errorHandler, InfoHandler infoHandler) {
-        this(source, _interface, phase, null, null, null, null, errorHandler, infoHandler, null);
+        this.messageHandler = messageHandler;
     }
 
     public String getUsername() {
@@ -74,30 +60,38 @@ public class AppSession implements Serializable{
         this.id = id;
     }
 
-    public ErrorHandler getErrorHandler() {
-        return errorHandler;
+    public MessageHandler getMessageHandler() {
+        return messageHandler;
     }
-    public void setErrorHandler(ErrorHandler errorHandler) {
-        this.errorHandler = errorHandler;
+    public void setMessageHandler(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
     }
-    public String getErrorMsg(EC errorCode, Object ... args) {
-        String error = errorHandler.getMsg(this, errorCode, args);
-        if(error == null)
-            error = errorHandler.getMsg(this, EC.AMT_0000);
-        return error;
+    public AppSession removeMessageHandler() {
+        AppSession session = this.clone();
+        session.messageHandler = null;
+        return session;
     }
 
-    public InfoHandler getInfoHandler() {
-        return infoHandler;
+    public String getErrorMsg(EC code, Object ... args) {
+        try {
+            return messageHandler.getMsg(code, args);
+        } catch (Exception e) {
+            return MessageFormat.format(AME.SYS_012.value(), "Error", code.toString());
+        }
     }
-    public void setInfoHandler(InfoHandler infoHandler) {
-        this.infoHandler = infoHandler;
+    public String getInfoMsg(IC code, Object ... args) {
+        try {
+            return messageHandler.getMsg(code, args);
+        } catch (Exception e) {
+            return MessageFormat.format(AME.SYS_012.value(), "Info", code.toString());
+        }
     }
-    public String getInfoMsg(IC infoCode, Object ... args) {
-        String info = infoHandler.getMsg(this, infoCode, args);
-        if(info == null)
-            info = infoHandler.getMsg(this, IC.AMT_0000);
-        return info;
+    public String getWarnMsg(WC code, Object ... args) {
+        try {
+            return messageHandler.getMsg(code, args);
+        } catch (Exception e) {
+            return MessageFormat.format(AME.SYS_012.value(), "Warn", code.toString());
+        }
     }
 
     public String getCLASS() {
@@ -107,32 +101,32 @@ public class AppSession implements Serializable{
         this.CLASS = CLASS;
     }
 
-    public String getMethod() {
-        return method;
+    public Source getSOURCE() {
+        return SOURCE;
     }
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    public Source getSource() {
-        return source;
-    }
-    public void setSource(Source source) {
-        this.source = source;
+    public void setSOURCE(Source SOURCE) {
+        this.SOURCE = SOURCE;
     }
 
-    public Interface getInterface() {
-        return _interface;
+    public Interface getINTERFACE() {
+        return INTERFACE;
     }
-    public void setInterface(Interface _interface) {
-        this._interface = _interface;
+    public void setINTERFACE(Interface INTERFACE) {
+        this.INTERFACE = INTERFACE;
     }
 
-    public Phase getPhase() {
-        return phase;
+    public Phase getPHASE() {
+        return PHASE;
     }
-    public void setPhase(Phase phase) {
-        this.phase = phase;
+    public void setPHASE(Phase PHASE) {
+        this.PHASE = PHASE;
+    }
+
+    public String getMETHOD() {
+        return METHOD;
+    }
+    public void setMETHOD(String METHOD) {
+        this.METHOD = METHOD;
     }
 
     public String getIp() {
@@ -144,10 +138,13 @@ public class AppSession implements Serializable{
 
     @Override
     public String toString() {
-        String st = "[Src: " + source.value();
+        String st = "";
 
-        if(username != null)
-            st += "] [Inter: " + _interface.value();
+        if(SOURCE != null)
+            st += "[Source: " + SOURCE.value();
+
+        if(INTERFACE != null)
+            st += "] [Interface: " + INTERFACE.value();
 
         if(ip != null)
             st += "] [IP: " + ip;
@@ -158,27 +155,41 @@ public class AppSession implements Serializable{
         if(id !=null)
             st += "] [ID: " + id;
 
-        st += "]\n " + CLASS + "." + method + "(): ";
+        st += "]\n " + CLASS + "." + METHOD + "(): ";
         return st;
     }
 
-    public AppSession updateSession(Phase phase, String CLASS, String method) {
+    public AppSession updateSession(Phase PHASE, String CLASS, String METHOD) {
         AppSession session = new AppSession();
-        session.phase = phase;
+        session.PHASE = PHASE;
         session.CLASS = CLASS;
-        session.method = method;
-        session.source = this.source;
-        session._interface = this._interface;
+        session.METHOD = METHOD;
+        session.SOURCE = this.SOURCE;
+        session.INTERFACE = this.INTERFACE;
         session.username = this.username;
         session.id = this.id;
-        session.errorHandler = this.errorHandler;
-        session.infoHandler = this.infoHandler;
+        session.messageHandler = this.messageHandler;
         return session;
     }
-    public AppSession updateSession(String method) {
-        return updateSession(this.phase, this.CLASS, method);
+    public AppSession updateSession(String METHOD) {
+        return updateSession(this.PHASE, this.CLASS, METHOD);
     }
-    public AppSession updateSession(String CLASS, String method) {
-        return updateSession(this.phase, CLASS, method);
+    public AppSession updateSession(String CLASS, String METHOD) {
+        return updateSession(this.PHASE, CLASS, METHOD);
+    }
+
+    @Override
+    protected AppSession clone() {
+        AppSession session = new AppSession();
+        session.SOURCE = this.SOURCE;
+        session.PHASE = this.PHASE;
+        session.INTERFACE = this.INTERFACE;
+        session.messageHandler = this.messageHandler;
+        session.ip = this.ip;
+        session.id = this.id;
+        session.username = this.username;
+        session.CLASS = this.CLASS;
+        session.METHOD = this.METHOD;
+        return session;
     }
 }

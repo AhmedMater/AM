@@ -18,8 +18,8 @@ public class HQLCondition<T>{
     // For Date
     private String fromPH;
     private String toPH;
-    private T from;
-    private T to;
+    private Date from;
+    private Date to;
 
     private String tableAlias;
     private String attribute;
@@ -33,7 +33,7 @@ public class HQLCondition<T>{
     public HQLCondition(T value, String attribute, Operators operator) {
         this(value, null, attribute, operator);
     }
-    public HQLCondition(T from, T to, String attribute) {
+    public HQLCondition(Date from, Date to, String attribute) {
         this(from, to, null, attribute);
     }
     public HQLCondition(T value, String tableAlias, String attribute, Operators operator) {
@@ -46,7 +46,7 @@ public class HQLCondition<T>{
         }else
             this.isApplicable = false;
     }
-    public HQLCondition(T from, T to, String tableAlias, String attribute) {
+    public HQLCondition(Date from, Date to, String tableAlias, String attribute) {
         this.from = from;
         this.to = to;
         this.attribute = (tableAlias != null) ? tableAlias + "." + attribute : attribute;
@@ -75,17 +75,17 @@ public class HQLCondition<T>{
         this.toPH = toPH;
     }
 
-    public T getFrom() {
+    public Date getFrom() {
         return from;
     }
-    public void setFrom(T from) {
+    public void setFrom(Date from) {
         this.from = from;
     }
 
-    public T getTo() {
+    public Date getTo() {
         return to;
     }
-    public void setTo(T to) {
+    public void setTo(Date to) {
         this.to = to;
     }
 

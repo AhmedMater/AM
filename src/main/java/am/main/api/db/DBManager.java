@@ -3,7 +3,6 @@ package am.main.api.db;
 import am.main.api.AppLogger;
 import am.main.data.enums.AME;
 import am.main.data.enums.AMI;
-import am.main.core.config.AMConfigurationManager;
 import am.main.exception.DBException;
 import am.main.session.AppSession;
 import am.shared.common.SharedParam;
@@ -18,7 +17,8 @@ import javax.validation.ConstraintViolationException;
 import java.io.Serializable;
 import java.util.*;
 
-import static am.shared.enums.Phase.AM_LIBRARY;
+import static am.shared.enums.Phase.MESSAGE_HANDLER;
+import static am.shared.enums.Source.AM;
 
 
 /**
@@ -27,8 +27,10 @@ import static am.shared.enums.Phase.AM_LIBRARY;
 @ApplicationScoped
 public class DBManager implements Serializable {
     @Inject private AppLogger logger;
-    @Inject private AMConfigurationManager amConfigManager;
-    private final static String CLASS = "DBManager";
+
+    private static final String CLASS = DBManager.class.getSimpleName();
+    private static final AppSession appSession = new AppSession(AM, MESSAGE_HANDLER, CLASS);
+
     private final static String DB_INSERT = "Insert";
     private final static String DB_UPDATE = "Update";
     private final static String DB_DELETE = "Delete";
@@ -48,14 +50,13 @@ public class DBManager implements Serializable {
     }
 
     public EntityManagerFactory getEmf() {
-
         return emf;
     }
 
     @Transactional
     public <T> T persist(AppSession appSession, T toBeInserted, Boolean usingCache) throws Exception {
-        String FN_NAME = "persist";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        String METHOD = "persist";
+        AppSession session = appSession.updateSession(METHOD);
         try {
             logger.startDebug(session, toBeInserted);
             try {
@@ -99,10 +100,9 @@ public class DBManager implements Serializable {
         }
     }
 
-//    @Transactional
     public <T> T find(AppSession appSession, Class<T> className, Object identifier, Boolean usingCache)throws DBException {
-        String FN_NAME = "find";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        String METHOD = "find";
+        AppSession session = appSession.updateSession(METHOD);
         try {
             logger.startDebug(session, className, identifier);
 
@@ -132,8 +132,8 @@ public class DBManager implements Serializable {
         }
     }
     public <T> List<T> findAll(AppSession appSession, Class<T> className, Boolean usingCache)throws DBException {
-        String FN_NAME = "find";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        String METHOD = "find";
+                 AppSession session = appSession.updateSession(METHOD);
         try {
             logger.startDebug(session, className);
 
@@ -167,8 +167,8 @@ public class DBManager implements Serializable {
 
     @Transactional
     public <T> T merge(AppSession appSession, T toBeUpdated, Boolean usingCache)throws DBException{
-        String FN_NAME = "merge";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        String METHOD = "merge";
+        AppSession session = appSession.updateSession(METHOD);
         try {
             logger.startDebug(session, toBeUpdated);
 
@@ -205,8 +205,8 @@ public class DBManager implements Serializable {
 
     @Transactional
     public void remove(AppSession appSession, Object toBeRemoved, Boolean usingCache)throws DBException {
-        String FN_NAME = "remove";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        String METHOD = "remove";
+        AppSession session = appSession.updateSession(METHOD);
         EntityManager em = null;
         try {
             logger.startDebug(session, toBeRemoved);
@@ -253,8 +253,8 @@ public class DBManager implements Serializable {
 
     public boolean checkIsFound(AppSession appSession, Boolean usingCache, String selectAttribute,
                 Class entity, String conditionAttribute, String value) throws DBException {
-        String FN_NAME = "checkIsFound";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        String METHOD = "checkIsFound";
+        AppSession session = appSession.updateSession(METHOD);
         EntityManager em = null;
         try {
             logger.startDebug(session);
@@ -312,8 +312,8 @@ public class DBManager implements Serializable {
 
     public <T> T getSingleResult(AppSession appSession, Boolean usingCache,
                                  Class<T> entity, Map<String, Object> parameters) throws Exception {
-        String FN_NAME = "getSingleResult";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        String METHOD = "getSingleResult";
+        AppSession session = appSession.updateSession(METHOD);
         EntityManager em = null;
         try {
             logger.startDebug(session, usingCache, entity.getSimpleName(), parameters);
@@ -373,8 +373,8 @@ public class DBManager implements Serializable {
 
     public <T> List<T> getList(AppSession appSession, Boolean usingCache,
                                  Class<T> entity, Map<String, Object> parameters) throws Exception {
-        String FN_NAME = "getList";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        String METHOD = "getList";
+        AppSession session = appSession.updateSession(METHOD);
         EntityManager em = null;
         try {
             logger.startDebug(session, usingCache, entity.getSimpleName(), parameters);
@@ -427,8 +427,8 @@ public class DBManager implements Serializable {
     }
 
     private Map<String, Object> constructQuery(AppSession appSession, Class entity, Map<String, Object> parameters) throws Exception{
-        String FN_NAME = "constructQuery";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        String METHOD = "constructQuery";
+        AppSession session = appSession.updateSession(METHOD);
         try {
             logger.startDebug(session, entity.getSimpleName(), parameters);
             String queryStr = "FROM " + entity.getSimpleName() + " WHERE ";

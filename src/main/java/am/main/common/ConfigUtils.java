@@ -22,23 +22,20 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static am.shared.enums.Phase.AM_LIBRARY;
-
 /**
  * Created by ahmed.motair on 9/7/2017.
  */
 public class ConfigUtils {
-    private static final String CLASS = "ConfigUtils";
-    private static final AppLogger logger = new AppLogger();
+    private static final String CLASS = ConfigUtils.class.getSimpleName();
 
     /**
      * Reads Resource File into Properties Object
      * @param file Resource File Name
      * @return Properties Object
      */
-    public static Properties readResourceFiles(AppSession appSession, String file, String component) throws Exception {
+    public static Properties readResourceFiles(AppSession appSession, AppLogger logger, String file, String component) throws Exception {
         String FN_NAME = "readResourceFiles";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
         try {
             logger.startDebug(session, file, component);
             Properties properties = new Properties();
@@ -73,9 +70,9 @@ public class ConfigUtils {
      * @param filePath Resource File Name
      * @return Properties Object
      */
-    public static Properties readRemotePropertyFiles(AppSession appSession, String filePath, String component) throws Exception {
+    public static Properties readRemotePropertyFiles(AppSession appSession, AppLogger logger, String filePath, String component) throws Exception {
         String FN_NAME = "readRemotePropertyFiles";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
         try {
             logger.startDebug(session, filePath, component);
             Properties properties = new Properties();
@@ -110,9 +107,9 @@ public class ConfigUtils {
      * @param filePathStr Resource File Name
      * @return Properties Object
      */
-    public static List<String> readRemoteTextFiles(AppSession appSession, String filePathStr, String component) throws Exception {
+    public static List<String> readRemoteTextFiles(AppSession appSession, AppLogger logger, String filePathStr, String component) throws Exception {
         String FN_NAME = "readRemoteTextFiles";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
         try {
             logger.startDebug(session, filePathStr, component);
             List<String> fileLines = new ArrayList<>();
@@ -151,9 +148,9 @@ public class ConfigUtils {
      * @throws GeneralException - IO_0009 - If the message has placeholders less than arguments provided
      * @throws GeneralException - IO_0010 - If the message has placeholders more than arguments provided
      */
-    public static String formatMsg(AppSession appSession, String message, Object ... args) throws Exception{
+    public static String formatMsg(AppSession appSession, AppLogger logger, String message, Object ... args) throws Exception{
         String FN_NAME = "formatMsg";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
         try {
             logger.startDebug(session, message, args);
 
@@ -199,9 +196,9 @@ public class ConfigUtils {
      * @throws GeneralException - AM_E_0030 - If the Property file isn't loaded or Empty
      * @throws GeneralException - AM_E_0031 - If the Property isn't found in the file
      */
-    public static String readValueFromPropertyFile(AppSession appSession, Properties propertyFile, String property, String fileName) throws Exception{
+    public static String readValueFromPropertyFile(AppSession appSession, AppLogger logger, Properties propertyFile, String property, String fileName) throws Exception{
         String FN_NAME = "readValueFromPropertyFile";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
         try {
             logger.startDebug(session, property, fileName);
 
@@ -228,18 +225,18 @@ public class ConfigUtils {
         }
     }
 
-    public static Properties loadPropertySystemComponent(AppSession appSession, String fileName, String componentName){
+    public static Properties loadPropertySystemComponent(AppSession appSession, AppLogger logger, String fileName, String componentName) throws Exception{
         String FN_NAME = "loadPropertySystemComponent";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
-        try {
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+//        try {
             logger.startDebug(session, fileName, componentName);
 
             Properties properties = new Properties();
 
             if(fileName.endsWith(".properties"))
-                properties = ConfigUtils.readRemotePropertyFiles(session, fileName, componentName);
+                properties = ConfigUtils.readRemotePropertyFiles(session, logger, fileName, componentName);
             else if(fileName.endsWith(".txt")){
-                List<String> fileLines = ConfigUtils.readRemoteTextFiles(session, fileName, componentName);
+                List<String> fileLines = ConfigUtils.readRemoteTextFiles(session, logger, fileName, componentName);
                 properties.put("0", fileLines);
             }
 
@@ -247,28 +244,10 @@ public class ConfigUtils {
             logger.endDebug(session);
 
             return properties;
-        }catch (Exception ex){
-            logger.error(session, ex, AME.SYS_006, componentName);
-            return null;
-        }
-    }
-
-    public static List<String> loadTextSystemComponent(AppSession appSession, String fileName, String componentName){
-        String FN_NAME = "loadTextSystemComponent";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
-        try {
-            logger.startDebug(session, fileName, componentName);
-
-            List<String> fileLines = ConfigUtils.readRemoteTextFiles(session, fileName, componentName);
-
-            logger.info(session, AMI.SYS_002, componentName);
-            logger.endDebug(session);
-
-            return fileLines;
-        }catch (Exception ex){
-            logger.error(session, ex, AME.SYS_006, componentName);
-            return null;
-        }
+//        }catch (Exception ex){
+//            logger.error(session, ex, AME.SYS_006, componentName);
+//            return null;
+//        }
     }
 
 

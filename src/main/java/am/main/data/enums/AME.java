@@ -13,13 +13,14 @@ public enum AME {
     SYS_007("AM-SYS-007: ''{0}'' of Code can''t be null"),
     SYS_008("AM-SYS-008: Class type of the System Config value can''t be null"),
     SYS_009("AM-SYS-009: ''{0}'' isn''t a supported System Config Property Type"),
-    SYS_010("AM-SYS-010: Failed while Logging ''{0}'' Code: ''{1}''"),
+//    SYS_010("AM-SYS-010: Failed while retrieving ''{0}'' Code: ''{1}''"),
     SYS_011("AM-SYS-011: Session Object is null, Can't use ''{0}'' Handler to log the ''{1}'' message of Code ''{2}''"),
     SYS_012("AM-SYS-012: Failed while getting ''{0}'' Message of Code ''{1}''"),
     SYS_013("AM-SYS-013: Invalid Logger name: ''{0}'' attribute in the AM Config Property File"),
     SYS_014("AM-SYS-014: Invalid Logger value: ''{0}'' in the AM Config Property File, It has to be [Boolean], [Logger Name]"),
     SYS_015("AM-SYS-015: Both Exception and Error Code are null, Can't Log this Error"),
     SYS_016("AM-SYS-016: Value of the System Config property can''t be null"),
+    SYS_017("AM-SYS-017: Invalid Logging Level"),
 
     ENM_001("AM-ENM-001: Invalid ''{0}'' E-Mail Address"),
     ENM_002("AM-ENM-002: Failed to send the Message: ''{0}'', To: ''{1}''"),
@@ -67,7 +68,12 @@ public enum AME {
     DB_022("AM-DB-022: The Query ''{0}'' exceeds its timeout Limit, and The Transaction is rolled back"),
     DB_023("AM-DB-023: Checking record of Entity: ''{0}'' isn't found in Database failed"),
     DB_024("AM-DB-024: Selecting single record from Entity: ''{0}'' failed"),
-    DB_025("AM-DB-025: Constructing the Query failed");
+    DB_025("AM-DB-025: Constructing the Query failed"),
+
+    JMS_000("AM-JMS-000: Failed to Initialize Queue ''{0}''"),
+    JMS_001("AM-JMS-001: Queue Session of Queue ''{0}'' isn''t initiated"),
+    JMS_002("AM-JMS-002: JMS Sender of Queue ''{0}'' isn''t initiated"),
+    JMS_003("AM-JMS-003: Failed to send ''{0}'' Message to ''{0}'' Queue");
 
     private String value;
 

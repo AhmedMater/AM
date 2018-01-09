@@ -10,25 +10,27 @@ import javax.inject.Inject;
 import java.security.MessageDigest;
 import java.util.Base64;
 
-import static am.shared.enums.Phase.AM_LIBRARY;
+import static am.shared.enums.Phase.SECURITY_MANAGER;
+import static am.shared.enums.Source.AM;
 
 //import static am.shared.am.shared.enums.Phase.AM_LIBRARY;
 
 /**
  * Created by ahmed.motair on 9/26/2017.
  */
-public class AMSecurityManager {
+public class SecurityManager {
     @Inject private AppLogger logger;
-    private static final String CLASS = "AMSecurityManager";
+    private static final String CLASS = SecurityManager.class.getSimpleName();
+    private static final AppSession appSession = new AppSession(AM, SECURITY_MANAGER, CLASS);
 
     // Generated at https://www.random.org/strings
     private final static String _salt = "rz8LuOtFBXphj9WQfvFh";
     private final static String SHA_256_ALGORITHM = "HmacSHA256";
     private final static String MD5_ALGORITHM = "MD5";
 
-    public String generateToken(AppSession appSession, String userName, String password, long ticks) throws Exception {
-        String FN_NAME = "generateToken";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+    public String generateToken(String userName, String password, long ticks) throws Exception {
+        String METHOD = "generateToken";
+        AppSession session = appSession.updateSession(METHOD);
         logger.startDebug(session, userName, ticks);
         Mac sha256_HMAC;
 
@@ -39,7 +41,7 @@ public class AMSecurityManager {
         }
 
         String hash = String.join(":",new String[] {userName,String.valueOf(ticks)});
-        byte[] hashedPassword = getHashedPassword(session, password);
+        byte[] hashedPassword = getHashedPassword(password);
 
         String result;
         if(hashedPassword != null) {
@@ -60,9 +62,9 @@ public class AMSecurityManager {
         return result;
     }
 
-    public byte[] getHashedPassword(AppSession appSession, String password) throws Exception{
-        String FN_NAME = "getHashedPassword";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+    public byte[] getHashedPassword(String password) throws Exception{
+        String METHOD = "getHashedPassword";
+        AppSession session = appSession.updateSession(METHOD);
         logger.startDebug(session);
 
         String key = String.join(":", new String[]{password, _salt});
@@ -87,9 +89,9 @@ public class AMSecurityManager {
         return hash;
     }
 
-    public String dm5Hash(AppSession appSession, String password) throws Exception{
-        String FN_NAME = "dm5Hash";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+    public String dm5Hash(String password) throws Exception{
+        String METHOD = "dm5Hash";
+        AppSession session = appSession.updateSession(METHOD);
         logger.startDebug(session);
         MessageDigest md;
 

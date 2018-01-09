@@ -1,19 +1,16 @@
 package am.main.api;
 
-import am.main.data.dto.MailData;
-import am.main.data.enums.ENMC;
 import am.main.common.ConfigParam;
 import am.main.common.ConfigParam.COMPONENT;
 import am.main.common.ConfigParam.FILE;
 import am.main.common.ConfigUtils;
+import am.main.data.dto.MailData;
 import am.main.data.enums.AME;
 import am.main.data.enums.AMI;
-import am.main.core.config.AMConfigurationManager;
 import am.main.data.enums.AM_CC;
+import am.main.data.enums.ENMC;
 import am.main.exception.GeneralException;
 import am.main.session.AppSession;
-import am.main.data.enums.Source;
-import am.shared.enums.Phase;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -22,30 +19,35 @@ import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.text.MessageFormat;
 import java.util.Properties;
 
-import static am.shared.enums.Phase.AM_LIBRARY;
+import static am.shared.enums.Phase.NOTIFICATION_MANAGER;
+import static am.shared.enums.Source.AM;
 
 
 @Singleton
-public class EmailNotificationManager {
-    @Inject private AMConfigurationManager amConfigManager;
+public class NotificationManager {
+    @Inject private ConfigManager configManager;
     @Inject private AppLogger logger;
-    private static String FILE_NAME;
-    private static final String CLASS = "EmailNotificationManager";
-    private Properties EMAIL_NOTIFICATION_CONFIG;
+    private static final String CLASS = SecurityManager.class.getSimpleName();
     private Session mailSession;
-    private static EmailNotificationManager instance;
 
-    private EmailNotificationManager() {
+    private static NotificationManager instance;
+    private static final AppSession appSession = new AppSession(AM, NOTIFICATION_MANAGER, CLASS);
+
+    private static String EMAIL_NOTIFICATION_CONFIG_FN;
+    private Properties EMAIL_NOTIFICATION_CONFIG = new Properties();
+
+    private NotificationManager() {
 
     }
 
-    public static EmailNotificationManager getInstance() throws Exception{
+    public static NotificationManager getInstance() throws Exception{
         if (instance == null){
-            synchronized(EmailNotificationManager.class){
+            synchronized(NotificationManager.class){
                 if (instance == null){
-                    instance = new EmailNotificationManager();
+                    instance = new NotificationManager();
                     instance.load();
                 }
             }
@@ -55,19 +57,18 @@ public class EmailNotificationManager {
 
     @PostConstruct
     private void load(){
-        String FN_NAME = "load";
-        AppSession session = new AppSession(Source.AM, Phase.AM_INITIALIZING, CLASS, FN_NAME);
-
+        String METHOD = "load";
+        AppSession session = appSession.updateSession(METHOD);
         try {
-            logger.startDebug(session, AM_CC.EMAIL_NOTIFICATION_MANAGER, COMPONENT.EMAIL_NOTIFICATION_MANAGER);
+            logger.startDebug(session, AM_CC.EMAIL_NOTIFICATION_MANAGER, COMPONENT.NOTIFICATION_MANAGER);
 
-            FILE_NAME = amConfigManager.getConfigValue(session, AM_CC.EMAIL_NOTIFICATION_MANAGER);
-            FILE.EMAIL_NOTIFICATION = ConfigParam.APP_CONFIG_PATH + FILE_NAME;
+            EMAIL_NOTIFICATION_CONFIG_FN = configManager.getConfigValue(AM_CC.EMAIL_NOTIFICATION_MANAGER);
+            FILE.EMAIL_NOTIFICATION = ConfigParam.APP_CONFIG_PATH + EMAIL_NOTIFICATION_CONFIG_FN;
 
-            EMAIL_NOTIFICATION_CONFIG = ConfigUtils.readRemotePropertyFiles(session, FILE.EMAIL_NOTIFICATION, COMPONENT.EMAIL_NOTIFICATION_MANAGER);
+            EMAIL_NOTIFICATION_CONFIG = ConfigUtils.readRemotePropertyFiles(session, logger, FILE.EMAIL_NOTIFICATION, COMPONENT.NOTIFICATION_MANAGER);
 
             checkEmailPropertyFile(session);
-            logger.info(session, AMI.ENM_002, COMPONENT.EMAIL_NOTIFICATION_MANAGER);
+            logger.info(session, AMI.ENM_002, COMPONENT.NOTIFICATION_MANAGER);
 
             boolean sessionCreationDone = false;
             mailSession = Session.getInstance(EMAIL_NOTIFICATION_CONFIG,
@@ -82,10 +83,11 @@ public class EmailNotificationManager {
             );
             logger.info(session, AMI.ENM_001);
 
-            logger.info(session, AMI.SYS_002, COMPONENT.EMAIL_NOTIFICATION_MANAGER);
+            logger.info(session, AMI.SYS_002, COMPONENT.NOTIFICATION_MANAGER);
             logger.endDebug(session, EMAIL_NOTIFICATION_CONFIG);
         }catch (Exception ex){
-            logger.error(session, ex, AME.SYS_006, COMPONENT.EMAIL_NOTIFICATION_MANAGER);
+            logger.FAILURE_LOGGER.error(MessageFormat.format(AME.SYS_006.value(), COMPONENT.NOTIFICATION_MANAGER), ex);
+            throw new IllegalStateException(MessageFormat.format(AME.SYS_006.value(), COMPONENT.NOTIFICATION_MANAGER), ex);
         }
     }
 
@@ -115,13 +117,13 @@ public class EmailNotificationManager {
 
 
     public void sendEmail(AppSession appSession, MailData mailData) throws Exception {
-        String FN_NAME = "sendEmail";
-        AppSession session = appSession.updateSession(AM_LIBRARY, CLASS, FN_NAME);
+        String METHOD = "sendEmail";
+        AppSession session = appSession.updateSession(METHOD);
         logger.startDebug(session, mailData);
         try {
 
             String mailTo = mailData.getTo();
-            String mailFrom = ConfigUtils.readValueFromPropertyFile(session, EMAIL_NOTIFICATION_CONFIG, ENMC.MAIL_FROM.value(), FILE_NAME);
+            String mailFrom = ConfigUtils.readValueFromPropertyFile(session, logger, EMAIL_NOTIFICATION_CONFIG, ENMC.MAIL_FROM.value(), EMAIL_NOTIFICATION_CONFIG_FN);
 
             Message message = new MimeMessage(mailSession);
 

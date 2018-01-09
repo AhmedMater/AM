@@ -19,7 +19,20 @@ public enum AMI {
     DB_001("AM-DB-001: Record of Entity ''{0}'' is inserted successfully in Database"),
     DB_002("AM-DB-002: Entity: ''{0}'' with ID: ''{1}'' is selected successfully from Database"),
     DB_003("AM-DB-003: Record '{0}' is updated successfully in Database"),
-    DB_004("AM-DB-004: Record '{0}' is removed successfully from Database");
+    DB_004("AM-DB-004: Record '{0}' is removed successfully from Database"),
+
+    JMS_000("AM-JMS-000: JMS Queue ''{0}'' is initiated successfully"),
+    JMS_001("AM-JMS-001: Message ''{0}'' is sent successfully"),
+    JMS_002("AM-JMS-002: Start initializing JMS Manager of the System"),
+    JMS_003("AM-JMS-003: JMS Manager is initialized successfully"),
+
+    LOG_001("AM-Log-001: Start initializing the New Logger"),
+    LOG_002("AM-Log-002: Reading old Log4j2.xml file successfully"),
+    LOG_003("AM-Log-003: Logger: ''{0}'' is added to Log4j2.xml successfully"),
+    LOG_004("AM-Log-004: Logger: ''{0}'' is disabled"),
+    LOG_006("AM-Log-006: Log4j2.xml file is recreated successfully"),
+    LOG_007("AM-Log-007: Log4j2.xml file is reloaded successfully"),
+    LOG_008("AM-Log-008: Logger: ''{0}'' is loaded successfully");
 
     private String value;
 

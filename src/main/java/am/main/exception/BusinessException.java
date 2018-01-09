@@ -41,7 +41,7 @@ public class BusinessException extends WebApplicationException {
         this.formattedError = session.getErrorMsg(errorCode, args);
         this.fullErrMsg = session.toString() + this.formattedError;
         this.CLASS = session.getCLASS();
-        this.METHOD = session.getMethod();
+        this.METHOD = session.getMETHOD();
     }
     public BusinessException(AppSession session, FormValidation validation) {
         super(Response.status(Status.BAD_REQUEST)
@@ -53,9 +53,21 @@ public class BusinessException extends WebApplicationException {
         this.fullErrMsg = session.toString() + this.formattedError;
         this.errorList = validation;
         this.CLASS = session.getCLASS();
-        this.METHOD = session.getMethod();
+        this.METHOD = session.getMETHOD();
     }
 
+    public BusinessException(SerializedBusinessException ex) {
+        super(ex.getCause(), Response.status(Status.BAD_REQUEST)
+                .entity(ex.getAmError())
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .build());
+        this.errorCode = ex.getErrorCode();
+        this.formattedError = ex.getFormattedError();
+        this.fullErrMsg = ex.getFullErrMsg();
+        this.errorList = ex.getErrorList();
+        this.CLASS = ex.getCLASS();
+        this.METHOD = ex.getMETHOD();
+    }
 
     public EC getErrorCode() {
         return errorCode;
@@ -90,5 +102,12 @@ public class BusinessException extends WebApplicationException {
     }
     public void setFormattedError(String formattedError) {
         this.formattedError = formattedError;
+    }
+
+    public FormValidation getErrorList() {
+        return errorList;
+    }
+    public void setErrorList(FormValidation errorList) {
+        this.errorList = errorList;
     }
 }
