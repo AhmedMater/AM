@@ -6,10 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="AM-Notification" />
         <module name="AM-Resources" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="AM-Notification" target="1.8" />
       <module name="AM-Resources" target="1.8" />
     </bytecodeTargetLevel>
   </component>

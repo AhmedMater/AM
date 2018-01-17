@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AM-Resources.iml" filepath="$PROJECT_DIR$/AM-Resources.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AM-Notification/AM-Notification.iml" filepath="$PROJECT_DIR$/AM-Notification/AM-Notification.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AM-Resources/AM-Resources.iml" filepath="$PROJECT_DIR$/AM-Resources/AM-Resources.iml" />
     </modules>
   </component>
 </project>
