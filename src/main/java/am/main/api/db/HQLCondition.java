@@ -3,7 +3,9 @@ package am.main.api.db;
 import am.main.data.enums.Operators;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static am.main.data.enums.Operators.*;
 
@@ -14,6 +16,7 @@ public class HQLCondition<T>{
     //For Normal Value
     private String placeHolder;
     private T value;
+    private List<T> values;
 
     // For Date
     private String fromPH;
@@ -30,8 +33,12 @@ public class HQLCondition<T>{
 
     public HQLCondition() {
     }
-    public HQLCondition(T value, String attribute, Operators operator) {
+    public HQLCondition(String attribute, Operators operator, T value) {
         this(value, null, attribute, operator);
+    }
+    public HQLCondition(String attribute, T ... values) {
+        this(null, null, attribute, Operators.IN);
+        this.values = Arrays.asList(values);
     }
     public HQLCondition(Date from, Date to, String attribute) {
         this(from, to, null, attribute);

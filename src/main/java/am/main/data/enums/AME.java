@@ -13,7 +13,6 @@ public enum AME {
     SYS_007("AM-SYS-007: ''{0}'' of Code can''t be null"),
     SYS_008("AM-SYS-008: Class type of the System Config value can''t be null"),
     SYS_009("AM-SYS-009: ''{0}'' isn''t a supported System Config Property Type"),
-//    SYS_010("AM-SYS-010: Failed while retrieving ''{0}'' Code: ''{1}''"),
     SYS_011("AM-SYS-011: Session Object is null, Can't use ''{0}'' Handler to log the ''{1}'' message of Code ''{2}''"),
     SYS_012("AM-SYS-012: Failed while getting ''{0}'' Message of Code ''{1}''"),
     SYS_013("AM-SYS-013: Invalid Logger name: ''{0}'' attribute in the AM Config Property File"),
@@ -38,6 +37,7 @@ public enum AME {
     IO_010("AM-IO-010: Value of key: ''{0}'' in Property File: ''{1}'' is empty"),
     IO_011("AM-IO-011: Changing value of ''{0}'' of Code: ''{1}'' failed"),
     IO_012("AM-IO-012: File path: ''{0}'' is invalid"),
+
 
     SEQ_001("AMT-SEQ-001: Generating Hashed Password failed"),
     SEQ_002("AMT-SEQ-002: Request ''{0}'' isn't Authorized to Access our Services"),

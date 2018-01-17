@@ -16,7 +16,6 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -107,19 +106,22 @@ public class ConfigUtils {
      * @param filePathStr Resource File Name
      * @return Properties Object
      */
-    public static List<String> readRemoteTextFiles(AppSession appSession, AppLogger logger, String filePathStr, String component) throws Exception {
+    public static String readRemoteTextFiles(AppSession appSession, AppLogger logger, String filePathStr, String component) throws Exception {
         String FN_NAME = "readRemoteTextFiles";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         try {
             logger.startDebug(session, filePathStr, component);
-            List<String> fileLines = new ArrayList<>();
+            String textFile = "";
 
             if(filePathStr == null || filePathStr.isEmpty())
                 throw new GeneralException(session, AME.IO_001, filePathStr, component);
 
             try {
                 Path filePath = Paths.get(filePathStr);
-                fileLines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
+                List<String> fileLines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
+                for (String line : fileLines)
+                    textFile += line + "\n";
+                textFile = textFile.substring(0, textFile.length()-1);
             } catch (FileNotFoundException e) {
                 throw new GeneralException(session, e, AME.IO_002, filePathStr);
             } catch (InvalidPathException e) {
@@ -129,7 +131,7 @@ public class ConfigUtils {
             logger.info(session, AMI.IO_001, filePathStr);
 
             logger.endDebug(session);
-            return fileLines;
+            return textFile;
         } catch (Exception ex){
             if(ex instanceof GeneralException)
                 throw ex;
@@ -225,30 +227,30 @@ public class ConfigUtils {
         }
     }
 
-    public static Properties loadPropertySystemComponent(AppSession appSession, AppLogger logger, String fileName, String componentName) throws Exception{
-        String FN_NAME = "loadPropertySystemComponent";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
-//        try {
-            logger.startDebug(session, fileName, componentName);
-
-            Properties properties = new Properties();
-
-            if(fileName.endsWith(".properties"))
-                properties = ConfigUtils.readRemotePropertyFiles(session, logger, fileName, componentName);
-            else if(fileName.endsWith(".txt")){
-                List<String> fileLines = ConfigUtils.readRemoteTextFiles(session, logger, fileName, componentName);
-                properties.put("0", fileLines);
-            }
-
-            logger.info(session, AMI.SYS_002, componentName);
-            logger.endDebug(session);
-
-            return properties;
-//        }catch (Exception ex){
-//            logger.error(session, ex, AME.SYS_006, componentName);
-//            return null;
-//        }
-    }
+//    public static Properties loadPropertySystemComponent(AppSession appSession, AppLogger logger, String fileName, String componentName) throws Exception{
+//        String FN_NAME = "loadPropertySystemComponent";
+//        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+////        try {
+//            logger.startDebug(session, fileName, componentName);
+//
+//            Properties properties = new Properties();
+//
+//            if(fileName.endsWith(".properties"))
+//                properties = ConfigUtils.readRemotePropertyFiles(session, logger, fileName, componentName);
+//            else if(fileName.endsWith(".txt")){
+//                List<String> fileLines = ConfigUtils.readRemoteTextFiles(session, logger, fileName, componentName);
+//                properties.put("0", fileLines);
+//            }
+//
+//            logger.info(session, AMI.SYS_002, componentName);
+//            logger.endDebug(session);
+//
+//            return properties;
+////        }catch (Exception ex){
+////            logger.error(session, ex, AME.SYS_006, componentName);
+////            return null;
+////        }
+//    }
 
 
 }

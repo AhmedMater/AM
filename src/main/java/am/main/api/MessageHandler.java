@@ -59,15 +59,15 @@ public class MessageHandler {
         try {
             ERROR_MSG_FN = configManager.getConfigValue(AM_CC.ERROR_HANDLER);
             ConfigParam.FILE.ERROR_MESSAGES = ConfigParam.APP_CONFIG_PATH + ERROR_MSG_FN;
-            ERROR_MESSAGES = ConfigUtils.loadPropertySystemComponent(session, logger, ConfigParam.FILE.ERROR_MESSAGES, ConfigParam.COMPONENT.MESSAGE_HANDLER);
+            ERROR_MESSAGES = ConfigUtils.readRemotePropertyFiles(session, logger, ConfigParam.FILE.ERROR_MESSAGES, ConfigParam.COMPONENT.MESSAGE_HANDLER);
 
             INFO_MSG_FN = configManager.getConfigValue(AM_CC.INFO_HANDLER);
             ConfigParam.FILE.INFO_MESSAGES = ConfigParam.APP_CONFIG_PATH + INFO_MSG_FN;
-            INFO_MESSAGES = ConfigUtils.loadPropertySystemComponent(session, logger, ConfigParam.FILE.INFO_MESSAGES, ConfigParam.COMPONENT.MESSAGE_HANDLER);
+            INFO_MESSAGES = ConfigUtils.readRemotePropertyFiles(session, logger, ConfigParam.FILE.INFO_MESSAGES, ConfigParam.COMPONENT.MESSAGE_HANDLER);
 
             WARN_MSG_FN = configManager.getConfigValue(AM_CC.WARNING_HANDLER);
             ConfigParam.FILE.WARNING_MESSAGES = ConfigParam.APP_CONFIG_PATH + WARN_MSG_FN;
-            WARNING_MESSAGES = ConfigUtils.loadPropertySystemComponent(session, logger, ConfigParam.FILE.WARNING_MESSAGES, ConfigParam.COMPONENT.MESSAGE_HANDLER);
+            WARNING_MESSAGES = ConfigUtils.readRemotePropertyFiles(session, logger, ConfigParam.FILE.WARNING_MESSAGES, ConfigParam.COMPONENT.MESSAGE_HANDLER);
         }catch (Exception ex){
             logger.FAILURE_LOGGER.error(MessageFormat.format(AME.SYS_006.value(), ConfigParam.COMPONENT.MESSAGE_HANDLER), ex);
             throw new IllegalStateException(MessageFormat.format(AME.SYS_006.value(), ConfigParam.COMPONENT.MESSAGE_HANDLER), ex);

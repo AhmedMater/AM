@@ -25,12 +25,12 @@ public class ConfigParam {
     public static class COMPONENT{
         public static final String MESSAGE_HANDLER = "Message Handler";
         public static final String CONFIG_MANAGER = "Configuration Manager";
-        public static final String NOTIFICATION_MANAGER = "Notification Manager";
+        public static final String NOTIFICATION_MANAGER = "AMNotification Manager";
         public static final String JMS_MANAGER = "JMS Manager";
 //        public static final String ERROR_HANDLER = "Error Handler";
 //        public static final String INFO_HANDLER = "Info Handler";
 //        public static final String WARNING_HANDLER = "Warning Handler";
-//        public static final String EMAIL_NOTIFICATION_MANAGER = "Email Notification Manager";
+//        public static final String EMAIL_NOTIFICATION_MANAGER = "Email AMNotification Manager";
 //        public static final String APP_CONFIG_MANAGER = "Application Configuration Manager";
 //        public static final String AM_CONFIG_MANAGER = "AM Configuration Manger";
 //        public static final String LOGGERS_MANAGER = "AM Loggers Manger";

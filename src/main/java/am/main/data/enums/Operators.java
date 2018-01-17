@@ -5,6 +5,7 @@ package am.main.data.enums;
  */
 public enum Operators {
     LIKE("Like", "LIKE"),
+    IN("In", "IN"),
     GT_EQ("Greater Than or Equal", ">="),
     ST_EQ("Smaller Than or Equal", "<="),
     EQ("Equal", "="),

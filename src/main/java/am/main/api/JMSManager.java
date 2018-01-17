@@ -112,7 +112,7 @@ public class JMSManager {
         sender.setDeliveryDelay(deliveryDelay);
         sender.send(message);
 
-        INITIAL_LOGGER.info(session + MessageFormat.format(AMI.JMS_001.value(), message.toString()));
+        INITIAL_LOGGER.info(session + MessageFormat.format(AMI.JMS_001.value(), message.toString(), queue.description()));
 
         INITIAL_LOGGER.debug(session + "Ended: [Void Function]");
     }

@@ -59,7 +59,7 @@ public class ConfigManager {
 
             APP_CONFIG_FN = getConfigValue(AM_CC.APP_CONFIG);
             ConfigParam.FILE.APP_CONFIG_PROPERTIES = ConfigParam.APP_CONFIG_PATH + APP_CONFIG_FN;
-            APP_CONFIGURATION = ConfigUtils.loadPropertySystemComponent(session, logger, ConfigParam.FILE.APP_CONFIG_PROPERTIES, ConfigParam.COMPONENT.CONFIG_MANAGER);
+            APP_CONFIGURATION = ConfigUtils.readRemotePropertyFiles(session, logger, ConfigParam.FILE.APP_CONFIG_PROPERTIES, ConfigParam.COMPONENT.CONFIG_MANAGER);
         }catch (Exception ex){
             logger.FAILURE_LOGGER.error(MessageFormat.format(AME.SYS_006.value(), ConfigParam.COMPONENT.CONFIG_MANAGER), ex);
             throw new IllegalStateException(MessageFormat.format(AME.SYS_006.value(), ConfigParam.COMPONENT.CONFIG_MANAGER), ex);
@@ -132,7 +132,6 @@ public class ConfigManager {
         }
     }
 
-
     public String getConfigValue(AM_CC code){
         String METHOD = "getConfigValue";
         AppSession session = appSession.updateSession(METHOD);
@@ -162,4 +161,5 @@ public class ConfigManager {
     public void setAM_CONFIGURATION(Properties AM_CONFIGURATION) {
         AM_CONFIGURATION = AM_CONFIGURATION;
     }
+
 }

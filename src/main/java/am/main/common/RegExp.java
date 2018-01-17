@@ -18,6 +18,7 @@ public class RegExp {
     public static final String URL = "^((http[s]?|ftp):\\/)?\\/?([^:\\/\\s]+)((\\/\\w+)*\\/)([\\w\\-\\.]+[^#?\\s]+)(.*)?(#[\\w\\-]+)?$";
     public static final String YOUTUBE_VIDEO = "^(https?\\:\\/\\/)?(www\\.youtube\\.com|youtu\\.?be)\\/.+$";
     public static final String YOUTUBE_PLAYLIST = "^http(s)?:\\/\\/(?:www\\.)?youtube\\.com\\/(playlist\\?|watch\\?v=[a-zA-Z0-9_\\-]+&)list=[a-zA-Z0-9_\\-]+$";
+    public static final String INTERNATIONAL_PHONE_NUMBER = "^[0-9]{14}$";
 
     public static final String ORDER_DIRECTION = "^(asc|desc)$";
 
@@ -34,6 +35,7 @@ public class RegExp {
            put(ORDER_DIRECTION, "asc or desc");
            put(YOUTUBE_VIDEO, "valid YouTube URLs");
            put(YOUTUBE_PLAYLIST, "valid YouTube List URLs");
+           put(INTERNATIONAL_PHONE_NUMBER, "valid Mobile Number is 14 digits");
        }}
     );
 }

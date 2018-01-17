@@ -6,7 +6,7 @@ import am.main.data.enums.AMI;
 import am.main.data.jaxb.log4jData.Configuration;
 import am.main.data.jaxb.log4jData.RollingFile;
 import am.main.session.AppSession;
-import am.shared.enums.Category;
+import am.shared.enums.notification.Category;
 import am.shared.enums.EC;
 import am.shared.enums.IC;
 import am.shared.enums.Phase;
@@ -28,10 +28,10 @@ import java.util.Map;
 import static am.main.common.ConfigParam.LOG4J2_FILE_NAME;
 import static am.main.common.ConfigParam.TEMPLATE;
 import static am.main.data.enums.AMI.*;
-import static am.shared.enums.JMSQueues.LOG4J2_Q;
+import static am.shared.enums.JMSQueues.LOG4J2;
 import static am.shared.enums.Phase.APP_LOGGER;
 import static am.shared.enums.Source.AM;
-import static am.shared.enums.Source.AMT_LOGGER;
+import static am.shared.enums.Source.AM_LOGGER;
 
 @Singleton
 public class AppLogger implements Serializable{
@@ -172,7 +172,7 @@ public class AppLogger implements Serializable{
                     logger = amLoggers.get(logData.getSession().getPHASE().value());
                 }
                 logData.logMsg(this, logger);
-            }else if (session.getSOURCE() != null && session.getSOURCE().value().equals(AMT_LOGGER.value())) {
+            }else if (session.getSOURCE() != null && session.getSOURCE().value().equals(AM_LOGGER.value())) {
                 Logger logger = appLoggers.get(logData.getSession().getPHASE().value());
                 if (logger == null) {
                     addNewLogger(logData.getSession().getPHASE());
@@ -182,7 +182,7 @@ public class AppLogger implements Serializable{
             } else {
                 try {
                     logData.setSession(logData.getSession().removeMessageHandler());
-                    jmsManager.sendMessage(LOG4J2_Q, logData);
+                    jmsManager.sendMessage(LOG4J2, logData);
                 } catch (Exception exc) {
                     logData.logMsg(this, FAILURE_LOGGER);
                     FAILURE_LOGGER.error(exc);
