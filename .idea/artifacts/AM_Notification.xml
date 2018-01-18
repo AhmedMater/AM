@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="AM-Notification">
+    <output-path>$PROJECT_DIR$/AM-Release</output-path>
+    <root id="archive" name="AM-Notification.war">
+      <element id="artifact" artifact-name="exploded AM-Notification" />
+    </root>
+  </artifact>
+</component>
