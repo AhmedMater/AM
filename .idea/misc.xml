@@ -6,6 +6,9 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/AM-Resources/pom.xml" />
         <option value="$PROJECT_DIR$/AM-Notification/pom.xml" />
+        <option value="$PROJECT_DIR$/AM-Logger/pom.xml" />
+        <option value="$PROJECT_DIR$/AM-File-Manager/pom.xml" />
+        <option value="$PROJECT_DIR$/AM-Shared-Resources/pom.xml" />
       </list>
     </option>
   </component>

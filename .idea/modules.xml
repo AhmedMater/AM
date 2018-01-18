@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AM-File-Manager/AM-File-Manager.iml" filepath="$PROJECT_DIR$/AM-File-Manager/AM-File-Manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AM-Logger/AM-Logger.iml" filepath="$PROJECT_DIR$/AM-Logger/AM-Logger.iml" />
       <module fileurl="file://$PROJECT_DIR$/AM-Notification/AM-Notification.iml" filepath="$PROJECT_DIR$/AM-Notification/AM-Notification.iml" />
       <module fileurl="file://$PROJECT_DIR$/AM-Resources/AM-Resources.iml" filepath="$PROJECT_DIR$/AM-Resources/AM-Resources.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AM-Shared-Resources/AM-Shared-Resources.iml" filepath="$PROJECT_DIR$/AM-Shared-Resources/AM-Shared-Resources.iml" />
     </modules>
   </component>
 </project>
