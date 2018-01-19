@@ -40,8 +40,8 @@ public class ConfigParam {
 
     public static final String LOG4J2_FILE_NAME = "/log4j2.xml";
 //    public static final String AM_LOGGERS_FILE_NAME = "/AM-Loggers.xml";
-    public static final String LOGGER_FILE_NAME = "../logs/" + LOGGER_FOLDER + "/{0}/{1}.log";
-    public static final String LOGGER_FILE_PATTERN = "../logs/" + LOGGER_FOLDER + "/{0}/{1}/{1}-%i-%d'{yyyy-MM-dd HH-mm-ss.SSS'}.log";
+    public static final String LOGGER_FILE_NAME = "C:/AMT-Loges/" + LOGGER_FOLDER + "/{0}/{1}.log";
+    public static final String LOGGER_FILE_PATTERN = "C:/AMT-Loges/" + LOGGER_FOLDER + "/{0}/{1}/{1}-%i-%d'{yyyy-MM-dd HH-mm-ss.SSS'}.log";
     public static final String TEMPLATE = "Template";
 
     public static final String ASC_ORDER = "ASC";

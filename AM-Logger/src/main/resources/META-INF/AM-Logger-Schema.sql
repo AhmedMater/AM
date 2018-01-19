@@ -1,3 +1,3 @@
-DROP SCHEMA am_logger IF EXISTS;
+DROP SCHEMA IF EXISTS am_logger ;
 CREATE SCHEMA am_logger;
 USE am_logger;

@@ -36,21 +36,21 @@ INSERT INTO event_notification (event_notif_id, event_type, notification, descri
 INSERT INTO event_notification (event_notif_id, event_type, notification, description)
   VALUES ('NCor-ITT', 'NCor', 'ITT', 'Notification to all Technical Reviewers interested in the Course');
 
-INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, template_name, num_of_placeholders)
-  VALUES ('NCor-IS-EM', 'NCor-IS', 'EM', 'NewCourse_IS_EM.txt', 5);
-INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, template_name, num_of_placeholders)
-  VALUES ('NCor-IS-SMS', 'NCor-IS', 'SMS', 'NewCourse_IS_SMS.txt', 3);
-INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, template_name, num_of_placeholders)
-  VALUES ('NCor-IS-WN', 'NCor-IS', 'WN', 'NewCourse_IS_WebNotification.txt', 2);
-INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, template_name, num_of_placeholders)
-  VALUES ('NCor-ITR-EM', 'NCor-ITR', 'EM', 'NewCourse_ITR_EM.txt', 5);
-INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, template_name, num_of_placeholders)
-  VALUES ('NCor-ITR-SMS', 'NCor-ITR', 'SMS', 'NewCourse_ITR_SMS.txt', 3);
-INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, template_name, num_of_placeholders)
-  VALUES ('NCor-ITR-WN', 'NCor-ITR', 'WN', 'NewCourse_ITR_WebNotification.txt', 2);
-INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, template_name, num_of_placeholders)
-  VALUES ('NCor-ITT-EM', 'NCor-ITT', 'EM', 'NewCourse_ITT_EM.txt', 5);
-INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, template_name, num_of_placeholders)
-  VALUES ('NCor-ITT-SMS', 'NCor-ITT', 'SMS', 'NewCourse_ITT_SMS.txt', 3);
-INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, template_name, num_of_placeholders)
-  VALUES ('NCor-ITT-WN', 'NCor-ITT', 'WN', 'NewCourse_ITT_WebNotification.txt', 2);
+INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, subject, template_name, num_of_placeholders)
+  VALUES ('NCor-IS-EM', 'NCor-IS', 'EM', 'AMT New Course', 'NewCourse_IS_EM.txt', 5);
+INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, subject, template_name, num_of_placeholders)
+  VALUES ('NCor-IS-SMS', 'NCor-IS', 'SMS', 'AMT New Course', 'NewCourse_IS_SMS.txt', 3);
+INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, subject, template_name, num_of_placeholders)
+  VALUES ('NCor-IS-WN', 'NCor-IS', 'WN', 'AMT New Course', 'NewCourse_IS_WebNotification.txt', 2);
+INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, subject, template_name, num_of_placeholders)
+  VALUES ('NCor-ITR-EM', 'NCor-ITR', 'EM', 'AMT New Course', 'NewCourse_ITR_EM.txt', 5);
+INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, subject, template_name, num_of_placeholders)
+  VALUES ('NCor-ITR-SMS', 'NCor-ITR', 'SMS', 'AMT New Course', 'NewCourse_ITR_SMS.txt', 3);
+INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, subject, template_name, num_of_placeholders)
+  VALUES ('NCor-ITR-WN', 'NCor-ITR', 'WN', 'AMT New Course', 'NewCourse_ITR_WebNotification.txt', 2);
+INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, subject, template_name, num_of_placeholders)
+  VALUES ('NCor-ITT-EM', 'NCor-ITT', 'EM', 'AMT New Course', 'NewCourse_ITT_EM.txt', 5);
+INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, subject, template_name, num_of_placeholders)
+  VALUES ('NCor-ITT-SMS', 'NCor-ITT', 'SMS', 'AMT New Course', 'NewCourse_ITT_SMS.txt', 3);
+INSERT INTO notification_template(notif_temp_id, event_notif_id, notification_type, subject, template_name, num_of_placeholders)
+  VALUES ('NCor-ITT-WN', 'NCor-ITT', 'WN', 'AMT New Course', 'NewCourse_ITT_WebNotification.txt', 2);

@@ -5,8 +5,8 @@
             <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
         </Console>
 
-        <RollingFile name="Template" fileName="../logs/AM/Template.log" immediateFlush="true"
-                     filePattern="../logs/AM/Template/Template-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
+        <RollingFile name="Template" fileName="C:/AMT-Loges/AM/Template.log" immediateFlush="true"
+                     filePattern="C:/AMT-Loges/AM/Template/Template-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
             <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="6144 KB"/>
@@ -14,16 +14,16 @@
 
         </RollingFile>
 
-        <RollingFile name="Failure" fileName="../logs/AM/Failure.log" immediateFlush="true"
-                     filePattern="../logs/AM/Failure/Failure-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
+        <RollingFile name="Failure" fileName="C:/AMT-Loges/AM/Failure.log" immediateFlush="true"
+                     filePattern="C:/AMT-Loges/AM/Failure/Failure-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
             <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="6144 KB"/>
             </Policies>
 
         </RollingFile>
-        <RollingFile name="Initial" fileName="../logs/AM/Initial.log" immediateFlush="true"
-                     filePattern="../logs/AM/Initial/Initial-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
+        <RollingFile name="Initial" fileName="C:/AMT-Loges/AM/Initial.log" immediateFlush="true"
+                     filePattern="C:/AMT-Loges/AM/Initial/Initial-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
             <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="6144 KB"/>

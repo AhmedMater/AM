@@ -32,6 +32,7 @@ public class Log4j2Listener implements MessageListener {
     @Inject private DBManager dbManager;
 
     private final String CLASS = Log4j2Listener.class.getSimpleName();
+    AppSession session = new AppSession(Source.AM_LOGGER, Interface.JMS, Phase.AM_LOGGING, CLASS, "onMessage");
 
     @Inject private MessageHandler messageHandler;
     @Inject private AppLogger logger;
@@ -39,7 +40,7 @@ public class Log4j2Listener implements MessageListener {
     @Override
     public void onMessage(Message m) {
         String METHOD = "onMessage";
-        AppSession session = new AppSession(Source.AM_LOGGER, Interface.JMS, Phase.AM_LOGGING);
+
         try {
             String jmsID = m.getJMSMessageID();
 
@@ -50,7 +51,7 @@ public class Log4j2Listener implements MessageListener {
                 logData.getSession().setMessageHandler(messageHandler);
                 logger.log(session, logData);
 
-                logger.endDebug(session);
+//                logger.endDebug(session);
             }else
                 throw new GeneralException(session, EC.AMT_0050, NOTIFICATION_INPUT_Q);
 

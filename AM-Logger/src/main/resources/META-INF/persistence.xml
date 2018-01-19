@@ -3,7 +3,7 @@
 
     <persistence-unit name="amt">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>jdbc/mysql/am-Logger</jta-data-source>
+        <jta-data-source>AM_MySQL_Logger</jta-data-source>
         <properties>
             <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>

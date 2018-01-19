@@ -3,7 +3,7 @@
 
     <persistence-unit name="amt">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>jdbc/mysql/am-file-manager</jta-data-source>
+        <jta-data-source>AM_MySQL_File_Manager</jta-data-source>
         <properties>
             <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>

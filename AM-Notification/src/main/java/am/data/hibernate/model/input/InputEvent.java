@@ -44,7 +44,7 @@ public class InputEvent implements Serializable{
     @Basic
     @Column(name = "category_related_id")
     @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
-    @Length(min = 1, max = 50, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
+    @Length(min = 1, max = 30, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
     @Pattern(regexp = RegExp.CONTENT_NAME, message = FormValidation.REGEX, groups = InvalidValidation.class)
     @NotBlank(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String categoryRelatedID;
