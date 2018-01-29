@@ -41,6 +41,13 @@ public class Policies implements Cloneable{
     @XmlElement(name = "SizeBasedTriggeringPolicy", required = true)
     protected SizeBasedTriggeringPolicy sizeBasedTriggeringPolicy;
 
+    public Policies() {
+    }
+
+    public Policies(SizeBasedTriggeringPolicy sizeBasedTriggeringPolicy) {
+        this.sizeBasedTriggeringPolicy = sizeBasedTriggeringPolicy;
+    }
+
     /**
      * Gets the value of the sizeBasedTriggeringPolicy property.
      *

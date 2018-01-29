@@ -1,4 +1,4 @@
-package am.shared.enums;
+package am.main.data.enums.logger;
 
 /**
  * Created by ahmed.motair on 1/6/2018.
@@ -6,11 +6,14 @@ package am.shared.enums;
 public enum LoggerLevels {
     ST_DEBUG("SD", "debug"),
     EN_DEBUG("ED", "debug"),
+    INTERNAL_INFO("II", "info"),
     INFO("I", "info"),
     WARN("W", "warn"),
     ERROR_EX("EE", "error"),
     ERROR_MSG("EM", "error"),
-    ERROR_MSG_EX("EEM", "error");
+    ERROR_MSG_EX("EEM", "error"),
+    INTERNAL_ERROR_MSG("IEM", "error"),
+    INTERNAL_ERROR_MSG_EX("IEEM", "error");
 
     private final String abbreviation;
     private final String level;

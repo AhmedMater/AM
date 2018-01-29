@@ -1,13 +1,19 @@
 
 package am.main.data.jaxb.log4jData;
 
-import am.shared.enums.Phase;
+import am.main.api.AppLogger;
+import am.main.data.jaxb.am.logger.AMLoggerConfig;
+import am.main.data.jaxb.am.logger.LoggerData;
+import am.main.data.jaxb.am.logger.LoggerGroup;
+import am.main.session.AppSession;
 
 import javax.xml.bind.annotation.*;
 import java.text.MessageFormat;
+import java.util.List;
 
-import static am.main.common.ConfigParam.LOGGER_FILE_NAME;
-import static am.main.common.ConfigParam.LOGGER_FILE_PATTERN;
+import static am.main.data.enums.impl.IIC.I_LOG_3;
+import static am.main.data.enums.logger.LogConfigProp.MAIN_LOG_PATH;
+import static am.main.data.enums.logger.LogConfigProp.MAX_FILE_SIZE;
 
 
 /**
@@ -118,7 +124,7 @@ import static am.main.common.ConfigParam.LOGGER_FILE_PATTERN;
  *                       &lt;/complexContent>
  *                     &lt;/complexType>
  *                   &lt;/element>
- *                   &lt;element name="Logger" maxOccurs="unbounded" minOccurs="0">
+ *                   &lt;element name="LoggerData" maxOccurs="unbounded" minOccurs="0">
  *                     &lt;complexType>
  *                       &lt;complexContent>
  *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
@@ -166,7 +172,7 @@ public class Configuration implements Cloneable{
     @XmlElement(name = "Loggers", required = true)
     protected Loggers loggers;
     @XmlAttribute(name = "status")
-    protected String status;
+    protected String status = "WARN";
 
     /**
      * Gets the value of the appenders property.
@@ -240,21 +246,37 @@ public class Configuration implements Cloneable{
         this.status = value;
     }
 
+    private static final String LOGGER_FILE_NAME = "{0}\\{1}\\{2}.log";
+    private static final String LOGGER_FILE_PATTERN = "{0}\\{1}\\{2}\\{2}-%i-%d'{yyyy-MM-dd HH-mm-ss.SSS'}.log";
 
-    public void addNewLogger(Phase logger, Logger templateLogger, RollingFile templateRolling) throws Exception{
-        RollingFile newRollingFile = templateRolling.clone();
+    public void addNewLogger(AppSession appSession, LoggerGroup group, AppLogger logger, AMLoggerConfig config, Logger templateLogger, RollingFile templateRolling) throws Exception{
+        String METHOD = "addNewLogger";
+        AppSession session = appSession.updateSession(getClass().getSimpleName(), METHOD);
+        logger.startDebug(session, group, config, templateLogger, templateRolling);
 
-        newRollingFile.setName(logger.value());
-        newRollingFile.setFileName(MessageFormat.format(LOGGER_FILE_NAME, logger.category().name(), logger.value()));
-        newRollingFile.setFilePattern(MessageFormat.format(LOGGER_FILE_PATTERN, logger.category().name(), logger.value()));
-        this.getAppenders().getRollingFile().add(newRollingFile);
+        String groupName = group.getName();
+        String mainPath = config.getLoggerProperty(MAIN_LOG_PATH.getName()).getValue();
+        String maxFileLogSize = config.getLoggerProperty(MAX_FILE_SIZE.getName()).getValue();
 
-        Logger newLogger = templateLogger.clone();
+        List<LoggerData> loggerDataList = group.getLoggerData();
+        for (LoggerData loggerData : loggerDataList) {
+            RollingFile newRollingFile = templateRolling.clone();
 
-        newLogger.setName(logger.value());
-        newLogger.setLevel(logger.level().level());
-        newLogger.getAppenderRef().setRef(logger.value());
-        this.getLoggers().getLogger().add(newLogger);
+            newRollingFile.setName(loggerData.getName());
+            newRollingFile.setFileName(MessageFormat.format(LOGGER_FILE_NAME, mainPath, groupName, loggerData.getName()));
+            newRollingFile.setFilePattern(MessageFormat.format(LOGGER_FILE_PATTERN, mainPath, groupName, loggerData.getName()));
+            this.getAppenders().getRollingFile().add(newRollingFile);
+
+            Logger newLogger = templateLogger.clone();
+
+            newLogger.setName(loggerData.getName());
+            newLogger.setLevel(loggerData.getLevel());
+            newLogger.getAppenderRefList().add(new AppenderRef(loggerData.getName()));
+            newLogger.getAppenderRefList().add(new AppenderRef("Console"));
+            this.getLoggers().getLogger().add(newLogger);
+            logger.info(session, I_LOG_3, loggerData.getName());
+        }
+        logger.endDebug(session);
     }
     @Override
     protected Configuration clone() throws CloneNotSupportedException {

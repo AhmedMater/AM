@@ -88,7 +88,7 @@
               <xs:element name="Logger" maxOccurs="unbounded" minOccurs="0">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:element name="AppenderRef">
+                    <xs:element name="AppenderRef" maxOccurs="unbounded" minOccurs="0">
                       <xs:complexType>
                         <xs:simpleContent>
                           <xs:extension base="xs:string">

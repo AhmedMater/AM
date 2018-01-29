@@ -1,7 +1,8 @@
 package am.main.exception;
 
+import am.main.api.MessageHandler;
 import am.main.api.validation.FormValidation;
-import am.shared.enums.EC;
+import am.main.spi.AMCode;
 
 import java.io.Serializable;
 
@@ -15,9 +16,13 @@ public class AMError implements Serializable{
 
     public AMError() {
     }
-    public AMError(EC code, String message) {
-        this.code = code.toString();
+    public AMError(AMCode code, String message) {
+        this.code = code.getFullCode();
         this.message = message;
+    }
+    public AMError(AMCode code, MessageHandler messageHandler, Object ... args) {
+        this.code = code.getFullCode();
+        this.message = code.getFullMsg(messageHandler, args);
     }
     public AMError(FormValidation validation) {
         this.validation = validation;

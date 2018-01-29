@@ -8,16 +8,16 @@ import javax.validation.groups.Default;
  */
 @GroupSequence({Default.class, RequiredValidation.class, BlankValidation.class, LengthValidation.class, InvalidValidation.class})
 public interface FormValidation {
-    String REQUIRED = "AMT_0003";
-    String REGEX = "AMT_0004";
-    String EMPTY_STR = "AMT_0005";
-    String MAX_LENGTH = "AMT_0006";
-    String MIN_LENGTH = "AMT_0007";
-    String MIN_MAX_LENGTH = "AMT_0008";
-    String EQ_LENGTH = "AMT_0009";
-    String MAX_VALUE = "AMT_0010";
-    String MIN_VALUE = "AMT_0011";
-    String FUTURE_DATE = "AMT_0012";
-    String POSITIVE_NUM = "AMT_0013";
-    String POSITIVE_NUM_AND_ZERO = "AMT_0023";
+    String REQUIRED = "AM_VAL_1";
+    String REGEX = "AM_VAL_2";
+    String EMPTY_STR = "AM_VAL_3";
+    String MAX_LENGTH = "AM_VAL_4";
+    String MIN_LENGTH = "AM_VAL_5";
+    String MIN_MAX_LENGTH = "AM_VAL_6";
+    String EQ_LENGTH = "AM_VAL_7";
+    String MAX_VALUE = "AM_VAL_8";
+    String MIN_VALUE = "AM_VAL_9";
+    String FUTURE_DATE = "AM_VAL_10";
+    String POSITIVE_NUM = "AM_VAL_11";
+    String POSITIVE_NUM_AND_ZERO = "AM_VAL_12";
 }

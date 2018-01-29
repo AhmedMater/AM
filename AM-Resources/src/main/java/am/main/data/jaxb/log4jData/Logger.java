@@ -5,6 +5,8 @@ package am.main.data.jaxb.log4jData;
  */
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -37,39 +39,44 @@ import javax.xml.bind.annotation.*;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "appenderRef"
+        "appenderRefList"
 })
 public class Logger implements Cloneable{
 
     @XmlElement(name = "AppenderRef", required = true)
-    protected AppenderRef appenderRef;
+    protected List<AppenderRef> appenderRefList;
     @XmlAttribute(name = "name")
     protected String name;
     @XmlAttribute(name = "level")
     protected String level;
 
     /**
-     * Gets the value of the appenderRef property.
+     * Gets the value of the getAppenderRefList property.
      *
-     * @return
-     *     possible object is
-     *     {@link AppenderRef }
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the getAppenderRefList property.
+     *
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getAppenderRefList().add(newItem);
+     * </pre>
+     *
+     *
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link AppenderRef }
+     *
      *
      */
-    public AppenderRef getAppenderRef() {
-        return appenderRef;
-    }
-
-    /**
-     * Sets the value of the appenderRef property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link AppenderRef }
-     *
-     */
-    public void setAppenderRef(AppenderRef value) {
-        this.appenderRef = value;
+    public List<AppenderRef> getAppenderRefList() {
+        if (appenderRefList == null) {
+            appenderRefList = new ArrayList<AppenderRef>();
+        }
+        return this.appenderRefList;
     }
 
     /**
@@ -124,7 +131,8 @@ public class Logger implements Cloneable{
     public Logger clone() throws CloneNotSupportedException {
         Logger clone = new Logger();
         clone.setName(this.name);
-        clone.setAppenderRef(this.appenderRef.clone());
+        for (AppenderRef item : getAppenderRefList())
+            clone.getAppenderRefList().add(item.clone());
         clone.setLevel(this.level);
         return clone;
     }

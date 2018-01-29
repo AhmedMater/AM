@@ -67,10 +67,10 @@ public class QueryBuilder<T> {
         logger.startDebug(session);
 
         if(this.conditions.size()>0) {
-            this.where += " WHERE " + conditions.get(0).getCondition();
+            this.where += " WHERE " + conditions.get(0).constructCondition();
 
             for (int i=1; i<conditions.size(); i++)
-                this.where += " AND " + conditions.get(i).getCondition();
+                this.where += " AND " + conditions.get(i).constructCondition();
         }
 
         logger.endDebug(session, where);

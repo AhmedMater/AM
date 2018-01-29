@@ -1,49 +1,54 @@
 package am.main.common;
 
-import static am.shared.common.SharedParam.LOGGER_FOLDER;
+import am.main.spi.AMSource;
 
 /**
  * Created by ahmed.motair on 9/7/2017.
  */
 public class ConfigParam {
-    public static String APP_CONFIG_PATH;
+    public static String APP_NAME;
+    public static String APP_TYPE;
+    public static String AM_RESOURCE_NAME = "AM-Resources";
+    private static String APP_CONFIG_PATH;
 
-    public static class FILE{
-        public static final String AM_CONFIG_PROPERTIES = "AM-Config.properties";
-        public static String ERROR_MESSAGES;
-        public static String INFO_MESSAGES;
-        public static String WARNING_MESSAGES;
-        public static String EMAIL_NOTIFICATION;
-        public static String APP_CONFIG_PROPERTIES;
-        public static String SYSTEM_LOGGER;
-        public static String LOGGERS_CONFIG;
+    public static AMComponent ERROR_MSG_CONFIG, INFO_MSG_CONFIG, WARN_MSG_CONFIG, LOGGER_CONFIG;
+    public static AMComponent JMS_MANGER_CONFIG, NOTIFICATION_CONFIG, MAIN_APP_CONFIG;
 
-        public static String TIMER_CALCULATOR_CONFIG;
-        public static String PUBLIC_HOLIDAYS;
+    public static final String ASC_ORDER = "ASC";
+    public static final String DESC_ORDER = "DESC";
+
+    public static void setConfiguration(String appConfigPath, AMSource app){
+        APP_CONFIG_PATH = appConfigPath;
+        APP_NAME = app.getName();
+
+        ERROR_MSG_CONFIG = new AMComponent(appConfigPath, "AM-Error-Msg.properties", "Message Handler");
+        INFO_MSG_CONFIG = new AMComponent(appConfigPath, "AM-Info-Msg.properties", "Message Handler");
+        WARN_MSG_CONFIG = new AMComponent(appConfigPath, "AM-Warning-Msg.properties", "Message Handler");
+        LOGGER_CONFIG = new AMComponent(appConfigPath, "AM-Logger-Config.xml", "App LoggerData");
+        JMS_MANGER_CONFIG = new AMComponent(appConfigPath, "AM-JMS-Config.xml", "JMS Manager");
+        NOTIFICATION_CONFIG = new AMComponent(appConfigPath, "AM-Notification-Config.properties", "AM Notification Manger");
+        MAIN_APP_CONFIG = new AMComponent(appConfigPath, "Main-App-Config.properties", "Configuration Manager");
     }
 
     public static class COMPONENT{
+        public static final String APP_LOGGER = "Application Logger";
+        public static final String JMS_MANAGER = "JMS Manager";
         public static final String MESSAGE_HANDLER = "Message Handler";
         public static final String CONFIG_MANAGER = "Configuration Manager";
         public static final String NOTIFICATION_MANAGER = "AMNotification Manager";
-        public static final String JMS_MANAGER = "JMS Manager";
-//        public static final String ERROR_HANDLER = "Error Handler";
-//        public static final String INFO_HANDLER = "Info Handler";
-//        public static final String WARNING_HANDLER = "Warning Handler";
-//        public static final String EMAIL_NOTIFICATION_MANAGER = "Email AMNotification Manager";
-//        public static final String APP_CONFIG_MANAGER = "Application Configuration Manager";
-//        public static final String AM_CONFIG_MANAGER = "AM Configuration Manger";
-//        public static final String LOGGERS_MANAGER = "AM Loggers Manger";
         public static final String TIMER_CALCULATOR = "Timer Calculator";
         public static final String PUBLIC_HOLIDAYS = "Public Holidays";
     }
 
-    public static final String LOG4J2_FILE_NAME = "/log4j2.xml";
-//    public static final String AM_LOGGERS_FILE_NAME = "/AM-Loggers.xml";
-    public static final String LOGGER_FILE_NAME = "C:/AMT-Loges/" + LOGGER_FOLDER + "/{0}/{1}.log";
-    public static final String LOGGER_FILE_PATTERN = "C:/AMT-Loges/" + LOGGER_FOLDER + "/{0}/{1}/{1}-%i-%d'{yyyy-MM-dd HH-mm-ss.SSS'}.log";
-    public static final String TEMPLATE = "Template";
+    public static class AMComponent {
+        public final String FN;
+        public final String FN_PATH;
+        public final String COMPONENT_NAME;
 
-    public static final String ASC_ORDER = "ASC";
-    public static final String DESC_ORDER = "DESC";
+        public AMComponent(String appConfigPath, String FN, String COMPONENT_NAME) {
+            this.FN = FN;
+            this.FN_PATH = appConfigPath + FN;
+            this.COMPONENT_NAME = COMPONENT_NAME;
+        }
+    }
 }

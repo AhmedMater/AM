@@ -1,8 +1,6 @@
 package am.main.api.db;
 
 import am.main.api.AppLogger;
-import am.main.data.enums.AME;
-import am.main.data.enums.AMI;
 import am.main.exception.DBException;
 import am.main.session.AppSession;
 import am.shared.common.SharedParam;
@@ -17,8 +15,8 @@ import javax.validation.ConstraintViolationException;
 import java.io.Serializable;
 import java.util.*;
 
-import static am.shared.enums.Phase.MESSAGE_HANDLER;
-import static am.shared.enums.Source.AM;
+import static am.main.data.enums.impl.IEC.*;
+import static am.main.data.enums.impl.IIC.*;
 
 
 /**
@@ -29,7 +27,7 @@ public class DBManager implements Serializable {
     @Inject private AppLogger logger;
 
     private static final String CLASS = DBManager.class.getSimpleName();
-    private static final AppSession appSession = new AppSession(AM, MESSAGE_HANDLER, CLASS);
+//    private static final AppSession appSession = new AppSession(AM, DB_MANAGER, CLASS);
 
     private final static String DB_INSERT = "Insert";
     private final static String DB_UPDATE = "Update";
@@ -57,10 +55,12 @@ public class DBManager implements Serializable {
     public <T> T persist(AppSession appSession, T toBeInserted, Boolean usingCache) throws Exception {
         String METHOD = "persist";
         AppSession session = appSession.updateSession(METHOD);
+        EntityManager em = null;
+
         try {
             logger.startDebug(session, toBeInserted);
+            logger.info(session, I_DB_1, toBeInserted.getClass().getSimpleName());
             try {
-                EntityManager em;
                 if(usingCache) {
                     em = getCachedEM();
                     em.persist(toBeInserted);
@@ -71,15 +71,15 @@ public class DBManager implements Serializable {
                     em.persist(toBeInserted);
                     em.flush();
                 }
-                logger.info(session, AMI.DB_001, toBeInserted.getClass().getSimpleName());
+                logger.info(session, I_DB_2, toBeInserted.getClass().getSimpleName());
             } catch (EntityExistsException ex) {
-                throw new DBException(session, ex, AME.DB_001, toBeInserted);
+                throw new DBException(session, ex, E_DB_1, toBeInserted);
             } catch (IllegalArgumentException ex) {
-                throw new DBException(session, ex, AME.DB_002, toBeInserted.getClass().getSimpleName());
+                throw new DBException(session, ex, E_DB_2, toBeInserted.getClass().getSimpleName());
             } catch (TransactionRequiredException ex) {
-                throw new DBException(session, ex, AME.DB_003);
+                throw new DBException(session, ex, E_DB_3);
             } catch (PersistenceException ex) {
-                throw new DBException(session, ex, AME.DB_004, DB_INSERT);
+                throw new DBException(session, ex, E_DB_4, DB_INSERT);
             } catch (ConstraintViolationException ex) {
                 Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
 
@@ -87,28 +87,33 @@ public class DBManager implements Serializable {
                 for (ConstraintViolation<?> violation : violations)
                     errors.add(violation.getMessageTemplate());
 
-                throw new DBException(session, ex, AME.DB_005, errors, toBeInserted);
+                throw new DBException(session, ex, E_DB_5, errors, toBeInserted);
             }
 
             logger.endDebug(session, toBeInserted);
             return toBeInserted;
         }catch (Exception ex){
+            if(usingCache && em != null)
+                em.close();
+
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, ex, AME.DB_008, toBeInserted);
+                throw new DBException(session, ex, E_DB_8, toBeInserted);
         }
     }
 
     public <T> T find(AppSession appSession, Class<T> className, Object identifier, Boolean usingCache)throws DBException {
         String METHOD = "find";
         AppSession session = appSession.updateSession(METHOD);
+        EntityManager em = null;
+
         try {
             logger.startDebug(session, className, identifier);
+            logger.info(session, I_DB_3, className, identifier);
 
             T foundObject;
             try {
-                EntityManager em;
                 if(usingCache) {
                     em = getCachedEM();
                     foundObject = em.find(className, identifier);
@@ -117,29 +122,34 @@ public class DBManager implements Serializable {
                     em = getUnCachedEM();
                     foundObject = em.find(className, identifier);
                 }
-                logger.info(session, AMI.DB_002, className, identifier);
+                logger.info(session, I_DB_4, className, identifier);
             } catch (IllegalArgumentException ex) {
-                throw new DBException(session, ex, AME.DB_006, className.toString(), identifier, className.getSimpleName());
+                throw new DBException(session, ex, E_DB_6, className.toString(), identifier, className.getSimpleName());
             }
 
             logger.endDebug(session, foundObject);
             return foundObject;
         }catch (Exception ex){
+            if(usingCache && em != null)
+                em.close();
+
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, ex, AME.DB_009, className.getSimpleName(), identifier);
+                throw new DBException(session, ex, E_DB_9, className.getSimpleName(), identifier);
         }
     }
     public <T> List<T> findAll(AppSession appSession, Class<T> className, Boolean usingCache)throws DBException {
-        String METHOD = "find";
-                 AppSession session = appSession.updateSession(METHOD);
+        String METHOD = "findAll";
+        AppSession session = appSession.updateSession(METHOD);
+        EntityManager em = null;
+
         try {
             logger.startDebug(session, className);
+            logger.info(session, I_DB_5, className);
 
             List<T> result;
             try {
-                EntityManager em;
                 if(usingCache) {
                     em = getCachedEM();
                     result = em.createQuery("FROM " + className.getSimpleName(), className)
@@ -149,19 +159,21 @@ public class DBManager implements Serializable {
                     em = getUnCachedEM();
                     result = em.createQuery("FROM " + className.getSimpleName(), className).getResultList();
                 }
-                //TODO: Logging AMI and AME Check here need Change
-                logger.info(session, AMI.DB_002, className);
+                logger.info(session, I_DB_6, className);
             } catch (IllegalArgumentException ex) {
-                throw new DBException(session, ex, AME.DB_006, className.toString(), className.getSimpleName());
+                throw new DBException(session, ex, E_DB_26, className.getSimpleName());
             }
 
             logger.endDebug(session, result);
             return result;
         }catch (Exception ex){
+            if(usingCache && em != null)
+                em.close();
+
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, ex, AME.DB_009, className.getSimpleName());
+                throw new DBException(session, ex, E_DB_27, className.getSimpleName());
         }
     }
 
@@ -169,37 +181,49 @@ public class DBManager implements Serializable {
     public <T> T merge(AppSession appSession, T toBeUpdated, Boolean usingCache)throws DBException{
         String METHOD = "merge";
         AppSession session = appSession.updateSession(METHOD);
+        EntityManager em = null;
         try {
             logger.startDebug(session, toBeUpdated);
+            logger.info(session, I_DB_7, toBeUpdated.getClass().getSimpleName());
 
             try {
-                EntityManager em;
                 if(usingCache) {
                     em = getCachedEM();
+
+                    if (!em.contains(toBeUpdated))
+                        throw new DBException(session, E_DB_28, toBeUpdated);
+
                     toBeUpdated = em.merge(toBeUpdated);
                     em.flush();
                     em.close();
                 }else {
                     em = getUnCachedEM();
+
+                    if (!em.contains(toBeUpdated))
+                        throw new DBException(session, E_DB_28, toBeUpdated);
+
                     toBeUpdated = em.merge(toBeUpdated);
                     em.flush();
                 }
-                logger.info(session, AMI.DB_003, toBeUpdated);
+                logger.info(session, I_DB_8, toBeUpdated.getClass().getSimpleName());
             }catch (IllegalArgumentException ex){
-                throw new DBException(session, ex, AME.DB_007, toBeUpdated);
+                throw new DBException(session, ex, E_DB_26, toBeUpdated);
             }catch (TransactionRequiredException ex){
-                throw new DBException(session, ex, AME.DB_003);
+                throw new DBException(session, ex, E_DB_3);
             } catch (PersistenceException ex) {
-                throw new DBException(session, ex, AME.DB_004, DB_UPDATE);
+                throw new DBException(session, ex, E_DB_4, DB_UPDATE);
             }
 
             logger.endDebug(session, toBeUpdated);
             return toBeUpdated;
         }catch (Exception ex){
+            if(usingCache && em != null)
+                em.close();
+
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, ex, AME.DB_010, toBeUpdated);
+                throw new DBException(session, ex, E_DB_10, toBeUpdated);
         }
     }
 
@@ -210,33 +234,36 @@ public class DBManager implements Serializable {
         EntityManager em = null;
         try {
             logger.startDebug(session, toBeRemoved);
+            logger.info(session, I_DB_9, toBeRemoved.getClass().getSimpleName());
 
             try {
 
                 if(usingCache) {
                     em = getCachedEM();
+
                     if (!em.contains(toBeRemoved))
-                        throw new DBException(session, AME.DB_002, toBeRemoved);
+                        throw new DBException(session, E_DB_28, toBeRemoved);
 
                     em.remove(toBeRemoved);
                     em.flush();
                     em.close();
                 }else {
                     em = getUnCachedEM();
+
                     if (!em.contains(toBeRemoved))
-                        throw new DBException(session, AME.DB_002, toBeRemoved);
+                        throw new DBException(session, E_DB_28, toBeRemoved);
 
                     em.remove(toBeRemoved);
                     em.flush();
                 }
 
-                logger.info(session, AMI.DB_004, toBeRemoved);
+                logger.info(session, I_DB_10, toBeRemoved.getClass().getSimpleName());
             } catch (IllegalArgumentException ex) {
-                throw new DBException(session, ex, AME.DB_007, toBeRemoved);
+                throw new DBException(session, ex, E_DB_26, toBeRemoved);
             } catch (TransactionRequiredException ex) {
-                throw new DBException(session, ex, AME.DB_003);
+                throw new DBException(session, ex, E_DB_3);
             } catch (PersistenceException ex) {
-                throw new DBException(session, ex, AME.DB_004, DB_DELETE);
+                throw new DBException(session, ex, E_DB_4, DB_DELETE);
             }
 
             logger.endDebug(session);
@@ -247,7 +274,7 @@ public class DBManager implements Serializable {
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, ex, AME.DB_011, toBeRemoved);
+                throw new DBException(session, ex, E_DB_11, toBeRemoved);
         }
     }
 
@@ -260,13 +287,13 @@ public class DBManager implements Serializable {
             logger.startDebug(session);
 
             boolean isFound = false;
-            if (usingCache)
-                em = getCachedEM();
-            else
-                em = getUnCachedEM();
+
+            em = (usingCache) ? getCachedEM() : getUnCachedEM();
+
             String queryStr = "SELECT " + selectAttribute + " FROM " + entity.getSimpleName() +
                     " WHERE " + conditionAttribute + " = :AttributeValue";
 
+            logger.info(session, I_DB_11, queryStr);
             Query query = em
                     .createQuery(queryStr)
                     .setParameter("AttributeValue", value);
@@ -281,22 +308,25 @@ public class DBManager implements Serializable {
 
                 if (result.size() >= 1)
                     isFound = true;
+
+                logger.info(session, I_DB_12, queryStr);
             } catch (IllegalStateException ex) {
-                throw new DBException(session, ex, AME.DB_017, queryStr);
+                throw new DBException(session, ex, E_DB_17, queryStr);
             } catch (QueryTimeoutException ex) {
-                throw new DBException(session, ex, AME.DB_018, queryStr);
+                throw new DBException(session, ex, E_DB_18, queryStr);
             } catch (TransactionRequiredException ex) {
-                throw new DBException(session, ex, AME.DB_021, queryStr);
+                throw new DBException(session, ex, E_DB_21, queryStr);
             } catch (PessimisticLockException ex) {
-                throw new DBException(session, ex, AME.DB_019, queryStr);
+                throw new DBException(session, ex, E_DB_19, queryStr);
             } catch (LockTimeoutException ex) {
-                throw new DBException(session, ex, AME.DB_020, queryStr);
+                throw new DBException(session, ex, E_DB_20, queryStr);
             } catch (PersistenceException ex) {
-                throw new DBException(session, ex, AME.DB_022, queryStr);
+                throw new DBException(session, ex, E_DB_22, queryStr);
             }
 
             if(usingCache && em != null)
                 em.close();
+
             logger.endDebug(session);
             return isFound;
         }catch (Exception ex){
@@ -306,7 +336,7 @@ public class DBManager implements Serializable {
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, ex, AME.DB_023, entity.getSimpleName());
+                throw new DBException(session, ex, E_DB_23, entity.getSimpleName());
         }
     }
 
@@ -321,6 +351,7 @@ public class DBManager implements Serializable {
             Map<String, Object> placeHolders = constructQuery(session, entity, parameters);
             String queryStr = (String) placeHolders.remove(QUERY);
 
+            logger.info(session, I_DB_11, queryStr);
             em = (usingCache) ? getCachedEM() : getUnCachedEM();
             TypedQuery<T> query = em.createQuery(queryStr, entity);
 
@@ -339,20 +370,21 @@ public class DBManager implements Serializable {
 
             try {
                 result = query.getSingleResult();
+                logger.info(session, I_DB_12, queryStr);
             } catch (NonUniqueResultException ex) {
-                throw new DBException(session, AME.DB_015, entity.getSimpleName(), placeHolders.keySet().toString(), allValues.substring(0, allValues.length()-2));
+                throw new DBException(session, E_DB_15, entity.getSimpleName(), placeHolders.keySet().toString(), allValues.substring(0, allValues.length()-2));
             } catch (NoResultException ex) {
-                throw new DBException(session, AME.DB_016, entity.getSimpleName(), placeHolders.keySet().toString(), allValues.substring(0, allValues.length()-2));
+                throw new DBException(session, E_DB_16, entity.getSimpleName(), placeHolders.keySet().toString(), allValues.substring(0, allValues.length()-2));
             } catch (QueryTimeoutException ex) {
-                throw new DBException(session, ex, AME.DB_018, queryStr);
+                throw new DBException(session, ex, E_DB_18, queryStr);
             } catch (TransactionRequiredException ex) {
-                throw new DBException(session, ex, AME.DB_021, queryStr);
+                throw new DBException(session, ex, E_DB_21, queryStr);
             } catch (PessimisticLockException ex) {
-                throw new DBException(session, ex, AME.DB_019, queryStr);
+                throw new DBException(session, ex, E_DB_19, queryStr);
             } catch (LockTimeoutException ex) {
-                throw new DBException(session, ex, AME.DB_020, queryStr);
+                throw new DBException(session, ex, E_DB_20, queryStr);
             } catch (PersistenceException ex) {
-                throw new DBException(session, ex, AME.DB_022, queryStr);
+                throw new DBException(session, ex, E_DB_22, queryStr);
             }
 
             if(usingCache && em != null)
@@ -367,7 +399,7 @@ public class DBManager implements Serializable {
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, ex, AME.DB_024, entity.getSimpleName());
+                throw new DBException(session, ex, E_DB_24, entity.getSimpleName());
         }
     }
 
@@ -382,6 +414,7 @@ public class DBManager implements Serializable {
             Map<String, Object> placeHolders = constructQuery(session, entity, parameters);
             String queryStr = (String) placeHolders.remove(QUERY);
 
+            logger.info(session, I_DB_11, queryStr);
             em = (usingCache) ? getCachedEM() : getUnCachedEM();
             TypedQuery<T> query = em.createQuery(queryStr, entity);
 
@@ -396,18 +429,19 @@ public class DBManager implements Serializable {
 
             try {
                 result = query.getResultList();
+                logger.info(session, I_DB_12, queryStr);
             } catch (IllegalStateException ex) {
-                throw new DBException(session, ex, AME.DB_017, queryStr);
+                throw new DBException(session, ex, E_DB_17, queryStr);
             } catch (QueryTimeoutException ex) {
-                throw new DBException(session, ex, AME.DB_018, queryStr);
+                throw new DBException(session, ex, E_DB_18, queryStr);
             } catch (TransactionRequiredException ex) {
-                throw new DBException(session, ex, AME.DB_021, queryStr);
+                throw new DBException(session, ex, E_DB_21, queryStr);
             } catch (PessimisticLockException ex) {
-                throw new DBException(session, ex, AME.DB_019, queryStr);
+                throw new DBException(session, ex, E_DB_19, queryStr);
             } catch (LockTimeoutException ex) {
-                throw new DBException(session, ex, AME.DB_020, queryStr);
+                throw new DBException(session, ex, E_DB_20, queryStr);
             } catch (PersistenceException ex) {
-                throw new DBException(session, ex, AME.DB_022, queryStr);
+                throw new DBException(session, ex, E_DB_22, queryStr);
             }
 
             if(usingCache && em != null)
@@ -422,7 +456,7 @@ public class DBManager implements Serializable {
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, ex, AME.DB_024, entity.getSimpleName());
+                throw new DBException(session, ex, E_DB_29, entity.getSimpleName());
         }
     }
 
@@ -434,7 +468,7 @@ public class DBManager implements Serializable {
             String queryStr = "FROM " + entity.getSimpleName() + " WHERE ";
 
             if (parameters.size() == 0)
-                throw new DBException(session, AME.DB_014);
+                throw new DBException(session, E_DB_14);
 
             int count = 1;
 
@@ -464,7 +498,7 @@ public class DBManager implements Serializable {
             if(ex instanceof DBException)
                 throw ex;
             else
-                throw new DBException(session, ex, AME.DB_025, entity.getSimpleName());
+                throw new DBException(session, ex, E_DB_25);
         }
     }
 }

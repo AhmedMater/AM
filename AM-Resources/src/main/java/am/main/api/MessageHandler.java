@@ -2,30 +2,32 @@ package am.main.api;
 
 import am.main.common.ConfigParam;
 import am.main.common.ConfigUtils;
-import am.main.data.enums.AME;
-import am.main.data.enums.AMI;
-import am.main.data.enums.AM_CC;
 import am.main.exception.GeneralException;
 import am.main.session.AppSession;
-import am.shared.enums.EC;
-import am.shared.enums.IC;
-import am.shared.enums.WC;
+import am.main.spi.AMCode;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static am.shared.enums.Phase.MESSAGE_HANDLER;
-import static am.shared.enums.Source.AM;
+import static am.main.common.ConfigParam.*;
+import static am.main.data.enums.impl.AMP.MESSAGE_HANDLER;
+import static am.main.data.enums.impl.AMS.AM;
+import static am.main.data.enums.impl.IEC.*;
+import static am.main.data.enums.impl.IIC.*;
 
 /**
  * Created by ahmed.motair on 1/8/2018.
  */
 @Singleton
 public class MessageHandler {
-    @Inject private ConfigManager configManager;
     @Inject private AppLogger logger;
     private static final String CLASS = MessageHandler.class.getSimpleName();
 
@@ -47,7 +49,6 @@ public class MessageHandler {
         return instance;
     }
 
-    private String ERROR_MSG_FN, INFO_MSG_FN, WARN_MSG_FN;
     private static Properties ERROR_MESSAGES = new Properties();
     private static Properties INFO_MESSAGES = new Properties();
     private static Properties WARNING_MESSAGES = new Properties();
@@ -56,97 +57,116 @@ public class MessageHandler {
     private void load(){
         String METHOD = "load";
         AppSession session = appSession.updateSession(METHOD);
+        String componentName = ConfigParam.COMPONENT.JMS_MANAGER;
         try {
-            ERROR_MSG_FN = configManager.getConfigValue(AM_CC.ERROR_HANDLER);
-            ConfigParam.FILE.ERROR_MESSAGES = ConfigParam.APP_CONFIG_PATH + ERROR_MSG_FN;
-            ERROR_MESSAGES = ConfigUtils.readRemotePropertyFiles(session, logger, ConfigParam.FILE.ERROR_MESSAGES, ConfigParam.COMPONENT.MESSAGE_HANDLER);
+            logger.info(session, I_SYS_1, componentName);
 
-            INFO_MSG_FN = configManager.getConfigValue(AM_CC.INFO_HANDLER);
-            ConfigParam.FILE.INFO_MESSAGES = ConfigParam.APP_CONFIG_PATH + INFO_MSG_FN;
-            INFO_MESSAGES = ConfigUtils.readRemotePropertyFiles(session, logger, ConfigParam.FILE.INFO_MESSAGES, ConfigParam.COMPONENT.MESSAGE_HANDLER);
+            ERROR_MESSAGES = ConfigUtils.readRemotePropertyFiles(session, logger, ERROR_MSG_CONFIG.FN_PATH);
+            logger.info(session, I_MH_1);
 
-            WARN_MSG_FN = configManager.getConfigValue(AM_CC.WARNING_HANDLER);
-            ConfigParam.FILE.WARNING_MESSAGES = ConfigParam.APP_CONFIG_PATH + WARN_MSG_FN;
-            WARNING_MESSAGES = ConfigUtils.readRemotePropertyFiles(session, logger, ConfigParam.FILE.WARNING_MESSAGES, ConfigParam.COMPONENT.MESSAGE_HANDLER);
-        }catch (Exception ex){
-            logger.FAILURE_LOGGER.error(MessageFormat.format(AME.SYS_006.value(), ConfigParam.COMPONENT.MESSAGE_HANDLER), ex);
-            throw new IllegalStateException(MessageFormat.format(AME.SYS_006.value(), ConfigParam.COMPONENT.MESSAGE_HANDLER), ex);
+            INFO_MESSAGES = ConfigUtils.readRemotePropertyFiles(session, logger, INFO_MSG_CONFIG.FN_PATH);
+            logger.info(session, I_MH_2);
+
+            WARNING_MESSAGES = ConfigUtils.readRemotePropertyFiles(session, logger, WARN_MSG_CONFIG.FN_PATH);
+            logger.info(session, I_MH_3);
+
+            logger.info(session, I_SYS_2, componentName);
+        } catch (Exception ex) {
+            logger.error(session, ex, E_SYS_1, componentName, ex.getMessage());
+            throw new IllegalStateException(session + E_SYS_1.getFullMsg(componentName, ex.getMessage()));
         }
     }
 
-    public String getMsg(EC errorCode, Object ... arguments) throws Exception{
+    public String getMsg(AMCode amCode, Object ... args) {
         String METHOD = "getMsg";
         AppSession session = appSession.updateSession(METHOD);
+        try {
+            logger.startDebug(session, amCode);
 
-//        try {
-            logger.startDebug(session, errorCode, arguments);
+            if (amCode == null)
+                throw new GeneralException(session, E_SYS_4);
 
-            if(ERROR_MESSAGES == null || ERROR_MESSAGES.isEmpty()) {
-                load();
-                throw new GeneralException(session, AME.IO_005, ERROR_MSG_FN);
-            }else if(errorCode == null)
-                throw new GeneralException(session, AME.SYS_007, "Error Message");
+            logger.info(session, I_MH_8, amCode.getFullCode());
 
-            String message = "";
-            message = ConfigUtils.readValueFromPropertyFile(session, logger, ERROR_MESSAGES, errorCode.toString(), ERROR_MSG_FN);
-            message = errorCode.toString() + ": " + ConfigUtils.formatMsg(session, logger, message, arguments);
+            String message = getRawMsg(amCode);
+            message = formatMsg(session, message, args);
 
-            logger.info(session, AMI.IO_003, "Error Message", errorCode.toString());
+            logger.info(session, I_MH_9, amCode.getFullCode());
             logger.endDebug(session, message);
             return message;
-//        }catch (Exception ex){
-//            logger.error(session, ex, AME.IO_008, "Error Message", errorCode.toString());
-//            return null;
-//        }
+        } catch(Exception ex){
+            throw new IllegalArgumentException(E_SYS_3.getFullMsg(amCode.getFullCode(), ex.getMessage()));
+        }
     }
 
-    public String getMsg(IC infoCode, Object ... arguments) throws Exception{
-        String METHOD = "getMsg";
+    public String getRawMsg(AMCode amCode){
+        String METHOD = "getRawMsg";
         AppSession session = appSession.updateSession(METHOD);
-//        try {
-            logger.startDebug(session, infoCode, arguments);
+        try {
+            logger.startDebug(session, amCode);
 
-            if(INFO_MESSAGES == null || INFO_MESSAGES.isEmpty()) {
-                load();
-                throw new GeneralException(session, AME.IO_005, INFO_MSG_FN);
-            }else if(infoCode == null)
-                throw new GeneralException(session, AME.SYS_007, "Info Message");
+            if (amCode == null)
+                throw new GeneralException(session, E_SYS_4);
 
-            String message = "";
-            message = ConfigUtils.readValueFromPropertyFile(session, logger, INFO_MESSAGES, infoCode.toString(), INFO_MSG_FN);
-            message = infoCode.toString() + ": " + ConfigUtils.formatMsg(session, logger, message, arguments);
+            logger.info(session, I_MH_4, amCode.getFullCode());
 
-            logger.info(session, AMI.IO_003, "Info Message", infoCode.toString());
+            Properties propertiesFile = new Properties();
+
+            switch (amCode.getCodeType()){
+                case ERROR: propertiesFile = ERROR_MESSAGES; break;
+                case INFO: propertiesFile = INFO_MESSAGES; break;
+                case WARN: propertiesFile = WARNING_MESSAGES; break;
+                case CONFIGURATION: throw new GeneralException(session, E_MH_1);
+            }
+
+            String message = ConfigUtils.readValueFromPropertyFile(session, logger, propertiesFile,
+                    amCode.getFullCode(), amCode.getCodeType().toString() + " Messages");
+
+            logger.info(session, I_MH_5, amCode.getFullCode());
             logger.endDebug(session, message);
             return message;
-//        }catch (Exception ex){
-//            logger.error(session, ex, AME.IO_008, "Info Message", infoCode.toString());
-//            return null;
-//        }
+        }catch (GeneralException ex){
+            if(ex.getErrorCode().equals(E_IO_8))
+                this.load();
+            throw new IllegalArgumentException(E_SYS_2.getFullMsg(amCode.getFullCode(), ex.getMessage()));
+        } catch(Exception ex){
+            throw new IllegalArgumentException(E_SYS_2.getFullMsg(amCode.getFullCode(), ex.getMessage()));
+        }
     }
 
-    public String getMsg(WC warnCode, Object ... arguments) throws Exception{
-        String METHOD = "getMsg";
-        AppSession session = appSession.updateSession(METHOD);
-//        try {
-            logger.startDebug(session, warnCode, arguments);
+    private String formatMsg(AppSession appSession, String message, Object ... args) throws Exception{
+        String FN_NAME = "formatMsg";
+        AppSession session = appSession.updateSession(FN_NAME);
+        try {
+            logger.startDebug(session, message, args);
+            logger.info(session, I_MH_6);
 
-            if(WARNING_MESSAGES == null || WARNING_MESSAGES.isEmpty()) {
-                load();
-                throw new GeneralException(session, AME.IO_005, WARN_MSG_FN);
-            }else if(warnCode == null)
-                throw new GeneralException(session, AME.SYS_007, "Warning Message");
+            Matcher matcher = Pattern.compile("\\{[0-9]+\\}").matcher(message);
+            String _message = "";
 
-            String message = "";
-            message = ConfigUtils.readValueFromPropertyFile(session, logger, WARNING_MESSAGES, warnCode.toString(), WARN_MSG_FN);
-            message = warnCode.toString() + ": " + ConfigUtils.formatMsg(session, logger, message, arguments);
+            Set<String> placeHolders = new HashSet<>();
+            while (matcher.find())
+                placeHolders.add(matcher.group());
 
-            logger.info(session, AMI.IO_003, "Warning Message", warnCode.toString());
-            logger.endDebug(session, message);
-            return message;
-//        }catch (Exception ex){
-//            logger.error(session, ex, AME.IO_008, "Warning Message", warnCode.toString());
-//            return null;
-//        }
+            if (placeHolders.size() == 0) {
+                if (args == null || args.length == 0)
+                    _message = message;
+                else
+                    throw new GeneralException(session, E_MH_2);
+            } else if(args == null  || placeHolders.size() != args.length)
+                throw new GeneralException(session, E_MH_4, (args != null ? Arrays.toString(args) : "Null"), placeHolders.size());
+            else
+                _message = MessageFormat.format(message, args);
+
+
+            logger.info(session, I_MH_7);
+            logger.endDebug(session, _message);
+            return _message;
+        }catch (Exception ex){
+            if(ex instanceof GeneralException)
+                throw ex;
+            else
+                throw new GeneralException(session, ex, E_MH_5, message);
+        }
     }
 }

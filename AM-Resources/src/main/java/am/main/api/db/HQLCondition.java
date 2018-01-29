@@ -104,7 +104,7 @@ public class HQLCondition<T>{
         this.isApplicable = (value != null);
     }
 
-    public String getCondition() {
+    public String constructCondition() {
         if(type.equals(Date.class)) {
             if (from == null && to != null)
                 return attribute + " " + ST_EQ.getOperator() + " :" + getToPH();
@@ -134,6 +134,27 @@ public class HQLCondition<T>{
         this.operator = operator;
     }
 
+    public List<T> getValues() {
+        return values;
+    }
+    public void setValues(List<T> values) {
+        this.values = values;
+    }
+
+    public String getTableAlias() {
+        return tableAlias;
+    }
+    public void setTableAlias(String tableAlias) {
+        this.tableAlias = tableAlias;
+    }
+
+    public String getAttribute() {
+        return attribute;
+    }
+    public void setApplicable(Boolean applicable) {
+        isApplicable = applicable;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -141,17 +162,34 @@ public class HQLCondition<T>{
 
         HQLCondition<?> that = (HQLCondition<?>) o;
 
-        if (getPlaceHolder() != null ? !getPlaceHolder().equals(that.getPlaceHolder()) : that.getPlaceHolder() != null)
-            return false;
+        if (getPlaceHolder() != null ? !getPlaceHolder().equals(that.getPlaceHolder()) : that.getPlaceHolder() != null) return false;
         if (getValue() != null ? !getValue().equals(that.getValue()) : that.getValue() != null) return false;
-        return getCondition() != null ? getCondition().equals(that.getCondition()) : that.getCondition() == null;
+        if (getValues() != null ? !getValues().equals(that.getValues()) : that.getValues() != null) return false;
+        if (getFromPH() != null ? !getFromPH().equals(that.getFromPH()) : that.getFromPH() != null) return false;
+        if (getToPH() != null ? !getToPH().equals(that.getToPH()) : that.getToPH() != null) return false;
+        if (getFrom() != null ? !getFrom().equals(that.getFrom()) : that.getFrom() != null) return false;
+        if (getTo() != null ? !getTo().equals(that.getTo()) : that.getTo() != null) return false;
+        if (getTableAlias() != null ? !getTableAlias().equals(that.getTableAlias()) : that.getTableAlias() != null) return false;
+        if (getAttribute() != null ? !getAttribute().equals(that.getAttribute()) : that.getAttribute() != null) return false;
+        if (isApplicable != null ? !isApplicable.equals(that.isApplicable) : that.isApplicable != null) return false;
+        if (getType() != null ? !getType().equals(that.getType()) : that.getType() != null) return false;
+        return getOperator() == that.getOperator();
     }
 
     @Override
     public int hashCode() {
         int result = getPlaceHolder() != null ? getPlaceHolder().hashCode() : 0;
         result = 31 * result + (getValue() != null ? getValue().hashCode() : 0);
-        result = 31 * result + (getCondition() != null ? getCondition().hashCode() : 0);
+        result = 31 * result + (getValues() != null ? getValues().hashCode() : 0);
+        result = 31 * result + (getFromPH() != null ? getFromPH().hashCode() : 0);
+        result = 31 * result + (getToPH() != null ? getToPH().hashCode() : 0);
+        result = 31 * result + (getFrom() != null ? getFrom().hashCode() : 0);
+        result = 31 * result + (getTo() != null ? getTo().hashCode() : 0);
+        result = 31 * result + (getTableAlias() != null ? getTableAlias().hashCode() : 0);
+        result = 31 * result + (getAttribute() != null ? getAttribute().hashCode() : 0);
+        result = 31 * result + (isApplicable != null ? isApplicable.hashCode() : 0);
+        result = 31 * result + (getType() != null ? getType().hashCode() : 0);
+        result = 31 * result + (getOperator() != null ? getOperator().hashCode() : 0);
         return result;
     }
 
@@ -160,7 +198,16 @@ public class HQLCondition<T>{
         return "HQLCondition{" +
                 "placeHolder = " + placeHolder +
                 ", value = " + value +
+                ", values = " + values +
+                ", fromPH = " + fromPH +
+                ", toPH = " + toPH +
+                ", from = " + from +
+                ", to = " + to +
+                ", tableAlias = " + tableAlias +
                 ", attribute = " + attribute +
+                ", isApplicable = " + isApplicable +
+                ", type = " + type +
+                ", operator = " + operator +
                 "}\n";
     }
 }

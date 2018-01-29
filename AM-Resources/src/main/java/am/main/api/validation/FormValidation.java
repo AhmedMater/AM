@@ -2,11 +2,12 @@ package am.main.api.validation;
 
 import am.main.api.AppLogger;
 import am.main.common.RegExp;
+import am.main.data.enums.impl.IEC;
 import am.main.exception.BusinessException;
+import am.main.exception.GeneralException;
 import am.main.session.AppSession;
-import am.shared.enums.EC;
+import am.main.spi.AMCode;
 import am.shared.enums.Forms;
-import am.shared.enums.IC;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
@@ -16,11 +17,16 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static am.main.api.validation.groups.FormValidation.*;
+import static am.main.data.enums.impl.IEC.*;
+import static am.main.data.enums.impl.IIC.I_VAL_1;
+import static am.main.data.enums.impl.IIC.I_VAL_2;
+
 /**
  * Created by ahmed.motair on 11/20/2017.
  */
 public class FormValidation<T> implements Serializable{
-    private EC code;
+    private AMCode code;
     private String mainError;
     private String formName;
     private List<String> formErrors;
@@ -32,25 +38,28 @@ public class FormValidation<T> implements Serializable{
         this.formErrors = Arrays.asList(formErrors);
 
     }
-    public FormValidation(AppSession session, AppLogger logger, T object, EC code, Forms form) throws BusinessException {
-        logger.info(session, IC.AMT_0008, form.getName());
+    public FormValidation(AppSession session, AppLogger logger, T object, AMCode code, Forms form) throws BusinessException, GeneralException {
+        logger.info(session, I_VAL_1, form.getName());
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<T>> errors = validator.validate(object, am.main.api.validation.groups.FormValidation.class);
 
         if(errors.size() > 0) {
             this.code = code;
-            this.mainError = session.getErrorMsg(code, form);
+            this.mainError = code.getFullMsg(session.getMessageHandler(), form);
             this.formName = form.getName();
 
             this.formErrors = new ArrayList<>();
             for (ConstraintViolation<T> error : errors) {
-                EC errorCode = EC.valueOf(error.getMessage().replaceAll("-", "_"));
+                AMCode errorCode = IEC.getCodeByFullCode(error.getMessage());
+                if(errorCode == null)
+                    throw new GeneralException(session, E_VAL_20, error.getMessage());
+
                 String message = "";
                 String fieldName = "";
                 String fieldValue = "";
 
-                if(!errorCode.equals(EC.AMT_0003))
+                if(!errorCode.equals(E_VAL_1))
                     fieldValue = (error.getInvalidValue() == null) ? "Null" : error.getInvalidValue().toString();
 
                 //Get the Field Name
@@ -68,47 +77,47 @@ public class FormValidation<T> implements Serializable{
                     }
                 }
 
-                if(fieldName.isEmpty())
-                    throw new BusinessException(session, EC.AMT_0000);
+                if(fieldName.trim().isEmpty())
+                    throw new BusinessException(session, E_VAL_21);
 
                 Map<String, Object> attributes = error.getConstraintDescriptor().getAttributes();
                 Integer maxLength, minLength, eqLength;
                 Long minMaxValue;
 
-                switch (errorCode){
-                    case AMT_0003: case AMT_0005:
-                        message = session.getErrorMsg(errorCode, fieldName);
+                switch (errorCode.getFullCode()){
+                    case REQUIRED: case EMPTY_STR:
+                        message = errorCode.getFullMsg(session.getMessageHandler(), fieldName);
                         break;
-                    case AMT_0004:
+                    case REGEX:
                         String regexError = RegExp.MESSAGES.get(attributes.get("regexp"));
-                        message = session.getErrorMsg(errorCode, fieldValue, fieldName, regexError);
+                        message = errorCode.getFullMsg(session.getMessageHandler(), fieldValue, fieldName, regexError);
                         break;
-                    case AMT_0012: case AMT_0013: case AMT_0023:
-                        message = session.getErrorMsg(errorCode, fieldValue, fieldName);
+                    case FUTURE_DATE: case POSITIVE_NUM: case POSITIVE_NUM_AND_ZERO:
+                        message = errorCode.getFullMsg(session.getMessageHandler(), fieldValue, fieldName);
                         break;
-                    case AMT_0006:
+                    case MAX_LENGTH:
                         maxLength = (Integer) attributes.get("max");
-                        message = session.getErrorMsg(errorCode, fieldValue, fieldName, maxLength);
+                        message = errorCode.getFullMsg(session.getMessageHandler(), fieldValue, fieldName, maxLength);
                         break;
-                    case AMT_0007:
+                    case MIN_LENGTH:
                         minLength = (Integer) attributes.get("min");
-                        message = session.getErrorMsg(errorCode, fieldValue, fieldName, minLength);
+                        message = errorCode.getFullMsg(session.getMessageHandler(), fieldValue, fieldName, minLength);
                         break;
-                    case AMT_0008: case AMT_0009:
+                    case MIN_MAX_LENGTH: case EQ_LENGTH:
                         maxLength = (Integer) attributes.get("max");
                         minLength = (Integer) attributes.get("min");
 
-                        if(errorCode.equals(EC.AMT_0009) && maxLength.equals(minLength))
-                            message = session.getErrorMsg(errorCode, fieldValue, fieldName, minLength);
-                        else if(errorCode.equals(EC.AMT_0008) && !maxLength.equals(minLength))
-                            message = session.getErrorMsg(errorCode, fieldValue, fieldName, minLength, maxLength);
+                        if(errorCode.equals(E_VAL_7) && maxLength.equals(minLength))
+                            message = errorCode.getFullMsg(session.getMessageHandler(), fieldValue, fieldName, minLength);
+                        else if(errorCode.equals(E_VAL_6) && !maxLength.equals(minLength))
+                            message = errorCode.getFullMsg(session.getMessageHandler(), fieldValue, fieldName, minLength, maxLength);
                         else
-                            throw new BusinessException(session, EC.AMT_0000);
+                            throw new GeneralException(session, E_VAL_22);
 
                         break;
-                    case AMT_0010: case AMT_0011:
+                    case MAX_VALUE: case MIN_VALUE:
                         minMaxValue = (Long) attributes.get("value");
-                        message = session.getErrorMsg(errorCode, fieldValue, fieldName, minMaxValue);
+                        message = errorCode.getFullMsg(session.getMessageHandler(), fieldValue, fieldName, minMaxValue);
                         break;
                 }
                 formErrors.add(message);
@@ -116,7 +125,7 @@ public class FormValidation<T> implements Serializable{
 
             throw new BusinessException(session, this);
         }
-        logger.info(session, IC.AMT_0001, form.getName());
+        logger.info(session, I_VAL_2, form.getName());
     }
     public FormValidation(String mainError, List<String> formErrors) {
         this.mainError = mainError;
@@ -137,10 +146,10 @@ public class FormValidation<T> implements Serializable{
         this.formErrors = formErrors;
     }
 
-    public EC getCode() {
+    public AMCode getCode() {
         return code;
     }
-    public void setCode(EC code) {
+    public void setCode(AMCode code) {
         this.code = code;
     }
 

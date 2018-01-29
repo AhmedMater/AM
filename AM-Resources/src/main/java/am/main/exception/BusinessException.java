@@ -2,7 +2,7 @@ package am.main.exception;
 
 import am.main.api.validation.FormValidation;
 import am.main.session.AppSession;
-import am.shared.enums.EC;
+import am.main.spi.AMCode;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -10,35 +10,43 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 public class BusinessException extends WebApplicationException {
-    private EC errorCode;
+    private AMCode errorCode;
     private String formattedError;
     private String CLASS;
     private String METHOD;
     private String fullErrMsg;
     private FormValidation errorList;
 
-    public BusinessException(AppSession session, Throwable ex) {
-        this(session, ex, Status.BAD_REQUEST, null);
+//    public BusinessException(AppSession session, AMCode errorCode, Object ... args) {
+//        this(session, null, Status.BAD_REQUEST, errorCode, args);
+//    }
+//    public BusinessException(AppSession session, Throwable ex, AMCode errorCode, Object ... args) {
+//        this(session, ex, Status.BAD_REQUEST, errorCode, args);
+//    }
+//
+//    private BusinessException(AppSession session, Throwable ex, Status status, AMCode errorCode, Object ... args) {
+//        super(ex, Response.status(status)
+//                .entity(new AMError(errorCode,  session.getMessageHandler(), args))
+//                .type(MediaType.APPLICATION_JSON_TYPE)
+//                .build());
+//        this.errorCode = errorCode;
+//        this.formattedError = errorCode.getFullMsg(session.getMessageHandler(), args);
+//        this.fullErrMsg = session.toString() + this.formattedError;
+//        this.CLASS = session.getCLASS();
+//        this.METHOD = session.getMETHOD();
+//    }
+
+    public BusinessException(AppSession session, AMCode errorCode, Object ... args) {
+        this(session, Status.BAD_REQUEST, errorCode, args);
     }
-    public BusinessException(AppSession session, Throwable ex, Status status) {
-        this(session, ex, status, null);
-    }
-    public BusinessException(AppSession session, EC errorCode, Object ... args) {
-        this(session, null, Status.BAD_REQUEST, errorCode, args);
-    }
-    public BusinessException(AppSession session, Throwable ex, EC errorCode, Object ... args) {
-        this(session, ex, Status.BAD_REQUEST, errorCode, args);
-    }
-    public BusinessException(AppSession session, Status status, EC errorCode, Object ... args) {
-        this(session, null, status, errorCode, args);
-    }
-    public BusinessException(AppSession session, Throwable ex, Status status, EC errorCode, Object ... args) {
-        super(ex, Response.status(status)
-                .entity(new AMError(errorCode, session.getErrorMsg(errorCode, args)))
+
+    public BusinessException(AppSession session, Status status, AMCode errorCode, Object ... args) {
+        super(Response.status(status)
+                .entity(new AMError(errorCode,  session.getMessageHandler(), args))
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .build());
         this.errorCode = errorCode;
-        this.formattedError = session.getErrorMsg(errorCode, args);
+        this.formattedError = errorCode.getFullMsg(session.getMessageHandler(), args);
         this.fullErrMsg = session.toString() + this.formattedError;
         this.CLASS = session.getCLASS();
         this.METHOD = session.getMETHOD();
@@ -56,23 +64,10 @@ public class BusinessException extends WebApplicationException {
         this.METHOD = session.getMETHOD();
     }
 
-    public BusinessException(SerializedBusinessException ex) {
-        super(ex.getCause(), Response.status(Status.BAD_REQUEST)
-                .entity(ex.getAmError())
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .build());
-        this.errorCode = ex.getErrorCode();
-        this.formattedError = ex.getFormattedError();
-        this.fullErrMsg = ex.getFullErrMsg();
-        this.errorList = ex.getErrorList();
-        this.CLASS = ex.getCLASS();
-        this.METHOD = ex.getMETHOD();
-    }
-
-    public EC getErrorCode() {
+    public AMCode getErrorCode() {
         return errorCode;
     }
-    public void setErrorCode(EC errorCode) {
+    public void setErrorCode(AMCode errorCode) {
         this.errorCode = errorCode;
     }
 
@@ -110,4 +105,27 @@ public class BusinessException extends WebApplicationException {
     public void setErrorList(FormValidation errorList) {
         this.errorList = errorList;
     }
+
+
+//    public BusinessException(AppSession session, Throwable ex) {
+//        this(session, ex, Status.BAD_REQUEST, null);
+//    }
+//    public BusinessException(AppSession session, Throwable ex, Status status) {
+//        this(session, ex, status, null);
+//    }
+//    public BusinessException(AppSession session, Status status, AMCode errorCode, Object ... args) {
+//        this(session, null, status, errorCode, args);
+//    }
+//    public BusinessException(SerializedBusinessException ex) {
+//        super(ex.getCause(), Response.status(Status.BAD_REQUEST)
+//                .entity(ex.getAmError())
+//                .type(MediaType.APPLICATION_JSON_TYPE)
+//                .build());
+//        this.errorCode = ex.getErrorCode();
+//        this.formattedError = ex.getFormattedError();
+//        this.fullErrMsg = ex.getFullErrMsg();
+//        this.errorList = ex.getErrorList();
+//        this.CLASS = ex.getCLASS();
+//        this.METHOD = ex.getMETHOD();
+//    }
 }

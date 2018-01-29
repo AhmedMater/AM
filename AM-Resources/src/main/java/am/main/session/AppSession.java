@@ -1,40 +1,42 @@
 package am.main.session;
 
 import am.main.api.MessageHandler;
-import am.main.data.enums.AME;
-import am.shared.enums.*;
+import am.main.data.enums.Interface;
+import am.main.spi.AMPhase;
+import am.main.spi.AMSource;
 
 import java.io.Serializable;
-import java.text.MessageFormat;
 
 /**
  * Created by mohamed.elewa on 13/05/2017.
  */
 public class AppSession implements Serializable{
-    private Source SOURCE;
+    private AMSource SOURCE;
     private Interface INTERFACE;
-    private Phase PHASE;
+    private AMPhase PHASE;
     private String ip;
     private String username;
     private String id;
     private String CLASS;
+    private String THREAD_ID;
+    private String THREAD_NAME;
     private String METHOD;
     private MessageHandler messageHandler;
 
     public AppSession(){}
-    public AppSession(Source SOURCE, Phase PHASE, String CLASS) {
+    public AppSession(AMSource SOURCE, AMPhase PHASE, String CLASS) {
         this(SOURCE, null, PHASE, null, null, CLASS, null, null, null);
     }
-    public AppSession(Source SOURCE, Interface INTERFACE, Phase PHASE){
+    public AppSession(AMSource SOURCE, Interface INTERFACE, AMPhase PHASE){
         this(SOURCE, INTERFACE, PHASE, null, null, null, null, null, null);
     }
-    public AppSession(Source SOURCE, Interface INTERFACE, Phase PHASE, String CLASS, String METHOD) {
+    public AppSession(AMSource SOURCE, Interface INTERFACE, AMPhase PHASE, String CLASS, String METHOD) {
         this(SOURCE, INTERFACE, PHASE, null, null, CLASS, METHOD, null, null);
     }
-    public AppSession(Source SOURCE, Interface INTERFACE, Phase PHASE, String id, String CLASS, String METHOD, String ip, MessageHandler messageHandler) {
+    public AppSession(AMSource SOURCE, Interface INTERFACE, AMPhase PHASE, String id, String CLASS, String METHOD, String ip, MessageHandler messageHandler) {
         this(SOURCE, INTERFACE, PHASE, null, id, CLASS, METHOD, ip, messageHandler);
     }
-    public AppSession(Source SOURCE, Interface INTERFACE, Phase PHASE, String username, String id, String CLASS, String METHOD, String ip, MessageHandler messageHandler) {
+    public AppSession(AMSource SOURCE, Interface INTERFACE, AMPhase PHASE, String username, String id, String CLASS, String METHOD, String ip, MessageHandler messageHandler) {
         this.SOURCE = SOURCE;
         this.INTERFACE = INTERFACE;
         this.PHASE = PHASE;
@@ -44,6 +46,8 @@ public class AppSession implements Serializable{
         this.METHOD = METHOD;
         this.ip = ip;
         this.messageHandler = messageHandler;
+        this.THREAD_ID = Long.toString(Thread.currentThread().getId());
+        this.THREAD_NAME = Thread.currentThread().getName();
     }
 
     public String getUsername() {
@@ -71,28 +75,35 @@ public class AppSession implements Serializable{
         session.messageHandler = null;
         return session;
     }
+//    public String getErrorMsg(AMCode code, Object ... args) {
+//        try {
+//            return messageHandler.getMsg(code, args);
+//        } catch (Exception e) {
+//            return MessageFormat.format(AME.SYS_012.value(), "Error", code.toString());
+//        }
+//    }
 
-    public String getErrorMsg(EC code, Object ... args) {
-        try {
-            return messageHandler.getMsg(code, args);
-        } catch (Exception e) {
-            return MessageFormat.format(AME.SYS_012.value(), "Error", code.toString());
-        }
-    }
-    public String getInfoMsg(IC code, Object ... args) {
-        try {
-            return messageHandler.getMsg(code, args);
-        } catch (Exception e) {
-            return MessageFormat.format(AME.SYS_012.value(), "Info", code.toString());
-        }
-    }
-    public String getWarnMsg(WC code, Object ... args) {
-        try {
-            return messageHandler.getMsg(code, args);
-        } catch (Exception e) {
-            return MessageFormat.format(AME.SYS_012.value(), "Warn", code.toString());
-        }
-    }
+//    public String getErrorMsg(EC code, Object ... args) {
+//        try {
+//            return messageHandler.getMsg(code, args);
+//        } catch (Exception e) {
+//            return MessageFormat.format(AME.SYS_012.value(), "Error", code.toString());
+//        }
+//    }
+//    public String getInfoMsg(IC code, Object ... args) {
+//        try {
+//            return messageHandler.getMsg(code, args);
+//        } catch (Exception e) {
+//            return MessageFormat.format(AME.SYS_012.value(), "Info", code.toString());
+//        }
+//    }
+//    public String getWarnMsg(WC code, Object ... args) {
+//        try {
+//            return messageHandler.getMsg(code, args);
+//        } catch (Exception e) {
+//            return MessageFormat.format(AME.SYS_012.value(), "Warn", code.toString());
+//        }
+//    }
 
     public String getCLASS() {
         return CLASS;
@@ -101,10 +112,10 @@ public class AppSession implements Serializable{
         this.CLASS = CLASS;
     }
 
-    public Source getSOURCE() {
+    public AMSource getSOURCE() {
         return SOURCE;
     }
-    public void setSOURCE(Source SOURCE) {
+    public void setSOURCE(AMSource SOURCE) {
         this.SOURCE = SOURCE;
     }
 
@@ -115,10 +126,10 @@ public class AppSession implements Serializable{
         this.INTERFACE = INTERFACE;
     }
 
-    public Phase getPHASE() {
+    public AMPhase getPHASE() {
         return PHASE;
     }
-    public void setPHASE(Phase PHASE) {
+    public void setPHASE(AMPhase PHASE) {
         this.PHASE = PHASE;
     }
 
@@ -136,34 +147,49 @@ public class AppSession implements Serializable{
         this.ip = ip;
     }
 
-    @Override
-    public String toString() {
-        String st = "";
-
-        if(SOURCE != null)
-            st += "[Source: " + SOURCE.value();
-
-        if(INTERFACE != null)
-            st += "] [Interface: " + INTERFACE.value();
-
-        if(ip != null)
-            st += "] [IP: " + ip;
-
-        if(username != null)
-            st += "] [User: " + username;
-
-        if(id !=null)
-            st += "] [ID: " + id;
-
-        st += "]\n " + CLASS + "." + METHOD + "(): ";
-        return st;
+    public String getTHREAD_ID() {
+        return THREAD_ID;
+    }
+    public void setTHREAD_ID(String THREAD_ID) {
+        this.THREAD_ID = THREAD_ID;
     }
 
-    public AppSession updateSession(Phase PHASE, String CLASS, String METHOD) {
+    public String getTHREAD_NAME() {
+        return THREAD_NAME;
+    }
+    public void setTHREAD_NAME(String THREAD_NAME) {
+        this.THREAD_NAME = THREAD_NAME;
+    }
+
+    public AppSession updateSession(AMSource SOURCE, AMPhase PHASE, String CLASS, String METHOD) {
         AppSession session = new AppSession();
         session.PHASE = PHASE;
         session.CLASS = CLASS;
         session.METHOD = METHOD;
+        session.SOURCE = SOURCE;
+        session.INTERFACE = this.INTERFACE;
+        session.username = this.username;
+        session.id = this.id;
+        session.messageHandler = this.messageHandler;
+        return session;
+    }
+    public AppSession updateSession(AMPhase PHASE, String CLASS, String METHOD) {
+        AppSession session = new AppSession();
+        session.PHASE = PHASE;
+        session.CLASS = CLASS;
+        session.METHOD = METHOD;
+        session.SOURCE = this.SOURCE;
+        session.INTERFACE = this.INTERFACE;
+        session.username = this.username;
+        session.id = this.id;
+        session.messageHandler = this.messageHandler;
+        return session;
+    }
+    public AppSession updateSession(AMPhase PHASE, String METHOD) {
+        AppSession session = new AppSession();
+        session.PHASE = PHASE;
+        session.METHOD = METHOD;
+        session.CLASS = this.CLASS;
         session.SOURCE = this.SOURCE;
         session.INTERFACE = this.INTERFACE;
         session.username = this.username;
@@ -191,5 +217,34 @@ public class AppSession implements Serializable{
         session.CLASS = this.CLASS;
         session.METHOD = this.METHOD;
         return session;
+    }
+
+    @Override
+    public String toString() {
+        String st = "";
+
+        if(THREAD_NAME != null)
+            st += "[Thread-Name: " + THREAD_NAME;
+
+        if(THREAD_ID != null)
+            st += "] [Thread-ID: " + THREAD_ID;
+
+        if(SOURCE != null)
+            st += "] [Source: " + SOURCE.getName();
+
+        if(INTERFACE != null)
+            st += "] [Interface: " + INTERFACE.value();
+
+        if(ip != null)
+            st += "] [IP: " + ip;
+
+        if(username != null)
+            st += "] [User: " + username;
+
+        if(id !=null)
+            st += "] [ID: " + id;
+
+        st += "]\n " + CLASS + "." + METHOD + "(): ";
+        return st;
     }
 }

@@ -38,7 +38,7 @@ import java.util.List;
  *             &lt;/complexContent>
  *           &lt;/complexType>
  *         &lt;/element>
- *         &lt;element name="Logger" maxOccurs="unbounded" minOccurs="0">
+ *         &lt;element name="LoggerData" maxOccurs="unbounded" minOccurs="0">
  *           &lt;complexType>
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
@@ -104,18 +104,18 @@ public class Loggers implements Cloneable{
     }
 
     /**
-     * Gets the value of the logger property.
+     * Gets the value of the loggerDataList property.
      *
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the logger property.
+     * This is why there is not a <CODE>set</CODE> method for the loggerDataList property.
      *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getLogger().add(newItem);
+     *    getLoggerDataList().add(newItem);
      * </pre>
      *
      *

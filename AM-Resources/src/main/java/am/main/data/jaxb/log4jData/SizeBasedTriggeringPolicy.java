@@ -34,6 +34,12 @@ public class SizeBasedTriggeringPolicy implements Cloneable{
     @XmlAttribute(name = "size")
     protected String size;
 
+    public SizeBasedTriggeringPolicy() {
+    }
+
+    public SizeBasedTriggeringPolicy(String size) {
+        this.size = size;
+    }
     /**
      * Gets the value of the value property.
      *

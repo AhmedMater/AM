@@ -1,4 +1,4 @@
-package am.shared.enums;
+package am.main.data.enums;
 
 /**
  * Created by ahmed.motair on 9/29/2017.
@@ -9,7 +9,8 @@ public enum Interface {
     JMS("JMS"),
     JOB("Job-Interface"),
     QUARTZ("Quartz"),
-    ARQUILLIAN("Arquillian");
+    ARQUILLIAN("Arquillian"),
+    INITIALIZING_COMPONENT("Init-Component");
 
     private String value;
 

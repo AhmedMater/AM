@@ -1,41 +1,52 @@
 package am.main.exception;
 
-import am.main.data.enums.AME;
 import am.main.session.AppSession;
-import am.shared.enums.EC;
+import am.main.spi.AMCode;
 
 import java.io.Serializable;
-import java.text.MessageFormat;
 
 /**
  * Created by ahmed.motair on 1/29/2017.
  */
 public class GeneralException extends Exception implements Serializable {
-    private EC errorCode;
-    private String CLASS;
-    private String METHOD;
+    private final AMCode ERROR_CODE;
+    private final String CLASS;
+    private final String METHOD;
 
-    public GeneralException(AppSession session, Throwable ex){
-        super(session.toString(), ex);
-        this.CLASS = session.getCLASS();
-        this.METHOD = session.getMETHOD();
-    }
-    public GeneralException(AppSession session, EC errorCode, Object ... args){
+//    public GeneralException(AppSession session, Throwable ex){
+//        super(session.toString(), ex);
+//        this.CLASS = session.getCLASS();
+//        this.METHOD = session.getMETHOD();
+//    }
+    public GeneralException(AppSession session, AMCode errorCode, Object ... args){
         this(session, null, errorCode, args);
     }
-    public GeneralException(AppSession session, Throwable ex, EC errorCode, Object ... args){
-        super(session.toString() + session.getErrorMsg(errorCode, args), ex);
-        this.errorCode = errorCode;
+    public GeneralException(AppSession session, Throwable ex, AMCode errorCode, Object ... args){
+        super(session.toString() + errorCode.getFullMsg(session.getMessageHandler(), args), ex);
         this.CLASS = session.getCLASS();
         this.METHOD = session.getMETHOD();
+        this.ERROR_CODE = errorCode;
     }
 
-    public GeneralException(AppSession session, AME errorCode, Object ... args){
-        this(session, null, errorCode, args);
+    public AMCode getErrorCode() {
+        return ERROR_CODE;
     }
-    public GeneralException(AppSession session, Throwable ex, AME errorCode, Object ... args){
-        super(session.toString() + MessageFormat.format(errorCode.value(), args), ex);
-        this.CLASS = session.getCLASS();
-        this.METHOD = session.getMETHOD();
+
+    public String getClassName() {
+        return CLASS;
     }
+
+    public String getMethod() {
+        return METHOD;
+    }
+
+//    public GeneralException(AppSession session, AMCode errorCode, Object ... args){
+//        this(session, null, errorCode, args);
+//    }
+//    public GeneralException(AppSession session, Throwable ex, AMCode errorCode, Object ... args){
+//        super(session.toString() + session.getErrorMsg(errorCode, args), ex);
+//        this.errorCode = errorCode;
+//        this.CLASS = session.getCLASS();
+//        this.METHOD = session.getMETHOD();
+//    }
 }

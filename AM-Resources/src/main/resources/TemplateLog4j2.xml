@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="WARN">
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %n[[%msg%n%n]]"/>
+        </Console>
+
+        <RollingFile name="Template" fileName="C:/AMT-Loges/AM/Template.log" immediateFlush="true"
+                     filePattern="C:/AMT-Loges/AM/Template/Template-%i-%d{yyyy-MM-dd-HH-mm-ss}.log">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %n[[%msg%n%n]]"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="40 MB"/>
+            </Policies>
+
+        </RollingFile>
+
+        <RollingFile name="Failure" fileName="C:/AMT-Loges/AM/Failure.log" immediateFlush="true"
+                     filePattern="C:/AMT-Loges/AM/Failure/Failure-%i-%d{yyyy-MM-dd-HH-mm-ss}.log">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %n[[%msg%n%n]]"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="40 MB"/>
+            </Policies>
+
+        </RollingFile>
+        <RollingFile name="Initial" fileName="C:/AMT-Loges/AM/Initial.log" immediateFlush="true"
+                     filePattern="C:/AMT-Loges/AM/Initial/Initial-%i-%d{yyyy-MM-dd-HH-mm-ss}.log">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %n[[%msg%n%n]]"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="40 MB"/>
+            </Policies>
+
+        </RollingFile>
+    </appenders>
+
+    <Loggers>
+        <Logger name="Template" level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Template"/>
+        </Logger>
+
+        <Logger name="Failure" level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Failure"/>
+        </Logger>
+        <Logger name="Initial" level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Initial"/>
+        </Logger>
+    </Loggers>
+</configuration>

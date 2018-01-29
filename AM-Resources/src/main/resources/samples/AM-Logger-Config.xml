@@ -1,0 +1,68 @@
+<AM-Logger>
+    <AM-Application name="AMT-Services" type="WAR">
+        <AM-Logger-Config>
+            <Logger-Property name="MainLogPath" value="C:\_Payara-Logs\AMT-Logs"/>
+            <Logger-Property name="MaxFileSize" value="50 MB"/>
+            <Logger-Property name="UseAMLogger" value="true"/>
+        </AM-Logger-Config>
+
+        <LoggerGroup name="Security">
+            <LoggerData name="Authorization" level="debug"/>
+            <LoggerData name="URL-Logging" level="debug"/>
+        </LoggerGroup>
+
+        <LoggerGroup name="Course">
+            <LoggerData name="Course-New" level="debug"/>
+            <LoggerData name="Course-Detail" level="debug"/>
+            <LoggerData name="Course-Update" level="debug"/>
+            <LoggerData name="Course-List" level="debug"/>
+            <LoggerData name="Course-Quiz" level="debug"/>
+            <LoggerData name="Course-Review" level="debug"/>
+            <LoggerData name="Course-Translation" level="debug"/>
+        </LoggerGroup>
+
+        <LoggerGroup name="User">
+            <LoggerData name="User-Registration" level="debug"/>
+            <LoggerData name="User-Login" level="debug"/>
+            <LoggerData name="User-List" level="debug"/>
+            <LoggerData name="User-Detail" level="debug"/>
+            <LoggerData name="User-Update" level="debug"/>
+        </LoggerGroup>
+    </AM-Application>
+
+    <AM-Application name="AM-Notification" type="WAR">
+        <AM-Logger-Config>
+            <Logger-Property name="MainLogPath" value="D:\_Payarasa-Logs\AMT-Logs"/>
+            <Logger-Property name="MaxFileSize" value="58 MB"/>
+            <Logger-Property name="UseAMLogger" value="false"/>
+        </AM-Logger-Config>
+
+        <LoggerGroup name="AM">
+            <LoggerData name="Security-Manager" level="debug"/>
+            <LoggerData name="Message-Handler" level="debug"/>
+            <LoggerData name="XML-Handler" level="debug"/>
+            <LoggerData name="App-Logger" level="debug"/>
+            <LoggerData name="Integration-Test" level="debug"/>
+            <LoggerData name="AM-Notification" level="debug"/>
+            <LoggerData name="AM-Logger" level="debug"/>
+            <LoggerData name="AM-File-Manager" level="debug"/>
+        </LoggerGroup>
+    </AM-Application>
+
+    <AM-Application name="AMT-Scheduled-Jobs" type="JAR">
+        <AM-Logger-Config>
+            <Logger-Property name="MainLogPath" value="C:\_Payaxzra-Logs\AMT-Logs"/>
+            <Logger-Property name="MaxFileSize" value="10 KB"/>
+            <Logger-Property name="UseAMLogger" value="true"/>
+        </AM-Logger-Config>
+
+        <LoggerGroup name="Article">
+            <LoggerData name="Article-New" level="debug"/>
+            <LoggerData name="Article-Detail" level="debug"/>
+            <LoggerData name="Article-Update" level="debug"/>
+            <LoggerData name="Article-List" level="debug"/>
+            <LoggerData name="Article-Review" level="debug"/>
+            <LoggerData name="Article-Translation" level="debug"/>
+        </LoggerGroup>
+    </AM-Application>
+</AM-Logger>

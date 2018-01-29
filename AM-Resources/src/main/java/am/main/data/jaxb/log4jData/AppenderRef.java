@@ -34,6 +34,13 @@ public class AppenderRef implements Cloneable{
     @XmlAttribute(name = "ref")
     protected String ref;
 
+    public AppenderRef() {
+    }
+
+    public AppenderRef(String ref) {
+        this.ref = ref;
+    }
+
     /**
      * Gets the value of the value property.
      *

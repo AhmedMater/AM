@@ -1,0 +1,41 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="AM-Logger" type="AM-Logger"/>
+
+    <xs:complexType name="Logger-Property">
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="value" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="AM-Logger-Config">
+        <xs:sequence>
+            <xs:element type="Logger-Property" name="Logger-Property" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LoggerData">
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="level" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="LoggerGroup">
+        <xs:sequence>
+            <xs:element type="LoggerData" name="LoggerData" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="AM-Application">
+        <xs:sequence>
+            <xs:element type="AM-Logger-Config" name="AM-Logger-Config" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="LoggerGroup" name="LoggerGroup" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="type" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="AM-Logger">
+        <xs:sequence>
+            <xs:element type="AM-Application" name="AM-Application" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
