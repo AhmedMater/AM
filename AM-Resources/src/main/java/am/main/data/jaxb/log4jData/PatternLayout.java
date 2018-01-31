@@ -88,4 +88,30 @@ public class PatternLayout implements Cloneable{
         clone.setValue(this.value);
         return clone;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PatternLayout)) return false;
+
+        PatternLayout that = (PatternLayout) o;
+
+        if (getValue() != null ? !getValue().equals(that.getValue()) : that.getValue() != null) return false;
+        return getPattern() != null ? getPattern().equals(that.getPattern()) : that.getPattern() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getValue() != null ? getValue().hashCode() : 0;
+        result = 31 * result + (getPattern() != null ? getPattern().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "PatternLayout{" +
+                "value = " + value +
+                ", pattern = " + pattern +
+                "}\n";
+    }
 }

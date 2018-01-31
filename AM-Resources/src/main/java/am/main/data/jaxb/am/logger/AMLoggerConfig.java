@@ -73,4 +73,25 @@ public class AMLoggerConfig {
         return null;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AMLoggerConfig)) return false;
+
+        AMLoggerConfig that = (AMLoggerConfig) o;
+
+        return getLoggerProperty() != null ? getLoggerProperty().equals(that.getLoggerProperty()) : that.getLoggerProperty() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getLoggerProperty() != null ? getLoggerProperty().hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "AMLoggerConfig{" +
+                "loggerProperty = " + loggerProperty +
+                "}\n";
+    }
 }

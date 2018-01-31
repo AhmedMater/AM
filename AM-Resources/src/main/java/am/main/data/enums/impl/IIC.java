@@ -77,13 +77,13 @@ public class IIC extends AMCode {
 
 
 
-    public static IIC SYS_3 = new IIC(3, SYSTEM,"Message: ''{0}'' is formatted successfully");
+//    public static IIC SYS_3 = new IIC(3, SYSTEM,"Message: ''{0}'' is formatted successfully");
 
 
-    public static IIC IO_1 = new IIC(1, IO, "Resource File: ''{0}'' is read successfully");
-    public static IIC IO_2 = new IIC(2, IO, "Value of Property: ''{0}'' if read successfully from File:''{1}''");
-    public static IIC IO_3 = new IIC(3, IO, "''{0}'' of Code: ''{1}'' is read successfully");
-    public static IIC IO_4 = new IIC(4, IO, "''{0}'' of Code: ''{1}'' is changed successfully");
+//    public static IIC IO_1 = new IIC(1, IO, "Resource File: ''{0}'' is read successfully");
+//    public static IIC IO_2 = new IIC(2, IO, "Value of Property: ''{0}'' if read successfully from File:''{1}''");
+//    public static IIC IO_3 = new IIC(3, IO, "''{0}'' of Code: ''{1}'' is read successfully");
+//    public static IIC IO_4 = new IIC(4, IO, "''{0}'' of Code: ''{1}'' is changed successfully");
 
     public static IIC I_JMS_1 = new IIC(1, JMS, "Application JMS Configuration is read successfully");
     public static IIC I_JMS_2 = new IIC(2, JMS, "JMS Queue ''{0}'' is initiated successfully");
@@ -105,7 +105,7 @@ public class IIC extends AMCode {
     public static IIC I_LOG_13 = new IIC(13, LOGGER, "AM-Resources Internal Logger Configuration is loaded successfully");
     public static IIC I_LOG_14 = new IIC(14, LOGGER, "Logger Config Property: ''{0}'' is found and loaded successfully");
     public static IIC I_LOG_15 = new IIC(15, LOGGER, "General Logger for Application: ''{0}'' is generated");
-    public static IIC I_LOG_16 = new IIC(16, LOGGER, "Logger Config Property: ''{0}'' is will be overridden with the Value: ''{0}'' in external Logger Configuration");
+    public static IIC I_LOG_16 = new IIC(16, LOGGER, "Logger Config Property: ''{0}'' is will be overridden with the Value: ''{1}'' in external Logger Configuration");
     public static IIC I_LOG_17 = new IIC(17, LOGGER, "");
     public static IIC I_LOG_18 = new IIC(18, LOGGER, "");
     public static IIC I_LOG_19 = new IIC(19, LOGGER, "");

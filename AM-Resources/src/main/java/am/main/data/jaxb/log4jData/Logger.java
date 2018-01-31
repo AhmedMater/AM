@@ -136,4 +136,33 @@ public class Logger implements Cloneable{
         clone.setLevel(this.level);
         return clone;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Logger)) return false;
+
+        Logger logger = (Logger) o;
+
+        if (getAppenderRefList() != null ? !getAppenderRefList().equals(logger.getAppenderRefList()) : logger.getAppenderRefList() != null) return false;
+        if (getName() != null ? !getName().equals(logger.getName()) : logger.getName() != null) return false;
+        return getLevel() != null ? getLevel().equals(logger.getLevel()) : logger.getLevel() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getAppenderRefList() != null ? getAppenderRefList().hashCode() : 0;
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getLevel() != null ? getLevel().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Logger{" +
+                "appenderRefList = " + appenderRefList +
+                ", name = " + name +
+                ", level = " + level +
+                "}\n";
+    }
 }

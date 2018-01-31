@@ -231,4 +231,42 @@ public class RollingFile implements Cloneable{
         clone.setPolicies(this.policies.clone());
         return clone;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RollingFile)) return false;
+
+        RollingFile that = (RollingFile) o;
+
+        if (getPatternLayout() != null ? !getPatternLayout().equals(that.getPatternLayout()) : that.getPatternLayout() != null) return false;
+        if (getPolicies() != null ? !getPolicies().equals(that.getPolicies()) : that.getPolicies() != null) return false;
+        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
+        if (getFileName() != null ? !getFileName().equals(that.getFileName()) : that.getFileName() != null) return false;
+        if (getImmediateFlush() != null ? !getImmediateFlush().equals(that.getImmediateFlush()) : that.getImmediateFlush() != null) return false;
+        return getFilePattern() != null ? getFilePattern().equals(that.getFilePattern()) : that.getFilePattern() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getPatternLayout() != null ? getPatternLayout().hashCode() : 0;
+        result = 31 * result + (getPolicies() != null ? getPolicies().hashCode() : 0);
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getFileName() != null ? getFileName().hashCode() : 0);
+        result = 31 * result + (getImmediateFlush() != null ? getImmediateFlush().hashCode() : 0);
+        result = 31 * result + (getFilePattern() != null ? getFilePattern().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "RollingFile{" +
+                "patternLayout = " + patternLayout +
+                ", policies = " + policies +
+                ", name = " + name +
+                ", fileName = " + fileName +
+                ", immediateFlush = " + immediateFlush +
+                ", filePattern = " + filePattern +
+                "}\n";
+    }
 }

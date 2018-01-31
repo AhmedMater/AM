@@ -78,4 +78,26 @@ public class Policies implements Cloneable{
         clone.setSizeBasedTriggeringPolicy(this.sizeBasedTriggeringPolicy.clone());
         return clone;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Policies)) return false;
+
+        Policies policies = (Policies) o;
+
+        return getSizeBasedTriggeringPolicy() != null ? getSizeBasedTriggeringPolicy().equals(policies.getSizeBasedTriggeringPolicy()) : policies.getSizeBasedTriggeringPolicy() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getSizeBasedTriggeringPolicy() != null ? getSizeBasedTriggeringPolicy().hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Policies{" +
+                "sizeBasedTriggeringPolicy = " + sizeBasedTriggeringPolicy +
+                "}\n";
+    }
 }

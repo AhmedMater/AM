@@ -286,4 +286,33 @@ public class Configuration implements Cloneable{
         clone.setStatus(this.status);
         return clone;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Configuration)) return false;
+
+        Configuration that = (Configuration) o;
+
+        if (getAppenders() != null ? !getAppenders().equals(that.getAppenders()) : that.getAppenders() != null) return false;
+        if (getLoggers() != null ? !getLoggers().equals(that.getLoggers()) : that.getLoggers() != null) return false;
+        return getStatus() != null ? getStatus().equals(that.getStatus()) : that.getStatus() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getAppenders() != null ? getAppenders().hashCode() : 0;
+        result = 31 * result + (getLoggers() != null ? getLoggers().hashCode() : 0);
+        result = 31 * result + (getStatus() != null ? getStatus().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Configuration{" +
+                "appenders = " + appenders +
+                ", loggers = " + loggers +
+                ", status = " + status +
+                "}\n";
+    }
 }

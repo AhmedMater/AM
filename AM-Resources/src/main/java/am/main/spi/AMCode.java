@@ -1,9 +1,10 @@
 package am.main.spi;
 
-import am.main.api.MessageHandler;
 import am.main.data.enums.CodeTypes;
+import am.main.session.AppSession;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -82,7 +83,7 @@ public abstract class AMCode {
         return getFullMsg(null, args);
     }
 
-    public String getFullMsg(MessageHandler messageHandler, Object ... args) throws IllegalArgumentException{
+    public String getFullMsg(AppSession appSession, Object ... args) throws IllegalArgumentException{
         if(isInternal()) {
             Matcher matcher = Pattern.compile("\\{[0-9]+\\}").matcher(INTERNAL_MSG);
             String _message = "";
@@ -91,15 +92,38 @@ public abstract class AMCode {
             while (matcher.find())
                 placeholders.add(matcher.group());
 
+            if(args.length != 0 && args[1] instanceof Object[])
+                args = (Object[]) args[1];
+
             if(placeholders.size() != args.length)
                 throw new IllegalArgumentException(getFullCode() + " Code needs " +
-                    placeholders.size() + " Placeholders, and arguments provided are " + args.length + " Args");
+                        placeholders.size() + " Placeholders, and arguments provided are " + args.length + " Args, Which are " + Arrays.toString(args));
 
-            return MessageFormat.format(INTERNAL_MSG, args);
+            return getFullCode() + " " + MessageFormat.format(INTERNAL_MSG, args);
         } else
-            return messageHandler.getMsg(this, args);
+            return getFullCode() + " " + appSession.getMessageHandler().getMsg(appSession, this, args);
     }
     public void setInternalMsg(String INTERNAL_MSG) {
         this.INTERNAL_MSG = INTERNAL_MSG;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AMCode)) return false;
+
+        AMCode amCode = (AMCode) o;
+
+        return getFullCode() != null ? getFullCode().equals(amCode.getFullCode()) : amCode.getFullCode() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getFullCode() != null ? getFullCode().hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return getFullCode();
     }
 }

@@ -96,4 +96,30 @@ public class AppenderRef implements Cloneable{
         clone.setRef(this.ref);
         return clone;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AppenderRef)) return false;
+
+        AppenderRef that = (AppenderRef) o;
+
+        if (getValue() != null ? !getValue().equals(that.getValue()) : that.getValue() != null) return false;
+        return getRef() != null ? getRef().equals(that.getRef()) : that.getRef() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getValue() != null ? getValue().hashCode() : 0;
+        result = 31 * result + (getRef() != null ? getRef().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "AppenderRef{" +
+                "value = " + value +
+                ", ref = " + ref +
+                "}\n";
+    }
 }

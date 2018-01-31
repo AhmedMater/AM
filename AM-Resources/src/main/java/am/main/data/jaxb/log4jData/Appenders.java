@@ -163,4 +163,30 @@ public class Appenders implements Cloneable{
         }
         return clone;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Appenders)) return false;
+
+        Appenders appenders = (Appenders) o;
+
+        if (getConsole() != null ? !getConsole().equals(appenders.getConsole()) : appenders.getConsole() != null) return false;
+        return getRollingFile() != null ? getRollingFile().equals(appenders.getRollingFile()) : appenders.getRollingFile() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getConsole() != null ? getConsole().hashCode() : 0;
+        result = 31 * result + (getRollingFile() != null ? getRollingFile().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Appenders{" +
+                "console = " + console +
+                ", rollingFile = " + rollingFile +
+                "}\n";
+    }
 }

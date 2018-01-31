@@ -115,4 +115,12 @@ public class LoggerProperty {
     public int hashCode() {
         return getName() != null ? getName().hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return "LoggerProperty{" +
+                "name = " + name +
+                ", value = " + value +
+                "}\n";
+    }
 }

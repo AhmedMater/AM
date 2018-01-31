@@ -97,4 +97,27 @@ public class LoggerData {
         clone.setName(this.name);
         return clone;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LoggerData)) return false;
+
+        LoggerData that = (LoggerData) o;
+
+        return getName() != null ? getName().equals(that.getName()) : that.getName() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getName() != null ? getName().hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "LoggerData{" +
+                "name = " + name +
+                ", level = " + level +
+                "}\n";
+    }
 }

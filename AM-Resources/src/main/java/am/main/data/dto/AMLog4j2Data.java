@@ -80,6 +80,7 @@ public class AMLog4j2Data implements Serializable{
     public AMLog4j2Data(AppSession session){
         setSession(session);
         this.LEVEL = LoggerLevels.EN_DEBUG;
+        this.currentTimeStamp = new Date();
     }
     public AMLog4j2Data(AppSession session, Object result){
         setSession(session);
@@ -108,8 +109,8 @@ public class AMLog4j2Data implements Serializable{
         this.LEVEL = LEVEL;
     }
 
-    public List<String> getArgs() {
-        return args;
+    public Object[] getArgs() {
+        return args.toArray();
     }
     public void setEndDebugArgs(Object result) {
         this.args.add((result != null ? result.toString() : "Null"));
@@ -271,7 +272,7 @@ public class AMLog4j2Data implements Serializable{
         switch (this.LEVEL){
             case ST_DEBUG:
                 fullMsg = "Started with " +
-                        ((args.size() == 0) ? "No Arguments" : "Arguments = " + Arrays.toString(args.toArray()) + "\n");
+                        ((args.size() == 0) ? "No Arguments" : "Arguments = " + Arrays.toString(args.toArray()));
                 break;
             case EN_DEBUG:
                 fullMsg = "Ended " + (args.size() == 1 ?
@@ -281,8 +282,10 @@ public class AMLog4j2Data implements Serializable{
                 break;
             default:
                 AMCode code = AMCode.getCodeByFullCode(fullCode);
-                fullMsg += code.getFullMsg(messageHandler, args);
+                fullMsg += code.getFullMsg(messageHandler, getArgs());
         }
+
+        fullMsg += "\n";
 
 //        if (ex != null)
 //            fullMsg += ",\nDue to: " + ex.getMessage();
@@ -338,6 +341,7 @@ public class AMLog4j2Data implements Serializable{
             }
         }catch (Exception ex){
             appLogger.FAILURE_LOGGER.error(ex);
+            throw new IllegalStateException(ex);
         }
     }
 
@@ -345,19 +349,26 @@ public class AMLog4j2Data implements Serializable{
         String st = "[" + sdtf.format(currentTimeStamp) + "] ";
 
         if(THREAD_NAME != null)
-            st += "[Thread-Name: " + THREAD_NAME;
+            st += "[Thread: " + THREAD_NAME;
+        else
+            st += "[ThreadID: ";
 
         if(THREAD_ID != null)
-            st += "] [Thread-ID: " + THREAD_ID;
+            st += "::" + THREAD_ID + "] \n";
+        else
+            st += "] \n";
 
         if(SOURCE != null)
-            st += "] [Source: " + SOURCE;
+            st += "[Source: " + SOURCE;
 
         if(INTERFACE != null)
             st += "] [Interface: " + INTERFACE;
 
+        if(PHASE != null)
+            st += "] [Phase: " + PHASE;
+
         if(IP != null)
-            st += "] [IP: " + IP;
+            st += "]\n [IP: " + IP;
 
         if(username != null)
             st += "] [User: " + username;

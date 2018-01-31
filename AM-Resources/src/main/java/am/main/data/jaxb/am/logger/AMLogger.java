@@ -66,4 +66,25 @@ public class AMLogger {
         return this.amApplication;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AMLogger)) return false;
+
+        AMLogger amLogger = (AMLogger) o;
+
+        return amApplication != null ? amApplication.equals(amLogger.amApplication) : amLogger.amApplication == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return amApplication != null ? amApplication.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "AMLogger{" +
+                "amApplication = " + amApplication +
+                "}\n";
+    }
 }

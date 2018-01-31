@@ -129,4 +129,33 @@ public class Console implements Cloneable{
         clone.setTarget(this.target);
         return clone;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Console)) return false;
+
+        Console console = (Console) o;
+
+        if (getPatternLayout() != null ? !getPatternLayout().equals(console.getPatternLayout()) : console.getPatternLayout() != null) return false;
+        if (getName() != null ? !getName().equals(console.getName()) : console.getName() != null) return false;
+        return getTarget() != null ? getTarget().equals(console.getTarget()) : console.getTarget() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getPatternLayout() != null ? getPatternLayout().hashCode() : 0;
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getTarget() != null ? getTarget().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Console{" +
+                "patternLayout = " + patternLayout +
+                ", name = " + name +
+                ", target = " + target +
+                "}\n";
+    }
 }

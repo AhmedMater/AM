@@ -140,4 +140,30 @@ public class Loggers implements Cloneable{
             clone.getLogger().add(item.clone());
         return clone;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Loggers)) return false;
+
+        Loggers loggers = (Loggers) o;
+
+        if (getRoot() != null ? !getRoot().equals(loggers.getRoot()) : loggers.getRoot() != null) return false;
+        return getLogger() != null ? getLogger().equals(loggers.getLogger()) : loggers.getLogger() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getRoot() != null ? getRoot().hashCode() : 0;
+        result = 31 * result + (getLogger() != null ? getLogger().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Loggers{" +
+                "root = " + root +
+                ", logger = " + logger +
+                "}\n";
+    }
 }

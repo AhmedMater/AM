@@ -12,6 +12,7 @@ public class GeneralException extends Exception implements Serializable {
     private final AMCode ERROR_CODE;
     private final String CLASS;
     private final String METHOD;
+    private final String SESSION_HEADER;
 
 //    public GeneralException(AppSession session, Throwable ex){
 //        super(session.toString(), ex);
@@ -22,10 +23,11 @@ public class GeneralException extends Exception implements Serializable {
         this(session, null, errorCode, args);
     }
     public GeneralException(AppSession session, Throwable ex, AMCode errorCode, Object ... args){
-        super(session.toString() + errorCode.getFullMsg(session.getMessageHandler(), args), ex);
+        super(errorCode.getFullMsg(session.getMessageHandler(), args), ex);
         this.CLASS = session.getCLASS();
         this.METHOD = session.getMETHOD();
         this.ERROR_CODE = errorCode;
+        this.SESSION_HEADER = session.toString();
     }
 
     public AMCode getErrorCode() {
@@ -38,6 +40,10 @@ public class GeneralException extends Exception implements Serializable {
 
     public String getMethod() {
         return METHOD;
+    }
+
+    public String getSessionHeader() {
+        return SESSION_HEADER;
     }
 
 //    public GeneralException(AppSession session, AMCode errorCode, Object ... args){

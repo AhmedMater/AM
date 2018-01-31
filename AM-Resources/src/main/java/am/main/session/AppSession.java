@@ -224,13 +224,17 @@ public class AppSession implements Serializable{
         String st = "";
 
         if(THREAD_NAME != null)
-            st += "[Thread-Name: " + THREAD_NAME;
+            st += "[Thread: " + THREAD_NAME;
+        else
+            st += "[ThreadID: ";
 
         if(THREAD_ID != null)
-            st += "] [Thread-ID: " + THREAD_ID;
+            st += "::" + THREAD_ID + "] \n";
+        else
+            st += "] \n";
 
         if(SOURCE != null)
-            st += "] [Source: " + SOURCE.getName();
+            st += "[Source: " + SOURCE.getName();
 
         if(INTERFACE != null)
             st += "] [Interface: " + INTERFACE.value();

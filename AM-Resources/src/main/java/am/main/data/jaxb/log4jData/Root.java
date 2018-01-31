@@ -109,4 +109,30 @@ public class Root implements Cloneable{
 
         return clone;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Root)) return false;
+
+        Root root = (Root) o;
+
+        if (getAppenderRef() != null ? !getAppenderRef().equals(root.getAppenderRef()) : root.getAppenderRef() != null) return false;
+        return getLevel() != null ? getLevel().equals(root.getLevel()) : root.getLevel() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getAppenderRef() != null ? getAppenderRef().hashCode() : 0;
+        result = 31 * result + (getLevel() != null ? getLevel().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Root{" +
+                "appenderRef = " + appenderRef +
+                ", level = " + level +
+                "}\n";
+    }
 }

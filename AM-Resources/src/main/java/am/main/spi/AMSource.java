@@ -13,4 +13,24 @@ public abstract class AMSource {
     public String getName() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AMSource)) return false;
+
+        AMSource amSource = (AMSource) o;
+
+        return getName() != null ? getName().equals(amSource.getName()) : amSource.getName() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getName() != null ? getName().hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

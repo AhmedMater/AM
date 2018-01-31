@@ -98,4 +98,30 @@ public class LoggerGroup {
             clone.getLoggerData().add(item.clone());
         return clone;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LoggerGroup)) return false;
+
+        LoggerGroup group = (LoggerGroup) o;
+
+        if (getLoggerData() != null ? !getLoggerData().equals(group.getLoggerData()) : group.getLoggerData() != null) return false;
+        return getName() != null ? getName().equals(group.getName()) : group.getName() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getLoggerData() != null ? getLoggerData().hashCode() : 0;
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "LoggerGroup{" +
+                "loggerData = " + loggerData +
+                ", name = " + name +
+                "}\n";
+    }
 }

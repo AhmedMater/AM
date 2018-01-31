@@ -3,6 +3,7 @@ package am.main.api;
 import am.main.common.ConfigParam;
 import am.main.common.ConfigUtils;
 import am.main.data.dto.AMLog4j2Data;
+import am.main.data.enums.impl.AMP;
 import am.main.data.enums.impl.AMQ;
 import am.main.data.enums.logger.LogConfigProp;
 import am.main.data.jaxb.am.logger.*;
@@ -38,6 +39,7 @@ import static am.main.data.enums.impl.IIC.*;
 import static am.main.data.enums.impl.IWC.*;
 import static am.main.data.enums.logger.LogConfigProp.LOG_LEVEL_FOR_ALL;
 import static am.main.data.enums.logger.LogConfigProp.USE_AM_LOGGER;
+import static am.main.data.enums.logger.LoggerLevels.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Singleton
@@ -174,7 +176,7 @@ public class AppLogger implements Serializable{
                         continue;
                     }
 
-                    if(internalConfig.equals(externalConfig)){
+                    if(internalProp.equals(externalProp)){
                         found = true;
 
                         if(!externalProp.getValue().matches(prop.getRegex()))
@@ -213,7 +215,7 @@ public class AppLogger implements Serializable{
         LoggerGroup loggerGroup = new LoggerGroup();
         loggerGroup.setName(APP_LOGGER.getCategory());
 
-        HashMap<String, AMPhase> amPhaseHashMap = APP_LOGGER.getALL_PHASES();
+        HashMap<String, AMPhase> amPhaseHashMap = AMP.getALL_PHASES();
         for (String phase : amPhaseHashMap.keySet())
             loggerGroup.getLoggerData().add(new LoggerData(phase, amPhaseHashMap.get(phase).getDefaultLogLevel()));
 
@@ -299,7 +301,7 @@ public class AppLogger implements Serializable{
                                 boolean found = true;
 
                                 for (LoggerProperty fileProperty :appConfig.getLoggerProperty()) {
-                                    if(fileProperty.getName().equals(amProperty.getName())) {
+                                    if(fileProperty.equals(amProperty)) {
                                         found = true;
 
                                         LogConfigProp logConfigProp = LogConfigProp.getLogConfigProp(amProperty.getName());
@@ -331,13 +333,13 @@ public class AppLogger implements Serializable{
             }
 
             LoggerProperty property = amLogConfig.getAMLoggerConfig().getLoggerProperty(LOG_LEVEL_FOR_ALL.getName());
-            if(property != null & property.getValue().equals(LOG_LEVEL_FOR_ALL.getDefaultValue()))
+            if(property != null & !property.getValue().equals(LOG_LEVEL_FOR_ALL.getDefaultValue()))
                 for (LoggerGroup group :amLogConfig.getLoggerGroup())
                     for (LoggerData logger : group.getLoggerData())
                         logger.setLevel(property.getValue());
 
             property = appLogConfig.getAMLoggerConfig().getLoggerProperty(LOG_LEVEL_FOR_ALL.getName());
-            if(property != null & property.getValue().equals(LOG_LEVEL_FOR_ALL.getDefaultValue()))
+            if(property != null & !property.getValue().equals(LOG_LEVEL_FOR_ALL.getDefaultValue()))
                 for (LoggerGroup group :appLogConfig.getLoggerGroup())
                     for (LoggerData logger : group.getLoggerData())
                         logger.setLevel(property.getValue());
@@ -387,25 +389,25 @@ public class AppLogger implements Serializable{
     }
 
     public void error(AppSession session, Exception ex) {
-        AMLog4j2Data logData = new AMLog4j2Data(session, ex);
+        AMLog4j2Data logData = new AMLog4j2Data(session, ERROR_EX, ex);
         log(session, logData);
     }
     public void error(AppSession session, AMCode amCode, Object ... args) {
-        AMLog4j2Data logData = new AMLog4j2Data(session, amCode, args);
+        AMLog4j2Data logData = new AMLog4j2Data(session, ERROR_MSG, amCode, args);
         log(session, logData);
     }
     public void error(AppSession session, Exception ex, AMCode ec, Object ... args) {
-        AMLog4j2Data logData = new AMLog4j2Data(session, ex, ec, args);
+        AMLog4j2Data logData = new AMLog4j2Data(session, ERROR_MSG_EX, ex, ec, args);
         log(session, logData);
     }
 
     public void info(AppSession session, AMCode amCode, Object ... args){
-        AMLog4j2Data logData = new AMLog4j2Data(session, amCode, args);
+        AMLog4j2Data logData = new AMLog4j2Data(session, INFO, amCode, args);
         log(session, logData);
     }
 
     public void warn(AppSession session, AMCode amCode, Object ... args){
-        AMLog4j2Data logData = new AMLog4j2Data(session, amCode, args);
+        AMLog4j2Data logData = new AMLog4j2Data(session, WARN, amCode, args);
         log(session, logData);
     }
 

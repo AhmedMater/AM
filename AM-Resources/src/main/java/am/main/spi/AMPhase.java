@@ -12,14 +12,14 @@ public abstract class AMPhase {
     private final String NAME;
     private final String DEFAULT_LOG_LEVEL;
 
-    private HashMap<String, AMPhase> ALL_PHASES = new HashMap<>();
+    private static HashMap<String, AMPhase> ALL_PHASES = new HashMap<>();
 
     public AMPhase(String CATEGORY, String NAME, LoggerLevels DEFAULT_LOG_LEVEL) {
         this.CATEGORY = CATEGORY;
         this.NAME = NAME;
         this.DEFAULT_LOG_LEVEL = DEFAULT_LOG_LEVEL.level();
 
-        this.ALL_PHASES.put(NAME, this);
+        ALL_PHASES.put(NAME, this);
     }
 
     public String getCategory() {
@@ -32,7 +32,7 @@ public abstract class AMPhase {
         return DEFAULT_LOG_LEVEL;
     }
 
-    public HashMap<String, AMPhase> getALL_PHASES() {
+    public static HashMap<String, AMPhase> getALL_PHASES() {
         return ALL_PHASES;
     }
 
