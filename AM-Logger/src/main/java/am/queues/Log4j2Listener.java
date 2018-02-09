@@ -1,15 +1,12 @@
-package am.services;
+package am.queues;
 
 import am.main.api.AppLogger;
+import am.main.api.JMSManager;
 import am.main.api.MessageHandler;
-import am.main.api.db.DBManager;
-import am.main.data.dto.AMLogData;
+import am.main.data.dto.logger.AMFunLogData;
+import am.main.data.enums.Interface;
 import am.main.exception.GeneralException;
 import am.main.session.AppSession;
-import am.shared.enums.EC;
-import am.shared.enums.Interface;
-import am.shared.enums.Phase;
-import am.shared.enums.Source;
 
 import javax.annotation.Resource;
 import javax.ejb.MessageDriven;
@@ -20,7 +17,6 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
 import static am.shared.common.JMSParams.LOG4J2_Q;
-import static am.shared.common.JMSParams.NOTIFICATION_INPUT_Q;
 import static am.shared.common.JMSParams.QUEUE;
 
 /**
@@ -28,32 +24,30 @@ import static am.shared.common.JMSParams.QUEUE;
  */
 @MessageDriven(mappedName = QUEUE + LOG4J2_Q)
 public class Log4j2Listener implements MessageListener {
-    @Resource private MessageDrivenContext context;
-    @Inject private DBManager dbManager;
-
     private final String CLASS = Log4j2Listener.class.getSimpleName();
-    AppSession session = new AppSession(Source.AM_LOGGER, Interface.JMS, Phase.AM_LOGGING, CLASS, "onMessage");
 
     @Inject private MessageHandler messageHandler;
+    @Inject private JMSManager jmsManager;
     @Inject private AppLogger logger;
+    @Resource private MessageDrivenContext context;
 
     @Override
     public void onMessage(Message m) {
-        String METHOD = "onMessage";
-
+        AppSession session = new AppSession(Source.AM_LOGGER, Interface.JMS, Phase.AM_LOGGING,
+                CLASS, "onMessage");
         try {
             String jmsID = m.getJMSMessageID();
 
             if (m instanceof ObjectMessage) {
                 ObjectMessage message = (ObjectMessage) m;
-                AMLogData logData = message.getBody(AMLogData.class);
+                AMFunLogData logData = message.getBody(AMFunLogData.class);
 
                 logData.getSession().setMessageHandler(messageHandler);
                 logger.log(session, logData);
 
-//                logger.endDebug(session);
+                jmsManager.sendMessage(JMSQueues.PERFORMANCE, logData);
             }else
-                throw new GeneralException(session, EC.AMT_0050, NOTIFICATION_INPUT_Q);
+                throw new GeneralException(session, EC.AMT_0050, LOG4J2_Q);
 
         }catch (Exception ex){
             logger.error(session, ex);
