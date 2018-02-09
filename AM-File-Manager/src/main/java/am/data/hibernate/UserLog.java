@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * Created by ahmed.motair on 1/6/2018.
  */
 @Entity
-@Table(name = "logger")
+@Table(name = "loggerDataList")
 public class UserLog {
     @Id
     @Column(name = "log_id")
