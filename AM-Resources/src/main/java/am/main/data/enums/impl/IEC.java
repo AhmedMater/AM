@@ -31,7 +31,7 @@ public class IEC extends AMCode {
     public static IEC E_VAL_10 = new IEC(10, VALIDATION, "Value: ''{0}'' is invalid for Field: ''{1}'', as It allows only Future Date");
     public static IEC E_VAL_11 = new IEC(11, VALIDATION, "Value: ''{0}'' is invalid for Field: ''{1}'', as It allows only positive numbers");
     public static IEC E_VAL_12 = new IEC(12, VALIDATION, "Value: ''{0}'' is invalid for Field: ''{1}'', as It allows only positive numbers and zero");
-    public static IEC E_VAL_13 = new IEC(13, VALIDATION, "");
+    public static IEC E_VAL_13 = new IEC(13, VALIDATION, "{0} DTO validation failed");
     public static IEC E_VAL_14 = new IEC(14, VALIDATION, "");
     public static IEC E_VAL_15 = new IEC(15, VALIDATION, "");
     public static IEC E_VAL_16 = new IEC(16, VALIDATION, "");
@@ -98,7 +98,7 @@ public class IEC extends AMCode {
 //    public static IEC IO_4 = new IEC(4, IO, "Reading Resource File: ''{0}'' failed");
 //    public static IEC IO_5 = new IEC(5, IO, "Property File: ''{0}'' isn''t loaded in the System or Empty");
     public static IEC IO_8 = new IEC(8, IO, "Reading ''{0}'' of Code: ''{1}'' failed");
-    public static IEC IO_9 = new IEC(9, IO, "Parameter: ''{0}'' is missing from File: ''{1}''");
+//    public static IEC IO_9 = new IEC(9, IO, "Parameter: ''{0}'' is missing from File: ''{1}''");
     public static IEC IO_11 = new IEC(11, IO, "Changing value of ''{0}'' of Code: ''{1}'' failed");
 
     public static IEC E_SEC_1 = new IEC(1, SECURITY, "Generating Hashed Password failed");
@@ -140,7 +140,7 @@ public class IEC extends AMCode {
     public static IEC E_JMS_2 = new IEC(2, JMS, "Queue Session of Queue ''{0}'' isn''t initiated");
     public static IEC E_JMS_3 = new IEC(3, JMS, "JMS Sender of Queue ''{0}'' isn''t initiated");
     public static IEC E_JMS_4 = new IEC(4, JMS, "Failed to send ''{0}'' Message to ''{0}'' Queue");
-    public static IEC E_JMS_5 = new IEC(5, JMS, "Message of invalid type in Queue: ''{0}''");
+    public static IEC E_JMS_5 = new IEC(5, JMS, "Message of invalid type in Queue: ''{0}'', Expected: ''{1}'' and actual: ''{2}''");
     public static IEC E_JMS_6 = new IEC(6, JMS, "");
     public static IEC E_JMS_7 = new IEC(7, JMS, "");
     public static IEC E_JMS_8 = new IEC(8, JMS, "");

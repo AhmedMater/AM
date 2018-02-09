@@ -1,7 +1,8 @@
-package am.main.data.dto;
+package am.main.data.dto.logger;
 
 import am.main.api.AppLogger;
 import am.main.api.MessageHandler;
+import am.main.data.dto.LoginData;
 import am.main.data.enums.logger.LoggerLevels;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;
@@ -21,8 +22,10 @@ import static am.main.data.enums.logger.LoggerLevels.ERROR_MSG_EX;
 /**
  * Created by ahmed.motair on 1/5/2018.
  */
-public class AMLog4j2Data implements Serializable{
+public class AMFunLogData implements Serializable{
     private static final SimpleDateFormat sdtf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+    private LoginData loginData;
 
     private LoggerLevels LEVEL;
     private String fullCode;
@@ -44,10 +47,10 @@ public class AMLog4j2Data implements Serializable{
 
     private String fullMsg = "";
 
-    public AMLog4j2Data() {
+    public AMFunLogData() {
         this.currentTimeStamp = new Date();
     }
-    public AMLog4j2Data(AppSession session, LoggerLevels level, Exception ex, AMCode code, Object ... args){
+    public AMFunLogData(AppSession session, LoggerLevels level, Exception ex, AMCode code, Object ... args){
         this.LEVEL = level;
         setSession(session);
         switch (level){
@@ -61,28 +64,28 @@ public class AMLog4j2Data implements Serializable{
         this.setArgs(args);
         this.currentTimeStamp = new Date();
     }
-    public AMLog4j2Data(AppSession session, LoggerLevels level, AMCode code, Object ... args) {
+    public AMFunLogData(AppSession session, LoggerLevels level, AMCode code, Object ... args) {
         this(session, level, null, code, args);
     }
-    public AMLog4j2Data(AppSession session, Exception ex) {
+    public AMFunLogData(AppSession session, Exception ex) {
         this(session, ERROR_EX, ex, null);
     }
-    public AMLog4j2Data(AppSession session, Exception ex, AMCode errorCode, Object ... args) {
+    public AMFunLogData(AppSession session, Exception ex, AMCode errorCode, Object ... args) {
         this(session, ERROR_MSG_EX, ex, errorCode, args);
     }
 
-    public AMLog4j2Data(AppSession session, Object ... args){
+    public AMFunLogData(AppSession session, Object ... args){
         setSession(session);
         setArgs(args);
         this.LEVEL = LoggerLevels.ST_DEBUG;
         this.currentTimeStamp = new Date();
     }
-    public AMLog4j2Data(AppSession session){
+    public AMFunLogData(AppSession session){
         setSession(session);
         this.LEVEL = LoggerLevels.EN_DEBUG;
         this.currentTimeStamp = new Date();
     }
-    public AMLog4j2Data(AppSession session, Object result){
+    public AMFunLogData(AppSession session, Object result){
         setSession(session);
         setEndDebugArgs(result);
         this.LEVEL = LoggerLevels.EN_DEBUG;
@@ -225,48 +228,12 @@ public class AMLog4j2Data implements Serializable{
         this.fullMsg = fullMsg;
     }
 
-//    private void generateCodeMsg(MessageHandler messageHandler, AppLogger appLogger) throws Exception{
-//        AMCode code = AMCode.getCodeByFullCode(fullCode);
-//        this.fullMsg = code.getFullMsg(messageHandler, args);
-//    }
-//    private void generateErrorMsg(MessageHandler messageHandler, AppLogger appLogger) throws Exception{
-//        String errMsg = "";
-//        if(fullCode != null){
-//            AMCode code = AMCode.getCodeByFullCode(fullCode);
-//            fullMsg += code.getFullMsg(messageHandler, args);
-//        }
-//
-//        if (ex != null)
-//            fullMsg += ",\nDue to: " + ex.getMessage();
-//    }
-//    private void generateDebug(AppLogger appLogger) throws Exception{
-//        switch (this.LEVEL) {
-//            case ST_DEBUG:
-//                fullMsg = "Started with " +
-//                    ((args.size() == 0) ? "No Arguments" : "Arguments = " + Arrays.toString(args.toArray()) + "\n");
-//                break;
-//            case EN_DEBUG:
-//                fullMsg = "Ended " + (args.size() == 1 ?
-//                        "with Results = " + args.get(0) : "[Void Function]");
-//                break;
-////            default:
-////                appLogger.FAILURE_LOGGER.error(session.toString() + SYS_017.value());
-////                return false;
-//
-//        }
-////        return true;
-//    }
-//    private boolean generateWarning(MessageHandler messageHandler, AppLogger appLogger) throws Exception{
-//        if (session != null) {
-//            fullMsg = session.getWarnMsg(wc, args);
-//            return true;
-//        }else {
-//            appLogger.FAILURE_LOGGER.error(session.toString() +
-//                    MessageFormat.format(AME.SYS_011.value(), "Warn", "Error", ec.toString()));
-//            return false;
-//        }
-//    }
-
+    public LoginData getLoginData() {
+        return loginData;
+    }
+    public void setLoginData(LoginData loginData) {
+        this.loginData = loginData;
+    }
 
     private void generateFullMsg(MessageHandler messageHandler) throws Exception{
         switch (this.LEVEL){
@@ -286,9 +253,6 @@ public class AMLog4j2Data implements Serializable{
         }
 
         fullMsg += "\n";
-
-//        if (ex != null)
-//            fullMsg += ",\nDue to: " + ex.getMessage();
     }
     public void logMsg(MessageHandler messageHandler, AppLogger appLogger, Logger logger){
         try {
@@ -300,44 +264,22 @@ public class AMLog4j2Data implements Serializable{
             generateFullMsg(messageHandler);
             switch (LEVEL) {
                 case INFO: case INTERNAL_INFO:
-//                    generateCodeMsg(messageHandler, appLogger);
                     logger.info(header + fullMsg);
                     break;
                 case ERROR_EX:
-                    logger.error(header,ex);
-                case INTERNAL_ERROR_MSG:
-                case ERROR_MSG_EX: case INTERNAL_ERROR_MSG_EX:
-//                    generateErrorMsg(messageHandler, appLogger);
-
-//                    if (ex instanceof SerializedBusinessException)
-//                        logger.error(header + fullMsg);
-//                    else
-                        logger.error(header + fullMsg, ex);
-
+                    logger.error(header, ex);
+                case INTERNAL_ERROR_MSG: case ERROR_MSG_EX: case INTERNAL_ERROR_MSG_EX:
+                    logger.error(header + fullMsg, ex);
                     break;
                 case ERROR_MSG:
-//                    generateCodeMsg(messageHandler, appLogger);
                     logger.error(header + fullMsg);
                     break;
-//                case ERROR_MSG_EX:
-//                    if (generateErrorMsg(messageHandler, appLogger)) {
-//                        if (ex instanceof SerializedBusinessException)
-//                            logger.error(header + fullMsg);
-//                        else
-//                            logger.error(header + fullMsg, ex);
-//                    }
-//                    break;
-                case ST_DEBUG:
-                case EN_DEBUG:
-//                    generateDebug(appLogger);
+                case ST_DEBUG: case EN_DEBUG:
                     logger.debug(header + fullMsg);
                     break;
                 case WARN:
-//                    generateCodeMsg(messageHandler, appLogger);
                     logger.warn(header + fullMsg);
                     break;
-//                default:
-//                    appLogger.FAILURE_LOGGER.error(header + SYS_017.value());
             }
         }catch (Exception ex){
             appLogger.FAILURE_LOGGER.error(ex);

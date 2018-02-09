@@ -3,7 +3,6 @@ package am.main.api.db;
 import am.main.api.AppLogger;
 import am.main.exception.DBException;
 import am.main.session.AppSession;
-import am.shared.common.SharedParam;
 import org.hibernate.annotations.QueryHints;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -34,10 +33,10 @@ public class DBManager implements Serializable {
     private final static String DB_DELETE = "Delete";
     private final static String QUERY = "Query";
 
-    @PersistenceUnit(unitName = SharedParam.PERSISTENCE_UNIT)
+    @PersistenceUnit(unitName = "AM")
     private EntityManagerFactory emf;
 
-    @PersistenceContext(name = SharedParam.PERSISTENCE_UNIT)
+    @PersistenceContext(name = "AM")
     private EntityManager unCachedEM;
 
     public EntityManager getCachedEM() {
@@ -340,6 +339,20 @@ public class DBManager implements Serializable {
         }
     }
 
+    /**
+     * Retrieves Single value from Database Table or Entity
+     *
+     * @param usingCache Retrieve from cached data
+     * @param entity Hibernate Model Class
+     * @param parameters HashMap of Attribute and value as a filter condition
+     *
+     * @return Object of the entity returned from Database
+     *
+     * @throws DBException <code>E_DB_15</code> - If Non unique Result returns
+     * @throws DBException <code>E_DB_16</code> - If No Result returns
+     * @throws DBException <code>E_DB_18</code> - If Query Times out
+     * @throws DBException <code>E_DB_22</code> - If There is Persistence Error
+     */
     public <T> T getSingleResult(AppSession appSession, Boolean usingCache,
                                  Class<T> entity, Map<String, Object> parameters) throws Exception {
         String METHOD = "getSingleResult";

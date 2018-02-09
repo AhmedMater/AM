@@ -18,8 +18,8 @@ public class IIC extends AMCode {
     private static final String CONFIG = "CFG";
     private static final String VALIDATION = "VAL";
 
-    public static IIC I_VAL_1 = new IIC(1, VALIDATION, "Start Validating ''{0}'' Form Data");
-    public static IIC I_VAL_2 = new IIC(2, VALIDATION, "''{0}'' Form is Validated successfully");
+    public static IIC I_VAL_1 = new IIC(1, VALIDATION, "Start validating ''{0}'' data");
+    public static IIC I_VAL_2 = new IIC(2, VALIDATION, "''{0}'' is validated successfully");
     public static IIC I_VAL_3 = new IIC(3, VALIDATION, "");
     public static IIC I_VAL_4 = new IIC(4, VALIDATION, "");
     public static IIC I_VAL_5 = new IIC(5, VALIDATION, "");

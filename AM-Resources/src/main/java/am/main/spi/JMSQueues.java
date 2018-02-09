@@ -1,10 +1,14 @@
 package am.main.spi;
 
+import java.text.MessageFormat;
+
 /**
  * Created by ahmed.motair on 1/21/2018.
  */
 public abstract class JMSQueues {
-    protected String PREFIX;
+    private static final String Q_FORMAT = "{0}_{1}_Q";
+    private static final String QCF_FORMAT = "{0}_{1}_QCF";
+    private String PREFIX;
     private final String queueName;
     private final String description;
 
@@ -14,10 +18,10 @@ public abstract class JMSQueues {
     }
 
     public String getQueueName() {
-        return PREFIX + "_Q_" + queueName;
+        return MessageFormat.format(Q_FORMAT, PREFIX, queueName);
     }
     public String getConnectionFactory() {
-        return PREFIX + "_QCF_" + queueName;
+        return MessageFormat.format(QCF_FORMAT, PREFIX, queueName);
     }
     public String description() {
         return this.description;

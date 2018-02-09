@@ -52,7 +52,13 @@ public abstract class AMCode {
     }
 
     public String getFullCode(){
-        return (!PREFIX.isEmpty() ? PREFIX + "-" : "") +  CODE_NAME + (CODE_ID != -1 ? "-" + CODE_ID : "");
+        String type = "";
+        switch (CODE_TYPE){
+            case INFO: type = "I-";
+            case ERROR: type = "E-";
+            case WARN: type = "W-";
+        }
+        return (!PREFIX.isEmpty() ? PREFIX + "-" : "") + type + CODE_NAME + (CODE_ID != -1 ? "-" + CODE_ID : "");
     }
     public AMCode getCode(String fullCode) throws Exception{
         for (String code : ALL_CODES.keySet()) {
@@ -99,9 +105,9 @@ public abstract class AMCode {
                 throw new IllegalArgumentException(getFullCode() + " Code needs " +
                         placeholders.size() + " Placeholders, and arguments provided are " + args.length + " Args, Which are " + Arrays.toString(args));
 
-            return getFullCode() + " " + MessageFormat.format(INTERNAL_MSG, args);
+            return getFullCode() + ": " + MessageFormat.format(INTERNAL_MSG, args);
         } else
-            return getFullCode() + " " + appSession.getMessageHandler().getMsg(appSession, this, args);
+            return getFullCode() + ": " + appSession.getMessageHandler().getMsg(appSession, this, args);
     }
     public void setInternalMsg(String INTERNAL_MSG) {
         this.INTERNAL_MSG = INTERNAL_MSG;

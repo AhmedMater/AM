@@ -2,7 +2,7 @@ package am.main.api;
 
 import am.main.common.ConfigParam;
 import am.main.common.ConfigUtils;
-import am.main.data.dto.AMLog4j2Data;
+import am.main.data.dto.logger.AMFunLogData;
 import am.main.data.enums.impl.AMP;
 import am.main.data.enums.impl.AMQ;
 import am.main.data.enums.logger.LogConfigProp;
@@ -389,42 +389,42 @@ public class AppLogger implements Serializable{
     }
 
     public void error(AppSession session, Exception ex) {
-        AMLog4j2Data logData = new AMLog4j2Data(session, ERROR_EX, ex);
+        AMFunLogData logData = new AMFunLogData(session, ERROR_EX, ex);
         log(session, logData);
     }
     public void error(AppSession session, AMCode amCode, Object ... args) {
-        AMLog4j2Data logData = new AMLog4j2Data(session, ERROR_MSG, amCode, args);
+        AMFunLogData logData = new AMFunLogData(session, ERROR_MSG, amCode, args);
         log(session, logData);
     }
     public void error(AppSession session, Exception ex, AMCode ec, Object ... args) {
-        AMLog4j2Data logData = new AMLog4j2Data(session, ERROR_MSG_EX, ex, ec, args);
+        AMFunLogData logData = new AMFunLogData(session, ERROR_MSG_EX, ex, ec, args);
         log(session, logData);
     }
 
     public void info(AppSession session, AMCode amCode, Object ... args){
-        AMLog4j2Data logData = new AMLog4j2Data(session, INFO, amCode, args);
+        AMFunLogData logData = new AMFunLogData(session, INFO, amCode, args);
         log(session, logData);
     }
 
     public void warn(AppSession session, AMCode amCode, Object ... args){
-        AMLog4j2Data logData = new AMLog4j2Data(session, WARN, amCode, args);
+        AMFunLogData logData = new AMFunLogData(session, WARN, amCode, args);
         log(session, logData);
     }
 
     public void startDebug(AppSession session, Object ... args){
-        AMLog4j2Data logData = new AMLog4j2Data(session, args);
+        AMFunLogData logData = new AMFunLogData(session, args);
         log(session, logData);
     }
     public void endDebug(AppSession session){
-        AMLog4j2Data logData = new AMLog4j2Data(session);
+        AMFunLogData logData = new AMFunLogData(session);
         log(session, logData);
     }
     public void endDebug(AppSession session, Object result){
-        AMLog4j2Data logData = new AMLog4j2Data(session, result);
+        AMFunLogData logData = new AMFunLogData(session, result);
         log(session, logData);
     }
 
-    public void log(AppSession session, AMLog4j2Data logData){
+    public void log(AppSession session, AMFunLogData logData){
         if(session == null || session.getPHASE() == null || session.getSOURCE() == null)
             logData.logMsg(null, this, FAILURE_LOGGER);
         else{
@@ -440,7 +440,7 @@ public class AppLogger implements Serializable{
                         (logger != null ? logger : FAILURE_LOGGER));
             } else {
                 try {
-                    jmsManager.get().sendMessage(AMQ.LOG4J2, logData);
+                    jmsManager.get().sendObjMessage(AMQ.FILE_LOG, logData);
                 } catch (Exception exc) {
                     logData.logMsg(session.getMessageHandler(), this, FAILURE_LOGGER);
                     FAILURE_LOGGER.error(exc);

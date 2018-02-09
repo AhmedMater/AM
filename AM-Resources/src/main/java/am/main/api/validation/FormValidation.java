@@ -7,7 +7,7 @@ import am.main.exception.BusinessException;
 import am.main.exception.GeneralException;
 import am.main.session.AppSession;
 import am.main.spi.AMCode;
-import am.shared.enums.Forms;
+import am.main.spi.AMForm;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
@@ -38,8 +38,8 @@ public class FormValidation<T> implements Serializable{
         this.formErrors = Arrays.asList(formErrors);
 
     }
-    public FormValidation(AppSession session, AppLogger logger, T object, AMCode code, Forms form) throws BusinessException, GeneralException {
-        logger.info(session, I_VAL_1, form.getName());
+    public FormValidation(AppSession session, AppLogger logger, T object, AMCode code, AMForm form) throws BusinessException, GeneralException {
+        logger.info(session, I_VAL_1, form.getForm());
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<T>> errors = validator.validate(object, am.main.api.validation.groups.FormValidation.class);
@@ -47,7 +47,7 @@ public class FormValidation<T> implements Serializable{
         if(errors.size() > 0) {
             this.code = code;
             this.mainError = code.getFullMsg(session.getMessageHandler(), form);
-            this.formName = form.getName();
+            this.formName = form.getForm();
 
             this.formErrors = new ArrayList<>();
             for (ConstraintViolation<T> error : errors) {
@@ -125,7 +125,7 @@ public class FormValidation<T> implements Serializable{
 
             throw new BusinessException(session, this);
         }
-        logger.info(session, I_VAL_2, form.getName());
+        logger.info(session, I_VAL_2, form.getForm());
     }
     public FormValidation(String mainError, List<String> formErrors) {
         this.mainError = mainError;

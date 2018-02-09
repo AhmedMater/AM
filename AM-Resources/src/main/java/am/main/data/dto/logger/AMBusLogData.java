@@ -1,5 +1,6 @@
-package am.main.data.dto;
+package am.main.data.dto.logger;
 
+import am.main.data.dto.LoginData;
 import am.main.data.enums.logger.BusLogTypes;
 
 import java.io.Serializable;
@@ -8,7 +9,9 @@ import java.util.Date;
 /**
  * Created by ahmed.motair on 1/20/2018.
  */
-public class AMBusinessLog implements Serializable{
+public class AMBusLogData implements Serializable{
+    private LoginData loginData;
+
     private BusLogTypes TYPE;
     private Date currentTimeStamp;
     private String actionUserID;
@@ -19,10 +22,9 @@ public class AMBusinessLog implements Serializable{
     private String updatedFromJSON;
     private String updatedToJSON;
 
-    public AMBusinessLog() {
+    public AMBusLogData() {
     }
-
-    public AMBusinessLog(BusLogTypes TYPE, Date currentTimeStamp, String actionUserID, String category, String categoryRelatedID, String newDataJSON, String deletedDataJSON, String updatedFromJSON, String updatedToJSON) {
+    public AMBusLogData(BusLogTypes TYPE, Date currentTimeStamp, String actionUserID, String category, String categoryRelatedID, String newDataJSON, String deletedDataJSON, String updatedFromJSON, String updatedToJSON) {
         this.TYPE = TYPE;
         this.currentTimeStamp = currentTimeStamp;
         this.actionUserID = actionUserID;
@@ -97,12 +99,19 @@ public class AMBusinessLog implements Serializable{
         this.updatedToJSON = updatedToJSON;
     }
 
+    public LoginData getLoginData() {
+        return loginData;
+    }
+    public void setLoginData(LoginData loginData) {
+        this.loginData = loginData;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AMBusinessLog)) return false;
+        if (!(o instanceof AMBusLogData)) return false;
 
-        AMBusinessLog that = (AMBusinessLog) o;
+        AMBusLogData that = (AMBusLogData) o;
 
         if (getTYPE() != that.getTYPE()) return false;
         if (getCurrentTimeStamp() != null ? !getCurrentTimeStamp().equals(that.getCurrentTimeStamp()) : that.getCurrentTimeStamp() != null) return false;
@@ -131,7 +140,7 @@ public class AMBusinessLog implements Serializable{
 
     @Override
     public String toString() {
-        return "AMBusinessLog{" +
+        return "AMBusLogData{" +
                 "TYPE = " + TYPE +
                 ", currentTimeStamp = " + currentTimeStamp +
                 ", actionUserID = " + actionUserID +

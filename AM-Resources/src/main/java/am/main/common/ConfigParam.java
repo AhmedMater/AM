@@ -9,7 +9,7 @@ public class ConfigParam {
     public static String APP_NAME;
     public static String APP_TYPE;
     public static String AM_RESOURCE_NAME = "AM-Resources";
-    private static String APP_CONFIG_PATH;
+    public static String APP_CONFIG_PATH;
 
     public static AMComponent ERROR_MSG_CONFIG, INFO_MSG_CONFIG, WARN_MSG_CONFIG, LOGGER_CONFIG;
     public static AMComponent JMS_MANGER_CONFIG, NOTIFICATION_CONFIG, MAIN_APP_CONFIG;
@@ -35,7 +35,7 @@ public class ConfigParam {
         public static final String JMS_MANAGER = "JMS Manager";
         public static final String MESSAGE_HANDLER = "Message Handler";
         public static final String CONFIG_MANAGER = "Configuration Manager";
-        public static final String NOTIFICATION_MANAGER = "AMNotification Manager";
+        public static final String NOTIFICATION_MANAGER = "AMNotificationData Manager";
         public static final String TIMER_CALCULATOR = "Timer Calculator";
         public static final String PUBLIC_HOLIDAYS = "Public Holidays";
     }
@@ -51,4 +51,6 @@ public class ConfigParam {
             this.COMPONENT_NAME = COMPONENT_NAME;
         }
     }
+
+
 }

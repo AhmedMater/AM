@@ -175,6 +175,16 @@ public class ConfigUtils {
         }
     }
 
+    /**
+     * Reads Remote Text File into Properties Object
+     * @param filePath Resource File Name
+     * @return Properties Object
+     */
+    public static String readRemoteTextFiles(AppSession appSession, AppLogger logger, String filePath) throws Exception {
+        String FN_NAME = "readRemoteTextFiles";
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        return readFile(session, logger, false, filePath);
+    }
 //    public static Properties loadPropertySystemComponent(AppSession appSession, AppLogger loggerDataList, String fileName, String componentName) throws Exception{
 //        String FN_NAME = "loadPropertySystemComponent";
 //        AppSession session = appSession.updateSession(CLASS, FN_NAME);
