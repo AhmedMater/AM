@@ -6,13 +6,14 @@ import am.data.hibernate.model.performance.session.Source;
 import am.data.hibernate.model.performance.session.Thread;
 import am.main.api.AppLogger;
 import am.main.api.db.DBManager;
-import am.main.data.enums.AME;
 import am.main.exception.DBException;
 import am.main.session.AppSession;
 
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
+
+import static am.main.data.enums.impl.IEC.E_DB_16;
 
 /**
  * Created by ahmed.motair on 1/20/2018.
@@ -36,7 +37,7 @@ public class PerformanceRepository {
         try {
             phase = dbManager.getSingleResult(session, true, Phase.class, parameters);
         }catch (DBException ex){
-            if(!ex.getAME_CODE().equals(AME.DB_016))
+            if(ex.getCode().equals(E_DB_16))
                 throw ex;
         }
 
@@ -57,7 +58,7 @@ public class PerformanceRepository {
         try {
             thread = dbManager.getSingleResult(session, true, Thread.class, parameters);
         }catch (DBException ex){
-            if(!ex.getAME_CODE().equals(AME.DB_016))
+            if(ex.getCode().equals(E_DB_16))
                 throw ex;
         }
 
@@ -78,7 +79,7 @@ public class PerformanceRepository {
         try {
             _interface = dbManager.getSingleResult(session, true, Interface.class, parameters);
         }catch (DBException ex){
-            if(!ex.getAME_CODE().equals(AME.DB_016))
+            if(ex.getCode().equals(E_DB_16))
                 throw ex;
         }
 
@@ -99,7 +100,7 @@ public class PerformanceRepository {
         try {
             source = dbManager.getSingleResult(session, true, Source.class, parameters);
         }catch (DBException ex){
-            if(!ex.getAME_CODE().equals(AME.DB_016))
+            if(ex.getCode().equals(E_DB_16))
                 throw ex;
         }
 

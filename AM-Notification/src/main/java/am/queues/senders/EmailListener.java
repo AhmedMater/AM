@@ -15,17 +15,15 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
-import static am.common.NotificationParam.EMAIL_NOTIFICATION_QUEUE;
-import static am.data.enums.am.impl.ANP.EMAIL_NOTIFICATION;
-import static am.data.enums.am.impl.ANS.AM_NOTIFICATION;
+import static am.common.NotificationParam.EMAIL_NTF_QUEUE;
+import static am.common.NotificationParam.SOURCE;
+import static am.data.enums.am.impl.ANP.EMAIL_NTF;
 import static am.main.data.enums.impl.IEC.E_JMS_5;
-import static am.shared.common.JMSParams.EMAIL_NOTIFICATION_Q;
-import static am.shared.common.JMSParams.QUEUE;
 
 /**
  * Created by ahmed.motair on 1/17/2018.
  */
-@MessageDriven(mappedName = EMAIL_NOTIFICATION_QUEUE)
+@MessageDriven(mappedName = EMAIL_NTF_QUEUE)
 public class EmailListener implements MessageListener{
     private final String CLASS = EmailListener.class.getSimpleName();
 
@@ -36,7 +34,7 @@ public class EmailListener implements MessageListener{
     @Override
     public void onMessage(Message message) {
         String METHOD = "onMessage";
-        AppSession session = new AppSession(AM_NOTIFICATION, Interface.JMS, EMAIL_NOTIFICATION);
+        AppSession session = new AppSession(SOURCE, Interface.JMS, EMAIL_NTF);
         try {
             String jmsID = message.getJMSMessageID();
             session.setId(jmsID);
@@ -49,7 +47,7 @@ public class EmailListener implements MessageListener{
 
                 logger.endDebug(session);
             }else
-                throw new GeneralException(session, E_JMS_5, EMAIL_NOTIFICATION_Q);
+                throw new GeneralException(session, E_JMS_5, EMAIL_NTF_QUEUE);
 
         }catch (Exception ex){
             logger.error(session, ex);

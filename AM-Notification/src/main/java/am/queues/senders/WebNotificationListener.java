@@ -15,17 +15,15 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
-import static am.common.NotificationParam.WEB_NOTIFICATION_QUEUE;
-import static am.data.enums.am.impl.ANP.WEB_NOTIFICATION;
-import static am.data.enums.am.impl.ANS.AM_NOTIFICATION;
+import static am.common.NotificationParam.SOURCE;
+import static am.common.NotificationParam.WEB_NTF_QUEUE;
+import static am.data.enums.am.impl.ANP.WEB_NTF;
 import static am.main.data.enums.impl.IEC.E_JMS_5;
-import static am.shared.common.JMSParams.QUEUE;
-import static am.shared.common.JMSParams.WEB_NOTIFICATION_Q;
 
 /**
  * Created by ahmed.motair on 1/17/2018.
  */
-@MessageDriven(mappedName = WEB_NOTIFICATION_QUEUE)
+@MessageDriven(mappedName = WEB_NTF_QUEUE)
 public class WebNotificationListener implements MessageListener {
     private final String CLASS = WebNotificationListener.class.getSimpleName();
 
@@ -36,7 +34,7 @@ public class WebNotificationListener implements MessageListener {
     @Override
     public void onMessage(Message message) {
         String METHOD = "onMessage";
-        AppSession session = new AppSession(AM_NOTIFICATION, Interface.JMS, WEB_NOTIFICATION);
+        AppSession session = new AppSession(SOURCE, Interface.JMS, WEB_NTF);
         try {
             String jmsID = message.getJMSMessageID();
             session.setId(jmsID);
@@ -49,7 +47,7 @@ public class WebNotificationListener implements MessageListener {
 
                 logger.endDebug(session);
             }else
-                throw new GeneralException(session, E_JMS_5, WEB_NOTIFICATION_Q);
+                throw new GeneralException(session, E_JMS_5, WEB_NTF_QUEUE);
 
         }catch (Exception ex){
             logger.error(session, ex);

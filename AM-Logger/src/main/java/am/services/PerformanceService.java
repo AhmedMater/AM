@@ -1,7 +1,6 @@
 package am.services;
 
 import am.data.hibernate.model.performance.ExecutionLog;
-import am.data.hibernate.model.performance.codes.ErrorCode;
 import am.data.hibernate.model.performance.session.Interface;
 import am.data.hibernate.model.performance.session.Phase;
 import am.data.hibernate.model.performance.session.Source;
@@ -38,47 +37,47 @@ public class PerformanceService {
         ExecutionLog executionLog = new ExecutionLog();
 
         //Get the Thread Record from Database
-        Thread thread = repository.getThread(session, logData.getSession().getTHREAD_NAME());
+        Thread thread = repository.getThread(session, logData.getTHREAD_NAME());
         if(thread == null){
-            thread = dbManager.persist(session, new Thread(logData.getSession().getTHREAD_NAME(), logData.getSession().getTHREAD_ID()), true);
+            thread = dbManager.persist(session, new Thread(logData.getTHREAD_NAME(), logData.getTHREAD_ID()), true);
             newRecords.put(Thread.class, thread);
         }
         executionLog.setThread(thread);
 
         //Get the Phase Record from Database
-        Phase phase = repository.getPhase(session, logData.getSession().getPHASE().value());
+        Phase phase = repository.getPhase(session, logData.getPHASE());
         if(phase == null){
-            phase = dbManager.persist(session, new Phase(logData.getSession().getPHASE().value()), true);
+            phase = dbManager.persist(session, new Phase(logData.getPHASE()), true);
             newRecords.put(Phase.class, phase);
         }
         executionLog.setPhase(phase);
 
         //Get the Interface Record from Database
-        Interface _interface = repository.getInterface(session, logData.getSession().getINTERFACE().value());
+        Interface _interface = repository.getInterface(session, logData.getINTERFACE());
         if(_interface == null){
-            _interface = dbManager.persist(session, new Interface(logData.getSession().getINTERFACE().value()), true);
+            _interface = dbManager.persist(session, new Interface(logData.getINTERFACE()), true);
             newRecords.put(Interface.class, _interface);
         }
         executionLog.setInterfaceLog(_interface);
-        executionLog.setInterfaceRelatedID(logData.getSession().getId());
+        executionLog.setInterfaceRelatedID(logData.getInterfaceRelatedID());
 
         //Get the Source Record from Database
-        Source source = repository.getSource(session, logData.getSession().getSOURCE().value());
+        Source source = repository.getSource(session, logData.getSOURCE());
         if(source == null){
-            source = dbManager.persist(session, new Source(logData.getSession().getSOURCE().value()), true);
+            source = dbManager.persist(session, new Source(logData.getSOURCE()), true);
             newRecords.put(Source.class, source);
         }
         executionLog.setSource(source);
 
-        //Get the Source Record from Database
-        if(logData.getEc() != null) {
-            ErrorCode errorCode = repository.getErrorCode(session, logData.getEc());
-            if (source == null) {
-                source = dbManager.persist(session, new ErrorCode(logData.getEc()), true);
-                newRecords.put(Source.class, source);
-            }
-            executionLog.setSource(source);
-        }
+//        //Get the Source Record from Database
+//        if(logData.getFullCode() != null) {
+//            ErrorCode errorCode = repository.getErrorCode(session, logData.getEc());
+//            if (source == null) {
+//                source = dbManager.persist(session, new ErrorCode(logData.getEc()), true);
+//                newRecords.put(Source.class, source);
+//            }
+//            executionLog.setSource(source);
+//        }
 
 
 

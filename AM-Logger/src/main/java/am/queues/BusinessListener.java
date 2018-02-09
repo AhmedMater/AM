@@ -2,14 +2,10 @@ package am.queues;
 
 import am.main.api.AppLogger;
 import am.main.api.MessageHandler;
-import am.main.data.dto.logger.AMFunLogData;
-import am.main.exception.GeneralException;
+import am.main.data.dto.logger.AMBusLogData;
+import am.main.data.enums.Interface;
 import am.main.session.AppSession;
 import am.services.BusinessService;
-import am.shared.enums.EC;
-import am.main.data.enums.Interface;
-import am.shared.enums.Phase;
-import am.shared.enums.Source;
 
 import javax.annotation.Resource;
 import javax.ejb.MessageDriven;
@@ -19,13 +15,16 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
-import static am.shared.common.JMSParams.BUSINESS_Q;
-import static am.shared.common.JMSParams.QUEUE;
+import static am.common.LoggerParam.BUS_LOG_QUEUE;
+import static am.common.LoggerParam.SOURCE;
+import static am.data.enums.ALP.BUSINESS_LOG;
+import static am.main.data.enums.impl.IEC.E_JMS_5;
+
 
 /**
  * Created by ahmed.motair on 1/20/2018.
  */
-@MessageDriven(mappedName = QUEUE + BUSINESS_Q)
+@MessageDriven(mappedName = BUS_LOG_QUEUE)
 public class BusinessListener implements MessageListener {
     private final String CLASS = BusinessListener.class.getSimpleName();
 
@@ -35,21 +34,20 @@ public class BusinessListener implements MessageListener {
     @Inject private AppLogger logger;
 
     @Override
-    public void onMessage(Message m) {
-        AppSession session = new AppSession(Source.AM_LOGGER, Interface.JMS, Phase.AM_LOGGING,
-                CLASS, "onMessage");
-
+    public void onMessage(Message message) {
+        AppSession session = new AppSession(SOURCE, Interface.JMS, BUSINESS_LOG, CLASS, "onMessage");
         try {
-            String jmsID = m.getJMSMessageID();
+            String jmsID = message.getJMSMessageID();
 
-            if (m instanceof ObjectMessage) {
-                ObjectMessage message = (ObjectMessage) m;
-                AMFunLogData logData = message.getBody(AMFunLogData.class);
-
-                logData.getSession().setMessageHandler(messageHandler);
-
+            if (message instanceof ObjectMessage) {
+                if (message.isBodyAssignableTo(AMBusLogData.class)){
+                    AMBusLogData logData = message.getBody(AMBusLogData.class);
+//                logData.get().setMessageHandler(messageHandler);
+                }else
+                    logger.error(session, E_JMS_5, BUS_LOG_QUEUE, AMBusLogData.class.getSimpleName(), message.getJMSType());
             }else
-                throw new GeneralException(session, EC.AMT_0050, BUSINESS_Q);
+                logger.error(session, E_JMS_5, BUS_LOG_QUEUE, AMBusLogData.class.getSimpleName(), message.getJMSType());
+//                throw new GeneralException(session, EC.AMT_0050, BUS_LOG_QUEUE);
 
         }catch (Exception ex){
             logger.error(session, ex);

@@ -15,16 +15,15 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
-import static am.common.NotificationParam.SMS_NOTIFICATION_QUEUE;
-import static am.data.enums.am.impl.ANP.SMS_NOTIFICATION;
-import static am.data.enums.am.impl.ANS.AM_NOTIFICATION;
+import static am.common.NotificationParam.SMS_NTF_QUEUE;
+import static am.common.NotificationParam.SOURCE;
+import static am.data.enums.am.impl.ANP.SMS_NTF;
 import static am.main.data.enums.impl.IEC.E_JMS_5;
-import static am.shared.common.JMSParams.*;
 
 /**
  * Created by ahmed.motair on 1/17/2018.
  */
-@MessageDriven(mappedName = SMS_NOTIFICATION_QUEUE)
+@MessageDriven(mappedName = SMS_NTF_QUEUE)
 public class SMSListener implements MessageListener {
     private final String CLASS = SMSListener.class.getSimpleName();
 
@@ -35,7 +34,7 @@ public class SMSListener implements MessageListener {
     @Override
     public void onMessage(Message message) {
         String METHOD = "onMessage";
-        AppSession session = new AppSession(AM_NOTIFICATION, Interface.JMS, SMS_NOTIFICATION);
+        AppSession session = new AppSession(SOURCE, Interface.JMS, SMS_NTF);
         try {
             String jmsID = message.getJMSMessageID();
             session.setId(jmsID);
@@ -48,7 +47,7 @@ public class SMSListener implements MessageListener {
 
                 logger.endDebug(session);
             }else
-                throw new GeneralException(session, E_JMS_5, NOTIFICATION_PROCESS_Q);
+                throw new GeneralException(session, E_JMS_5, SMS_NTF_QUEUE);
 
         }catch (Exception ex){
             logger.error(session, ex);
