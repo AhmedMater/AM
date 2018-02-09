@@ -1,5 +1,7 @@
 package am.data.hibernate.model.lookup;
 
+import am.data.hibernate.model.apps.RegisteredApplication;
+
 import javax.persistence.*;
 
 /**
@@ -18,6 +20,10 @@ public class SystemAddress {
     @ManyToOne
     @JoinColumn(name = "type", referencedColumnName = "type")
     private NotificationType type;
+
+    @ManyToOne
+    @JoinColumn(name = "app_id", referencedColumnName = "app_id")
+    private RegisteredApplication application;
 
     @Basic
     @Column(name = "address")
@@ -60,6 +66,13 @@ public class SystemAddress {
     }
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public RegisteredApplication getApplication() {
+        return application;
+    }
+    public void setApplication(RegisteredApplication application) {
+        this.application = application;
     }
 
     @Override

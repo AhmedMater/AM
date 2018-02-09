@@ -9,13 +9,16 @@ import java.util.Set;
 @Entity
 @Table(name = "event_notification")
 public class EventNotification {
+    public static final String EVENT_NTF_ID = "eventNtfID";
+    public static final String EVENT_ID = "event." + Event.EVENT_ID;
+
     @Id
-    @Column(name = "event_notif_id")
-    private String eventNotificationID;
+    @Column(name = "event_ntf_id")
+    private String eventNtfID;
 
     @ManyToOne
-    @JoinColumn(name = "event_type", referencedColumnName = "type")
-    private EventType type;
+    @JoinColumn(name = "event_id", referencedColumnName = "event_id")
+    private Event event;
 
     @Basic
     @Column(name = "notification")
@@ -26,30 +29,31 @@ public class EventNotification {
     private String description;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "event_notif_id", referencedColumnName = "event_notif_id")
-    private Set<NotificationTemplate> notificationTemplates;
+    @JoinColumn(name = "template_id", referencedColumnName = "event_ntf_id")
+    private Set<Template> templates;
 
     public EventNotification() {
     }
-    public EventNotification(String eventNotificationID, EventType type, String notification, String description) {
-        this.eventNotificationID = eventNotificationID;
-        this.type = type;
+    public EventNotification(String eventNtfID, Event event, String notification, String description, Set<Template> templates) {
+        this.eventNtfID = eventNtfID;
+        this.event = event;
         this.notification = notification;
         this.description = description;
+        this.templates = templates;
     }
 
-    public String getEventNotificationID() {
-        return eventNotificationID;
+    public String getEventNtfID() {
+        return eventNtfID;
     }
-    public void setEventNotificationID(String eventNotificationID) {
-        this.eventNotificationID = eventNotificationID;
+    public void setEventNtfID(String eventNtfID) {
+        this.eventNtfID = eventNtfID;
     }
 
-    public EventType getType() {
-        return type;
+    public Event getEvent() {
+        return event;
     }
-    public void setType(EventType type) {
-        this.type = type;
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     public String getNotification() {
@@ -66,11 +70,11 @@ public class EventNotification {
         this.description = description;
     }
 
-    public Set<NotificationTemplate> getNotificationTemplates() {
-        return notificationTemplates;
+    public Set<Template> getTemplates() {
+        return templates;
     }
-    public void setNotificationTemplates(Set<NotificationTemplate> notificationTemplates) {
-        this.notificationTemplates = notificationTemplates;
+    public void setTemplates(Set<Template> templates) {
+        this.templates = templates;
     }
 
     @Override
@@ -80,21 +84,22 @@ public class EventNotification {
 
         EventNotification that = (EventNotification) o;
 
-        return getEventNotificationID() != null ? getEventNotificationID().equals(that.getEventNotificationID()) : that.getEventNotificationID() == null;
+        return getEventNtfID() != null ? getEventNtfID().equals(that.getEventNtfID()) : that.getEventNtfID() == null;
     }
 
     @Override
     public int hashCode() {
-        return getEventNotificationID() != null ? getEventNotificationID().hashCode() : 0;
+        return getEventNtfID() != null ? getEventNtfID().hashCode() : 0;
     }
 
     @Override
     public String toString() {
         return "EventNotification{" +
-                "eventNotificationID = " + eventNotificationID +
-                ", type = " + type +
+                "eventNtfID = " + eventNtfID +
+                ", event = " + event +
                 ", notification = " + notification +
                 ", description = " + description +
+                ", templates = " + templates +
                 "}\n";
     }
 }

@@ -1,4 +1,4 @@
-package am.data.enums;
+package am.data.enums.am.impl;
 
 /**
  * Created by ahmed.motair on 16/09/2017.

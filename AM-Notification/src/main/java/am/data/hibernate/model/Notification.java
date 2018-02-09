@@ -1,15 +1,16 @@
 package am.data.hibernate.model;
 
-import am.data.hibernate.model.configuration.NotificationTemplate;
-import am.data.hibernate.model.input.InputDestination;
+import am.data.hibernate.model.lookup.NotificationType;
 import am.data.hibernate.model.lookup.SystemAddress;
-import am.main.exception.GeneralException;
-import am.main.session.AppSession;
-import am.shared.enums.EC;
-import am.shared.enums.notification.NotificationTypes;
+import am.data.hibernate.model.valid.event.ValidEvent;
+import am.data.hibernate.model.valid.event.ValidEventDestination;
+import am.data.hibernate.model.valid.event.ValidEventParameter;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -17,27 +18,22 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "notification")
-public class Notification implements Serializable{
+public class Notification implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id")
-    private Integer notificationID;
+    private String notificationID;
 
     @ManyToOne
-    @JoinColumn(name = "template_id", referencedColumnName = "notif_temp_id")
-    private NotificationTemplate template;
-
-    @ManyToOne
-    @JoinColumn(name = "event_id", referencedColumnName = "event_id")
-    private Event event;
+    @JoinColumn(name = "valid_event_id", referencedColumnName = "valid_event_id")
+    private ValidEvent validEvent;
 
     @Basic
-    @Column(name = "full_message")
-    private String fullMessage;
+    @Column(name = "message_subject")
+    private String messageSubject;
 
     @Basic
-    @Column(name = "full_name")
-    private String fullName;
+    @Column(name = "message_body")
+    private String messageBody;
 
     @Basic
     @Column(name = "destination_address")
@@ -56,6 +52,10 @@ public class Notification implements Serializable{
     private Date sentDate;
 
     @Basic
+    @Column(name = "creation_date")
+    private Date creationDate;
+
+    @Basic
     @Column(name = "is_sent")
     private Boolean sent;
 
@@ -63,56 +63,60 @@ public class Notification implements Serializable{
     @JoinColumn(name = "sender_id", referencedColumnName = "address_id")
     private SystemAddress sender;
 
+    @Basic
+    @Column(name = "user_id")
+    private String userID;
+
+    @ManyToOne
+    @JoinColumn(name = "ntf_type", referencedColumnName = "ntf_type")
+    private NotificationType notificationType;
+
     public Notification() {
     }
-    public Notification(AppSession session, Event event, NotificationTemplate template, InputDestination destination) throws Exception {
-        this.event = event;
-        this.template = template;
-        this.sent = false;
-        this.numOfTrails = 0;
-        this.fullName = destination.getFullName();
-
-        switch (NotificationTypes.getNotificationType(template.getType().getType())){
-            case EMAIL: this.address = destination.getEmail(); break;
-            case SMS: this.address = destination.getPhone(); break;
-            case WEB_NOTIFICATION: this.address = destination.getUserID(); break;
-            default:
-                throw new GeneralException(session, EC.AMT_0077, template.getType().getDescription());
-        }
-    }
-    public Notification(NotificationTemplate template, Event event, String fullMessage) {
-        this.template = template;
-        this.event = event;
-        this.fullMessage = fullMessage;
+    public Notification(ValidEvent validEvent, NotificationType notificationType) {
+        creationDate = new Date();
+        sent = false;
+        this.validEvent = validEvent;
+        this.notificationType = notificationType;
+        numOfTrails = 0;
     }
 
-    public Integer getNotificationID() {
+    public void generateNotificationID(Integer eventNum) {
+        String format = "{0}-{1}-{2}";
+        String num = StringUtils.repeat("0", 12 - eventNum.toString().length()) + eventNum;
+        String id = MessageFormat.format(format, validEvent.getApplication().getAppID(),
+                new SimpleDateFormat("yyyyMMdd").format(new Date()), num);
+        setNotificationID(id);
+    }
+
+    public String getNotificationID() {
         return notificationID;
     }
-    public void setNotificationID(Integer notificationID) {
+    public void setNotificationID(String notificationID) {
         this.notificationID = notificationID;
     }
 
-    public NotificationTemplate getTemplate() {
-        return template;
+    public ValidEvent getValidEvent() {
+        return validEvent;
     }
-    public void setTemplate(NotificationTemplate template) {
-        this.template = template;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-    public void setEvent(Event event) {
-        this.event = event;
+    public void setValidEvent(ValidEvent validEvent) {
+        this.validEvent = validEvent;
     }
 
-    public String getFullMessage() {
-        return fullMessage;
+    public String getMessageSubject() {
+        return messageSubject;
     }
-    public void setFullMessage(String fullMessage) {
-        this.fullMessage = fullMessage;
+    public void setMessageSubject(String messageSubject) {
+        this.messageSubject = messageSubject;
     }
+
+    public String getMessageBody() {
+        return messageBody;
+    }
+    public void setMessageBody(String messageBody) {
+        this.messageBody = messageBody;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -144,11 +148,11 @@ public class Notification implements Serializable{
         this.sentDate = sentDate;
     }
 
-    public SystemAddress getSender() {
-        return sender;
+    public Date getCreationDate() {
+        return creationDate;
     }
-    public void setSender(SystemAddress sender) {
-        this.sender = sender;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Boolean getSent() {
@@ -157,6 +161,118 @@ public class Notification implements Serializable{
     public void setSent(Boolean sent) {
         this.sent = sent;
     }
+
+    public SystemAddress getSender() {
+        return sender;
+    }
+    public void setSender(SystemAddress sender) {
+        this.sender = sender;
+    }
+
+    public NotificationType getNotificationType() {
+        return notificationType;
+    }
+    public void setNotificationType(NotificationType notificationType) {
+        this.notificationType = notificationType;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+
+    //    public Notification(AppSession session, ValidEvent validEvent, Template template, ValidEventDestination destination) throws Exception {
+//        this.validEvent = validEvent;
+//        this.sent = false;
+//        this.numOfTrails = 0;
+//        this.fullName = destination.getFullName();
+//
+//        switch (NotificationTypes.getNotificationType(template.getType().getType())){
+//            case EMAIL: this.address = destination.getEmail(); break;
+//            case SMS: this.address = destination.getPhone(); break;
+//            case WEB_NOTIFICATION: this.address = destination.getUserID(); break;
+//            default:
+//                throw new GeneralException(session, E_NOT_4, template.getType().getDescription());
+//        }
+//    }
+//    public Notification(NotificationTemplate template, Event event, String fullMessage) {
+//        this.template = template;
+//        this.event = event;
+//        this.fullMessage = fullMessage;
+//    }
+//
+//    public Integer getNotificationID() {
+//        return notificationID;
+//    }
+//    public void setNotificationID(Integer notificationID) {
+//        this.notificationID = notificationID;
+//    }
+//
+//    public NotificationTemplate getTemplate() {
+//        return template;
+//    }
+//    public void setTemplate(NotificationTemplate template) {
+//        this.template = template;
+//    }
+//
+//    public Event getEvent() {
+//        return event;
+//    }
+//    public void setEvent(Event event) {
+//        this.event = event;
+//    }
+//
+//    public String getFullMessage() {
+//        return fullMessage;
+//    }
+//    public void setFullMessage(String fullMessage) {
+//        this.fullMessage = fullMessage;
+//    }
+//    public String getAddress() {
+//        return address;
+//    }
+//    public void setAddress(String address) {
+//        this.address = address;
+//    }
+//
+//    public String getFailureReason() {
+//        return failureReason;
+//    }
+//    public void setFailureReason(String failureReason) {
+//        this.failureReason = failureReason;
+//    }
+//
+//    public Integer getNumOfTrails() {
+//        return numOfTrails;
+//    }
+//    public void setNumOfTrails(Integer numOfTrails) {
+//        this.numOfTrails = numOfTrails;
+//    }
+
+//
+//    public Date getSentDate() {
+//        return sentDate;
+//    }
+//    public void setSentDate(Date sentDate) {
+//        this.sentDate = sentDate;
+//    }
+//
+//    public SystemAddress getSender() {
+//        return sender;
+//    }
+//    public void setSender(SystemAddress sender) {
+//        this.sender = sender;
+//    }
+//
+//    public Boolean getSent() {
+//        return sent;
+//    }
+//    public void setSent(Boolean sent) {
+//        this.sent = sent;
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -175,12 +291,19 @@ public class Notification implements Serializable{
 
     @Override
     public String toString() {
-        return "AMNotification{" +
+        return "Notification{" +
                 "notificationID = " + notificationID +
-                ", template = " + template +
-                ", event = " + event +
-                ", fullMessage = " + fullMessage +
+                ", validEvent = " + validEvent +
+                ", messageSubject = " + messageSubject +
+                ", messageBody = " + messageBody +
+                ", address = " + address +
+                ", failureReason = " + failureReason +
+                ", numOfTrails = " + numOfTrails +
+                ", sentDate = " + sentDate +
+                ", creationDate = " + creationDate +
+                ", sent = " + sent +
+                ", sender = " + sender +
+                ", notificationType = " + notificationType +
                 "}\n";
     }
-
 }

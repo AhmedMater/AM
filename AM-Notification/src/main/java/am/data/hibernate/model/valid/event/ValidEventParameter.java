@@ -1,21 +1,21 @@
-package am.data.hibernate.model;
+package am.data.hibernate.model.valid.event;
 
 import javax.persistence.*;
 
 /**
- * Created by ahmed.motair on 1/13/2018.
+ * Created by ahmed.motair on 2/4/2018.
  */
 @Entity
-@Table(name = "event_parameter")
-public class EventParameter {
+@Table(name = "valid_event_parameter")
+public class ValidEventParameter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "parameter_id")
     private Integer paramID;
 
-    @ManyToOne
-    @JoinColumn(name = "event_id", referencedColumnName = "event_id")
-    private Event event;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "valid_event_id", referencedColumnName = "valid_event_id")
+    private ValidEvent event;
 
     @Basic
     @Column(name = "key")
@@ -25,35 +25,35 @@ public class EventParameter {
     @Column(name = "value")
     private String value;
 
-    public EventParameter(Event event) {
-        this.event = event;
+    public ValidEventParameter() {
     }
-    public EventParameter(Event event, String key, String value) {
+
+    public ValidEventParameter(ValidEvent event, String key, String value) {
         this.event = event;
         this.key = key;
         this.value = value;
-    }
-    public EventParameter() {
-
     }
 
     public Integer getParamID() {
         return paramID;
     }
+
     public void setParamID(Integer paramID) {
         this.paramID = paramID;
     }
 
-    public Event getEvent() {
+    public ValidEvent getEvent() {
         return event;
     }
-    public void setEvent(Event event) {
+
+    public void setEvent(ValidEvent event) {
         this.event = event;
     }
 
     public String getKey() {
         return key;
     }
+
     public void setKey(String key) {
         this.key = key;
     }
@@ -61,6 +61,7 @@ public class EventParameter {
     public String getValue() {
         return value;
     }
+
     public void setValue(String value) {
         this.value = value;
     }
@@ -68,9 +69,9 @@ public class EventParameter {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof EventParameter)) return false;
+        if (!(o instanceof ValidEventParameter)) return false;
 
-        EventParameter that = (EventParameter) o;
+        ValidEventParameter that = (ValidEventParameter) o;
 
         return getParamID() != null ? getParamID().equals(that.getParamID()) : that.getParamID() == null;
     }
@@ -82,7 +83,7 @@ public class EventParameter {
 
     @Override
     public String toString() {
-        return "EventParameter{" +
+        return "ValidEventParameter{" +
                 "paramID = " + paramID +
                 ", event = " + event +
                 ", key = " + key +
