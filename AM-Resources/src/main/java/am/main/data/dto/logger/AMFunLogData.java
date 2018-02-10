@@ -93,16 +93,20 @@ public class AMFunLogData implements Serializable{
     }
 
     public void setSession(AppSession session) {
-        this.PHASE = session.getPHASE().getName();
-        this.INTERFACE = session.getINTERFACE().value();
-        this.SOURCE = session.getSOURCE().getName();
-        this.CLASS = session.getCLASS();
-        this.METHOD = session.getMETHOD();
-        this.THREAD_ID = session.getTHREAD_ID();
-        this.THREAD_NAME = session.getTHREAD_NAME();
-        this.interfaceRelatedID = session.getId();
-        this.username = session.getUsername();
-        this.IP = session.getIp();
+        try {
+            this.PHASE = session.getPHASE().getName();
+            this.INTERFACE = session.getINTERFACE().value();
+            this.SOURCE = session.getSOURCE().getName();
+            this.CLASS = session.getCLASS();
+            this.METHOD = session.getMETHOD();
+            this.THREAD_ID = session.getTHREAD_ID();
+            this.THREAD_NAME = session.getTHREAD_NAME();
+            this.interfaceRelatedID = session.getId();
+            this.username = session.getUsername();
+            this.IP = session.getIp();
+        }catch (Exception exc){
+            throw new IllegalArgumentException("Session Object is corrupted, Due to: " + exc.getMessage());
+        }
     }
 
     public LoggerLevels getLEVEL() {

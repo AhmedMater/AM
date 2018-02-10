@@ -45,10 +45,11 @@ public class AME extends AMCode {
     public static AME E_VAL_24 = new AME(24, VALIDATION, "");
 
     public static AME E_LOG_1 = new AME(1, LOGGER, "Failed to load ''{0}'' Logger Configuration");
-    public static AME E_LOG_2 = new AME(2, LOGGER, "Failed to load AM-Resources Internal Logger Configuration");
+    public static AME E_LOG_2 = new AME(2, LOGGER, "Failed to load Logger Configuration");
     public static AME E_LOG_3 = new AME(3, LOGGER, "Internal Logger Configuration has no Application Tags");
     public static AME E_LOG_4 = new AME(4, LOGGER, "AM-Resources Application Tag isn't found in the Internal Logger Configuration");
     public static AME E_LOG_5 = new AME(5, LOGGER, "Failed while validating AM-Resources Application Tag");
+    public static AME E_LOG_6 = new AME(6, LOGGER, "External Configuration isn't found");
 
     public static AME E_CFG_1 = new AME(1, CONFIG, "Value's type is null");
     public static AME E_CFG_2 = new AME(2, CONFIG, "''{0}'' isn''t a supported as a Value Type");
@@ -139,7 +140,7 @@ public class AME extends AMCode {
     public static AME E_JMS_1 = new AME(1, JMS, "Failed to Initialize Queue ''{0}''");
     public static AME E_JMS_2 = new AME(2, JMS, "Queue Session of Queue ''{0}'' isn''t initiated");
     public static AME E_JMS_3 = new AME(3, JMS, "JMS Sender of Queue ''{0}'' isn''t initiated");
-    public static AME E_JMS_4 = new AME(4, JMS, "Failed to send ''{0}'' Message to ''{0}'' Queue");
+    public static AME E_JMS_4 = new AME(4, JMS, "Failed to send ''{0}'' Message to ''{1}'' Queue");
     public static AME E_JMS_5 = new AME(5, JMS, "Message of invalid type in Queue: ''{0}'', Expected: ''{1}'' and actual: ''{2}''");
     public static AME E_JMS_6 = new AME(6, JMS, "");
     public static AME E_JMS_7 = new AME(7, JMS, "");

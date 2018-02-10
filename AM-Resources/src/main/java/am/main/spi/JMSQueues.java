@@ -13,6 +13,7 @@ public abstract class JMSQueues {
     private final String description;
 
     public JMSQueues(String prefix, String queueName, String description){
+        this.PREFIX = prefix;
         this.queueName = queueName;
         this.description = description;
     }

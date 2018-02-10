@@ -41,6 +41,7 @@ public class FileListener implements MessageListener {
             if (message instanceof ObjectMessage) {
                 if (message.isBodyAssignableTo(AMFunLogData.class)){
                     AMFunLogData logData = message.getBody(AMFunLogData.class);
+                    logger.log(session, logData);
                     //                logData.get().setMessageHandler(messageHandler);
                 }else
                     logger.error(session, E_JMS_5, FILE_LOG_QUEUE, AMFunLogData.class.getSimpleName(), message.getJMSType());

@@ -12,6 +12,8 @@ import javax.inject.Singleton;
 import java.util.Properties;
 
 import static am.main.common.ConfigParam.MAIN_APP_CONFIG;
+import static am.main.data.enums.Interface.INITIALIZING_COMPONENT;
+import static am.main.data.enums.impl.AMP.AM_INITIALIZATION;
 import static am.main.data.enums.impl.AMP.CONFIG_MANAGER;
 import static am.main.data.enums.impl.AMS.AM;
 import static am.main.data.enums.impl.AME.*;
@@ -50,8 +52,8 @@ public class ConfigManager {
     @PostConstruct
     private void load(){
         String METHOD = "load";
-        AppSession session = appSession.updateSession(METHOD);
-        String componentName = ConfigParam.COMPONENT.JMS_MANAGER;
+        AppSession session = new AppSession(AM, INITIALIZING_COMPONENT, AM_INITIALIZATION, CLASS, METHOD);
+        String componentName = ConfigParam.COMPONENT.CONFIG_MANAGER;
         try {
             logger.info(session, I_SYS_1, componentName);
 
@@ -68,9 +70,9 @@ public class ConfigManager {
         }
     }
 
-    public <T> T getConfigValue(AMCode amCode, Class<T> className) throws Exception {
+    public <T> T getConfigValue(AppSession appSession, AMCode amCode, Class<T> className) throws Exception {
         String METHOD = "getConfigValue";
-        AppSession session = appSession.updateSession(METHOD);
+        AppSession session = appSession.updateSession(CLASS, METHOD);
         try {
             logger.startDebug(session, amCode, className.getSimpleName());
 
@@ -108,9 +110,9 @@ public class ConfigManager {
         }
     }
 
-    public boolean updateConfigValue(AMCode amCode, String newValue) throws Exception {
+    public boolean updateConfigValue(AppSession appSession, AMCode amCode, String newValue) throws Exception {
         String METHOD = "updateConfigValue";
-        AppSession session = appSession.updateSession(METHOD);
+        AppSession session = appSession.updateSession(CLASS, METHOD);
         try {
             logger.startDebug(session, amCode, newValue);
 

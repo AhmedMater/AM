@@ -246,13 +246,13 @@ public class Configuration implements Cloneable{
         this.status = value;
     }
 
-    private static final String LOGGER_FILE_NAME = "{0}\\{1}\\{2}.log";
-    private static final String LOGGER_FILE_PATTERN = "{0}\\{1}\\{2}\\{2}-%i-%d'{yyyy-MM-dd HH-mm-ss.SSS'}.log";
+    private static final String LOGGER_FILE_NAME = "{0}/{1}/{2}.log";
+    private static final String LOGGER_FILE_PATTERN = "{0}/{1}/{2}/{2}-%i-%d'{yyyy-MM-dd HH-mm-ss.SSS'}.log";
 
-    public void addNewLogger(AppSession appSession, LoggerGroup group, AppLogger logger, AMLoggerConfig config, Logger templateLogger, RollingFile templateRolling) throws Exception{
+    public void addNewLogger(AppSession appSession, AppLogger logger, LoggerGroup group, AMLoggerConfig config, Logger templateLogger, RollingFile templateRolling, String globalLogLevel) throws Exception{
         String METHOD = "addNewLogger";
         AppSession session = appSession.updateSession(getClass().getSimpleName(), METHOD);
-        logger.startDebug(session, group, config, templateLogger, templateRolling);
+        logger.startDebug(session, group, config, templateLogger, templateRolling, globalLogLevel);
 
         String groupName = group.getName();
         String mainPath = config.getLoggerProperty(MAIN_LOG_PATH.getName()).getValue();
@@ -260,6 +260,9 @@ public class Configuration implements Cloneable{
 
         List<LoggerData> loggerDataList = group.getLoggerData();
         for (LoggerData loggerData : loggerDataList) {
+            if(!globalLogLevel.isEmpty())
+                loggerData.setLevel(globalLogLevel);
+
             RollingFile newRollingFile = templateRolling.clone();
 
             newRollingFile.setName(loggerData.getName());
@@ -274,7 +277,7 @@ public class Configuration implements Cloneable{
             newLogger.getAppenderRefList().add(new AppenderRef(loggerData.getName()));
             newLogger.getAppenderRefList().add(new AppenderRef("Console"));
             this.getLoggers().getLogger().add(newLogger);
-            logger.info(session, I_LOG_3, loggerData.getName());
+            logger.info(session, I_LOG_3, loggerData.getName(), group.getName());
         }
         logger.endDebug(session);
     }

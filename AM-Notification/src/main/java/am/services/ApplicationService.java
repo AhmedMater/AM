@@ -44,7 +44,7 @@ public class ApplicationService {
 
         RegisteredApplication application = appRepository.getRegAppByUsername(session, loginData.getUsername());
 
-        String hashedPassword = securityManager.dm5Hash(passwordString);
+        String hashedPassword = securityManager.dm5Hash(session, passwordString);
         if(!application.getPassword().equals(hashedPassword))
             throw new BusinessException(session, E_REC_2, application.getUsername());
 

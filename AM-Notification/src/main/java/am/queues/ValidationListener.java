@@ -69,13 +69,13 @@ public class ValidationListener implements MessageListener{
                                 receivedEvent, notification, app);
 
                         if(!validEvent.isQuarantined()) {
-                            jmsManager.sendTxtMessage(ANQ.PROCESS_NOTIFICATION, validEvent.getValidEventID());
+                            jmsManager.sendTxtMessage(session, ANQ.PROCESS_NOTIFICATION, validEvent.getValidEventID());
                             logger.info(session, I_VN_4, PROCESS_NTF_QUEUE, notification.getNotificationID());
                         }
                     }catch (BusinessException exc) {
                         logger.error(session, exc, E_VN_8, notificationID, app.getAppName());
 
-                        jmsManager.sendTxtMessage(ANQ.INVALID_NOTIFICATION, Integer.toString(notificationID));
+                        jmsManager.sendTxtMessage(session, ANQ.INVALID_NOTIFICATION, Integer.toString(notificationID));
                         logger.info(session, I_VN_4, INVALID_NTF_QUEUE, notification.getNotificationID());
                     }
                     logger.endDebug(session);

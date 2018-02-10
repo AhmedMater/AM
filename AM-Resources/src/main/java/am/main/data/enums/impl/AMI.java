@@ -101,8 +101,8 @@ public class AMI extends AMCode {
     public static AMI I_LOG_9 = new AMI(9, LOGGER, "Start loading ''{0}'' Logger Configuration");
     public static AMI I_LOG_10 = new AMI(10, LOGGER, "''{0}'' Logger Configuration are loaded successfully");
     public static AMI I_LOG_11 = new AMI(11, LOGGER, "Logger Config Property: ''{0}'' is found");
-    public static AMI I_LOG_12 = new AMI(12, LOGGER, "Start loading AM-Resources Internal Logger Configuration");
-    public static AMI I_LOG_13 = new AMI(13, LOGGER, "AM-Resources Internal Logger Configuration is loaded successfully");
+    public static AMI I_LOG_12 = new AMI(12, LOGGER, "Start checking Logger Configuration");
+    public static AMI I_LOG_13 = new AMI(13, LOGGER, "Logger Configuration is loaded successfully");
     public static AMI I_LOG_14 = new AMI(14, LOGGER, "Logger Config Property: ''{0}'' is found and loaded successfully");
     public static AMI I_LOG_15 = new AMI(15, LOGGER, "General Logger for Application: ''{0}'' is generated");
     public static AMI I_LOG_16 = new AMI(16, LOGGER, "Logger Config Property: ''{0}'' is will be overridden with the Value: ''{1}'' in external Logger Configuration");

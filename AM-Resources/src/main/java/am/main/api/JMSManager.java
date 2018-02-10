@@ -13,11 +13,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import static am.main.data.enums.impl.AME.E_JMS_4;
 import static am.main.data.enums.impl.AMP.JMS_MANAGER;
 import static am.main.data.enums.impl.AMS.AM;
-import static am.main.data.enums.impl.AME.E_JMS_4;
-import static am.main.data.enums.impl.AMI.I_JMS_3;
-import static am.main.data.enums.impl.AMI.I_JMS_4;
 
 /**
  * Created by mohamed.elewa on 26/06/2017.
@@ -102,21 +100,21 @@ public class JMSManager {
 //        }
 //    }
 
-    public void sendObjMessage(JMSQueues queue, Serializable object) throws Exception {
-        sendMessage(queue, object, 0L, false);
+    public void sendObjMessage(AppSession appSession, JMSQueues queue, Serializable object) throws Exception {
+        sendMessage(appSession, queue, object, 0L, false);
     }
-    public void sendObjMessage(JMSQueues queue, Serializable object, Long deliveryDelay) throws Exception {
-        sendMessage(queue, object, deliveryDelay, false);
-    }
-
-    public void sendTxtMessage(JMSQueues queue, String object) throws Exception {
-        sendMessage(queue, object, 0L, true);
-    }
-    public void sendTxtMessage(JMSQueues queue, String object, Long deliveryDelay) throws Exception {
-        sendMessage(queue, object, deliveryDelay, true);
+    public void sendObjMessage(AppSession appSession, JMSQueues queue, Serializable object, Long deliveryDelay) throws Exception {
+        sendMessage(appSession, queue, object, deliveryDelay, false);
     }
 
-    private void sendMessage(JMSQueues queue, Serializable object, Long deliveryDelay, boolean isText) throws Exception{
+    public void sendTxtMessage(AppSession appSession, JMSQueues queue, String object) throws Exception {
+        sendMessage(appSession, queue, object, 0L, true);
+    }
+    public void sendTxtMessage(AppSession appSession, JMSQueues queue, String object, Long deliveryDelay) throws Exception {
+        sendMessage(appSession, queue, object, deliveryDelay, true);
+    }
+
+    private void sendMessage(AppSession appSession, JMSQueues queue, Serializable object, Long deliveryDelay, boolean isText) throws Exception{
         String METHOD = "sendMessage";
         AppSession session = appSession.updateSession(METHOD);
 
@@ -125,9 +123,9 @@ public class JMSManager {
         MessageProducer sender = null;
 
         try {
-            INITIAL_LOGGER.debug(session + "Started with " + queue.getQueueName() + ", " + object.toString() + ", " + deliveryDelay);
+//            logger.startDebug(session, queue.getQueueName(), object.toString(), deliveryDelay, isText);
 
-            INITIAL_LOGGER.info(session + I_JMS_3.getFullMsg(object.toString(), queue.description()));
+//            logger.info(session, I_JMS_3, object.toString(), queue.description());
 
             queueConn = ((QueueConnectionFactory) new InitialContext().
                     lookup(queue.getConnectionFactory())).createQueueConnection();
@@ -158,9 +156,13 @@ public class JMSManager {
                 sender.send(objMsg);
             }
 
-            INITIAL_LOGGER.info(session + I_JMS_4.getFullMsg(object.toString(), queue.description()));
+            queueConn.close();
+            queueSession.close();
+            sender.close();
 
-            INITIAL_LOGGER.debug(session + "Ended: [Void Function]");
+//            logger.info(session, I_JMS_4, object.toString(), queue.description());
+
+//            logger.endDebug(session);
         } catch (Exception ex){
             if(ex instanceof GeneralException)
                 throw ex;

@@ -66,7 +66,7 @@ public class NotificationService {
         ReceivedEvent receivedEvent = new ReceivedEvent(application, new Gson().toJson(data));
         receivedEvent = dbManager.persist(session, receivedEvent, false);
 
-        jmsManager.sendTxtMessage(VALIDATE_NOTIFICATION, Integer.toString(receivedEvent.getReceivedEventID()));
+        jmsManager.sendTxtMessage(session, VALIDATE_NOTIFICATION, Integer.toString(receivedEvent.getReceivedEventID()));
         logger.info(session, I_VN_4, VALIDATE_NTF_QUEUE, data.getNotificationID());
     }
 
