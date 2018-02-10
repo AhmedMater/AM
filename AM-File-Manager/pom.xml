@@ -13,7 +13,7 @@
     </properties>
 
     <build>
-        <finalName>AM-Logger</finalName>
+        <finalName>AM-File-Manager</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
