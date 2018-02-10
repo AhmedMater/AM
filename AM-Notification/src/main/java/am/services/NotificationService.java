@@ -29,10 +29,7 @@ import am.repository.NotificationRepository;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static am.common.NotificationParam.VALIDATE_NTF_QUEUE;
 import static am.data.enums.NotificationTypes.*;
@@ -42,8 +39,8 @@ import static am.data.enums.am.impl.ANI.*;
 import static am.data.enums.am.impl.ANQ.VALIDATE_NOTIFICATION;
 import static am.data.enums.am.impl.ANW.*;
 import static am.main.data.enums.Folders.*;
-import static am.main.data.enums.impl.IEC.E_DB_16;
-import static am.main.data.enums.impl.IEC.E_VAL_13;
+import static am.main.data.enums.impl.AME.E_DB_16;
+import static am.main.data.enums.impl.AME.E_VAL_13;
 
 /**
  * Created by ahmed.motair on 1/13/2018.
@@ -81,6 +78,7 @@ public class NotificationService {
         logger.info(session, I_VN_1, notification.getNotificationID());
 
         ValidEvent validEvent = new ValidEvent();
+        validEvent.setJmsID(session.getId());
 
         try{
             Event event = ntfRepository.getEventByID(session, notification.getEventID());
@@ -102,8 +100,6 @@ public class NotificationService {
             else
                 throw exc;
         }
-
-        validEvent.setJmsID(session.getId());
 
         Set<ValidEventDestination> eventDestinations = new HashSet<>();
 
@@ -173,6 +169,8 @@ public class NotificationService {
             logger.warn(session, W_VN_1, app.getAppName(), validEvent.getValidEventID());
         }
 
+        validEvent.setReceiveDate(receivedEvent.getReceiveDate());
+        validEvent.setValidationDate(new Date());
         validEvent = dbManager.persist(session, validEvent, false);
         logger.info(session, I_VN_3, notification.getNotificationID(), app.getAppName());
 

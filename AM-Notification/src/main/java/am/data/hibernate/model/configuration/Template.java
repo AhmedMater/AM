@@ -20,7 +20,7 @@ public class Template {
     private EventNotification eventNotification;
 
     @ManyToOne
-    @JoinColumn(name = "ntf_type", referencedColumnName = "type")
+    @JoinColumn(name = "ntf_type", referencedColumnName = "ntf_type")
     private NotificationType type;
 
     @Basic

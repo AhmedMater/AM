@@ -49,8 +49,8 @@ public class ValidEvent {
     private String categoryRelatedID;
 
     @Basic
-    @Column(name = "creation_date")
-    private Date creationDate;
+    @Column(name = "receive_date")
+    private Date receiveDate;
 
     @Basic
     @Column(name = "validation_date")
@@ -148,11 +148,11 @@ public class ValidEvent {
         this.categoryRelatedID = categoryRelatedID;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
+    public Date getReceiveDate() {
+        return receiveDate;
     }
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public void setReceiveDate(Date receiveDate) {
+        this.receiveDate = receiveDate;
     }
 
     public Date getValidationDate() {
@@ -229,7 +229,7 @@ public class ValidEvent {
                 ", category = " + category +
                 ", application = " + application +
                 ", categoryRelatedID = " + categoryRelatedID +
-                ", creationDate = " + creationDate +
+                ", receiveDate = " + receiveDate +
                 ", validationDate = " + validationDate +
                 ", processDate = " + processDate +
                 ", completionDate = " + completionDate +

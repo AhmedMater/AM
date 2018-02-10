@@ -18,7 +18,7 @@ public class SystemAddress {
     private Integer addressID;
 
     @ManyToOne
-    @JoinColumn(name = "type", referencedColumnName = "type")
+    @JoinColumn(name = "ntf_type", referencedColumnName = "ntf_type")
     private NotificationType type;
 
     @ManyToOne

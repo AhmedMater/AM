@@ -24,8 +24,8 @@ import static am.data.enums.am.impl.ANF.NOTIFICATION_DTO;
 import static am.data.enums.am.impl.ANI.I_VN_5;
 import static am.data.enums.am.impl.ANP.RECEIVE_NTF;
 import static am.main.data.enums.Interface.REST;
-import static am.main.data.enums.impl.IEC.E_SYS_0;
-import static am.main.data.enums.impl.IEC.E_VAL_13;
+import static am.main.data.enums.impl.AME.E_SYS_0;
+import static am.main.data.enums.impl.AME.E_VAL_13;
 
 /**
  * Created by ahmed.motair on 2/6/2018.

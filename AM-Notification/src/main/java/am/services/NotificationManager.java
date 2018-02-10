@@ -30,9 +30,9 @@ import static am.data.enums.am.impl.ANP.NTF_MANAGER;
 import static am.main.common.ConfigParam.NOTIFICATION_CONFIG;
 import static am.main.data.enums.Interface.INITIALIZING_COMPONENT;
 import static am.main.data.enums.impl.AMP.AM_INITIALIZATION;
-import static am.main.data.enums.impl.IEC.E_SYS_1;
-import static am.main.data.enums.impl.IIC.I_SYS_1;
-import static am.main.data.enums.impl.IIC.I_SYS_2;
+import static am.main.data.enums.impl.AME.E_SYS_1;
+import static am.main.data.enums.impl.AMI.I_SYS_1;
+import static am.main.data.enums.impl.AMI.I_SYS_2;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 

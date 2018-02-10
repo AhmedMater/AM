@@ -11,7 +11,7 @@ public class NotificationType {
     public static final String TYPE = "type";
 
     @Id
-    @Column(name = "type")
+    @Column(name = "ntf_type")
     private String type;
 
     @Basic

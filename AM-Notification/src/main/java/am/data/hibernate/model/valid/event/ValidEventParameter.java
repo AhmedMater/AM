@@ -27,7 +27,6 @@ public class ValidEventParameter {
 
     public ValidEventParameter() {
     }
-
     public ValidEventParameter(ValidEvent event, String key, String value) {
         this.event = event;
         this.key = key;
@@ -37,7 +36,6 @@ public class ValidEventParameter {
     public Integer getParamID() {
         return paramID;
     }
-
     public void setParamID(Integer paramID) {
         this.paramID = paramID;
     }
@@ -45,7 +43,6 @@ public class ValidEventParameter {
     public ValidEvent getEvent() {
         return event;
     }
-
     public void setEvent(ValidEvent event) {
         this.event = event;
     }
@@ -53,7 +50,6 @@ public class ValidEventParameter {
     public String getKey() {
         return key;
     }
-
     public void setKey(String key) {
         this.key = key;
     }
@@ -61,7 +57,6 @@ public class ValidEventParameter {
     public String getValue() {
         return value;
     }
-
     public void setValue(String value) {
         this.value = value;
     }

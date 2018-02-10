@@ -26,7 +26,6 @@ public class EventParameter {
 
     public EventParameter() {
     }
-
     public EventParameter(Event event, String parameter) {
         this.event = event;
         this.parameter = parameter;
@@ -35,7 +34,6 @@ public class EventParameter {
     public Integer getParameterID() {
         return parameterID;
     }
-
     public void setParameterID(Integer parameterID) {
         this.parameterID = parameterID;
     }
@@ -43,7 +41,6 @@ public class EventParameter {
     public Event getEvent() {
         return event;
     }
-
     public void setEvent(Event event) {
         this.event = event;
     }
@@ -51,7 +48,6 @@ public class EventParameter {
     public String getParameter() {
         return parameter;
     }
-
     public void setParameter(String parameter) {
         this.parameter = parameter;
     }

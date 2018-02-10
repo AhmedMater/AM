@@ -18,7 +18,7 @@ import javax.jms.ObjectMessage;
 import static am.common.NotificationParam.SMS_NTF_QUEUE;
 import static am.common.NotificationParam.SOURCE;
 import static am.data.enums.am.impl.ANP.SMS_NTF;
-import static am.main.data.enums.impl.IEC.E_JMS_5;
+import static am.main.data.enums.impl.AME.E_JMS_5;
 
 /**
  * Created by ahmed.motair on 1/17/2018.

@@ -16,11 +16,11 @@ INSERT INTO java_mail_config (mail_config_id, smtp) VALUES ('GMail', 'smtp.gmail
 INSERT INTO java_mail_config (mail_config_id, smtp) VALUES ('Yahoo', 'smtp.mail.yahoo.com');
 INSERT INTO java_mail_config (mail_config_id, smtp) VALUES ('Outlook', 'smtp-mail.outlook.com');
 
-INSERT INTO system_address(address_id, app_id, address, address_password, type, mail_config_id)
+INSERT INTO system_address(address_id, app_id, address, address_password, ntf_type, mail_config_id)
   VALUES (1, 'ASR', 'amt.noreply1@gmail.com', 'YW10bm9yZXBseQ==', 'EML', 'GMail');
-INSERT INTO system_address(address_id, app_id, address, address_password, type, mail_config_id)
+INSERT INTO system_address(address_id, app_id, address, address_password, ntf_type, mail_config_id)
   VALUES (2, 'ASR', 'amt.noreply2@gmail.com', 'YW10bm9yZXBseQ==', 'EML', 'GMail');
-INSERT INTO system_address(address_id, app_id, address, address_password, type, mail_config_id)
+INSERT INTO system_address(address_id, app_id, address, address_password, ntf_type, mail_config_id)
   VALUES (3, 'ASR', 'amt.noreply3@gmail.com', 'YW10bm9yZXBseQ==', 'EML', 'GMail');
 
 INSERT INTO event (event_id, event_type, category_id, description)

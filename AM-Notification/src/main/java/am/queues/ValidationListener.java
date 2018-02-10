@@ -27,7 +27,7 @@ import static am.common.NotificationParam.*;
 import static am.data.enums.am.impl.ANE.E_VN_8;
 import static am.data.enums.am.impl.ANI.I_VN_4;
 import static am.data.enums.am.impl.ANP.VALIDATE_NTF;
-import static am.main.data.enums.impl.IEC.E_JMS_5;
+import static am.main.data.enums.impl.AME.E_JMS_5;
 
 /**
  * Created by ahmed.motair on 1/16/2018.

@@ -1,14 +1,14 @@
 package am.data.hibernate.model.valid.event;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.io.Serializable;
 
 /**
  * Created by ahmed.motair on 2/9/2018.
  */
 @Entity
 @Table(name = "event_ntf_start")
-public class EventNtfStart {
+public class EventNtfStart implements Serializable{
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "valid_event_id", referencedColumnName = "valid_event_id")
@@ -20,7 +20,6 @@ public class EventNtfStart {
 
     public EventNtfStart() {
     }
-
     public EventNtfStart(ValidEvent event, Integer startNtfID) {
         this.event = event;
         this.startNtfID = startNtfID;
