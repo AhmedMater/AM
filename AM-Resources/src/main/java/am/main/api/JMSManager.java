@@ -15,9 +15,9 @@ import java.util.Map;
 
 import static am.main.data.enums.impl.AMP.JMS_MANAGER;
 import static am.main.data.enums.impl.AMS.AM;
-import static am.main.data.enums.impl.IEC.E_JMS_4;
-import static am.main.data.enums.impl.IIC.I_JMS_3;
-import static am.main.data.enums.impl.IIC.I_JMS_4;
+import static am.main.data.enums.impl.AME.E_JMS_4;
+import static am.main.data.enums.impl.AMI.I_JMS_3;
+import static am.main.data.enums.impl.AMI.I_JMS_4;
 
 /**
  * Created by mohamed.elewa on 26/06/2017.

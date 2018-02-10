@@ -14,8 +14,8 @@ import java.util.Properties;
 import static am.main.common.ConfigParam.MAIN_APP_CONFIG;
 import static am.main.data.enums.impl.AMP.CONFIG_MANAGER;
 import static am.main.data.enums.impl.AMS.AM;
-import static am.main.data.enums.impl.IEC.*;
-import static am.main.data.enums.impl.IIC.*;
+import static am.main.data.enums.impl.AME.*;
+import static am.main.data.enums.impl.AMI.*;
 
 /**
  * Created by ahmed.motair on 1/8/2018.

@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.*;
 import java.text.MessageFormat;
 import java.util.List;
 
-import static am.main.data.enums.impl.IIC.I_LOG_3;
+import static am.main.data.enums.impl.AMI.I_LOG_3;
 import static am.main.data.enums.logger.LogConfigProp.MAIN_LOG_PATH;
 import static am.main.data.enums.logger.LogConfigProp.MAX_FILE_SIZE;
 

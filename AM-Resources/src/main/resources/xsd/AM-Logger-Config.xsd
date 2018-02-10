@@ -14,7 +14,7 @@
 
     <xs:complexType name="LoggerData">
         <xs:attribute type="xs:string" name="name" use="required"/>
-        <xs:attribute type="xs:string" name="level" use="required"/>
+        <xs:attribute type="xs:string" name="level" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="LoggerGroup">
@@ -24,18 +24,25 @@
         <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:complexType>
 
+    <xs:complexType name="AM-Applications">
+        <xs:sequence>
+            <xs:element type="AM-Application" name="AM-Application" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="AM-Application">
         <xs:sequence>
-            <xs:element type="AM-Logger-Config" name="AM-Logger-Config" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="LoggerGroup" name="LoggerGroup" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="LoggerGroup" name="LoggerGroup" maxOccurs="unbounded" minOccurs="1"/>
         </xs:sequence>
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="type" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="AM-Logger">
+
         <xs:sequence>
-            <xs:element type="AM-Application" name="AM-Application" maxOccurs="unbounded" minOccurs="1"/>
+            <xs:element type="AM-Logger-Config" name="AM-Logger-Config" maxOccurs="1" minOccurs="1"/>
+            <xs:element type="AM-Applications" name="AM-Applications" maxOccurs="1" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

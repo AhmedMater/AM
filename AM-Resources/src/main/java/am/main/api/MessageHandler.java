@@ -21,8 +21,8 @@ import static am.main.data.enums.Interface.INITIALIZING_COMPONENT;
 import static am.main.data.enums.impl.AMP.AM_INITIALIZATION;
 import static am.main.data.enums.impl.AMP.MESSAGE_HANDLER;
 import static am.main.data.enums.impl.AMS.AM;
-import static am.main.data.enums.impl.IEC.*;
-import static am.main.data.enums.impl.IIC.*;
+import static am.main.data.enums.impl.AME.*;
+import static am.main.data.enums.impl.AMI.*;
 
 /**
  * Created by ahmed.motair on 1/8/2018.

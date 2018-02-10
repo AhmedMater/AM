@@ -11,8 +11,8 @@ import java.util.Base64;
 
 import static am.main.data.enums.impl.AMP.SECURITY_MANAGER;
 import static am.main.data.enums.impl.AMS.AM;
-import static am.main.data.enums.impl.IEC.*;
-import static am.main.data.enums.impl.IIC.*;
+import static am.main.data.enums.impl.AME.*;
+import static am.main.data.enums.impl.AMI.*;
 
 
 /**

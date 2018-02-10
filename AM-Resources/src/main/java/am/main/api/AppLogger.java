@@ -5,6 +5,7 @@ import am.main.common.ConfigUtils;
 import am.main.data.dto.logger.AMFunLogData;
 import am.main.data.enums.impl.AMP;
 import am.main.data.enums.impl.AMQ;
+import am.main.data.enums.impl.AMS;
 import am.main.data.enums.logger.LogConfigProp;
 import am.main.data.jaxb.am.logger.*;
 import am.main.data.jaxb.log4jData.Configuration;
@@ -34,9 +35,9 @@ import static am.main.data.enums.impl.AMP.AM_INITIALIZATION;
 import static am.main.data.enums.impl.AMP.APP_LOGGER;
 import static am.main.data.enums.impl.AMS.AM;
 import static am.main.data.enums.impl.AMS.AM_LOGGER;
-import static am.main.data.enums.impl.IEC.*;
-import static am.main.data.enums.impl.IIC.*;
-import static am.main.data.enums.impl.IWC.*;
+import static am.main.data.enums.impl.AME.*;
+import static am.main.data.enums.impl.AMI.*;
+import static am.main.data.enums.impl.AMW.*;
 import static am.main.data.enums.logger.LogConfigProp.LOG_LEVEL_FOR_ALL;
 import static am.main.data.enums.logger.LogConfigProp.USE_AM_LOGGER;
 import static am.main.data.enums.logger.LoggerLevels.*;
@@ -54,8 +55,10 @@ public class AppLogger implements Serializable{
     private static final String LOG4J2_FILE_NAME = "/log4j2.xml";
     private static final String TEMPLATE = "Template";
 
+    private static final Boolean USE_DEFAULT_LOGGER = false;
+    private static final Boolean USE_AM_LOGGER_APP = false;
+
     private static AppLogger instance;
-//    private static final
 
     public AppLogger() {
     }
@@ -78,11 +81,9 @@ public class AppLogger implements Serializable{
         AppSession session = new AppSession(AM, INITIALIZING_COMPONENT, AM_INITIALIZATION, CLASS, METHOD);
         String componentName = COMPONENT.APP_LOGGER;
         try {
-//            INITIAL_LOGGER.info(session + I_SYS_1.getFullMsg(LOGGER_CONFIG.COMPONENT_NAME));
             this.info(session, I_SYS_1, componentName);
 
             Configuration log4j2 = ConfigUtils.readResourceXMLFile(session, this, Configuration.class,  "/TemplateLog4j2.xml");
-//            INITIAL_LOGGER.info(session + I_LOG_1.getFullMsg());
             this.info(session, I_LOG_1);
 
             RollingFile templateRolling = new RollingFile();
@@ -95,30 +96,33 @@ public class AppLogger implements Serializable{
                 if (logger.getName().equals(TEMPLATE))
                     templateLogger = logger;
 
-            List<AMApplication> applicationList = loadExternalConfig(session);
+            List<AMApplication> applicationList;
 
-            for (AMApplication application : applicationList) {
-                if(application.getAMLoggerConfig().getLoggerProperty(USE_AM_LOGGER.getName()).getValue().equals("true"))
-                    continue;
+            if(APP_NAME.equals(AMS.AM_LOGGER.getName())) {
+                applicationList = loadAllAppExternalConfig(session);
 
-                for (LoggerGroup group : application.getLoggerGroup()) {
-                    log4j2.addNewLogger(session, group, this, application.getAMLoggerConfig(), templateLogger, templateRolling);
-                    this.info(session, I_LOG_4, group.getName());
+                for (AMApplication application : applicationList) {
+                    if (!application.getAMLoggerConfig().getLoggerProperty(USE_AM_LOGGER.getName()).getValue().equals("true"))
+                        continue;
+
+                    for (LoggerGroup group : application.getLoggerGroup()) {
+                        log4j2.addNewLogger(session, group, this, application.getAMLoggerConfig(), templateLogger, templateRolling);
+                        this.info(session, I_LOG_4, group.getName());
+                    }
+                }
+            }else {
+                applicationList = loadAppExternalConfig(session);
+
+                for (AMApplication application : applicationList) {
+                    if (application.getAMLoggerConfig().getLoggerProperty(USE_AM_LOGGER.getName()).getValue().equals("true"))
+                        continue;
+
+                    for (LoggerGroup group : application.getLoggerGroup()) {
+                        log4j2.addNewLogger(session, group, this, application.getAMLoggerConfig(), templateLogger, templateRolling);
+                        this.info(session, I_LOG_4, group.getName());
+                    }
                 }
             }
-
-//                List<LoggerProperty> propertyList = loggerConfig.getAMLoggerConfig().getLoggerProperty();
-//                HashMap<String, String> properties = new HashMap<>();
-//                for (LoggerProperty property : propertyList)
-//                    properties.put(property.getName(), property.getValue());
-//
-//                List<LoggerGroup> loggerGroupList = loggerConfig.getLoggerGroup();
-//                for (LoggerGroup group : loggerGroupList) {
-//                    log4j2.addNewLogger(session, group, this, properties, templateLogger, templateRolling);
-////                INITIAL_LOGGER.info(session + I_LOG_4.getFullMsg(group.getName()));
-//                    this.info(session, I_LOG_4, group.getName());
-//                }
-
 
             writeLog4J2File(session, log4j2);
             this.info(session, I_LOG_5);
@@ -127,30 +131,38 @@ public class AppLogger implements Serializable{
             ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
             this.info(session, I_LOG_6);
 
-            for (AMApplication application : applicationList) {
-                if(application.getAMLoggerConfig().getLoggerProperty(USE_AM_LOGGER.getName()).getValue().equals("true"))
-                    continue;
+            if(APP_NAME.equals(AMS.AM_LOGGER.getName())) {
+                for (AMApplication application : applicationList) {
+                    if (!application.getAMLoggerConfig().getLoggerProperty(USE_AM_LOGGER.getName()).getValue().equals("true"))
+                        continue;
 
-                for (LoggerGroup group : application.getLoggerGroup())
-                    for (LoggerData loggerData: group.getLoggerData()){
-                        loggers.put(loggerData.getName(), LogManager.getLogger(loggerData.getName()));
-                        this.info(session, I_LOG_7, loggerData.getName());
-                    }
+                    for (LoggerGroup group : application.getLoggerGroup())
+                        for (LoggerData loggerData : group.getLoggerData()) {
+                            loggers.put(loggerData.getName(), LogManager.getLogger(loggerData.getName()));
+                            this.info(session, I_LOG_7, loggerData.getName());
+                        }
+                }
+            }else {
+                for (AMApplication application : applicationList) {
+                    if (application.getAMLoggerConfig().getLoggerProperty(USE_AM_LOGGER.getName()).getValue().equals("true"))
+                        continue;
+
+                    for (LoggerGroup group : application.getLoggerGroup())
+                        for (LoggerData loggerData : group.getLoggerData()) {
+                            loggers.put(loggerData.getName(), LogManager.getLogger(loggerData.getName()));
+                            this.info(session, I_LOG_7, loggerData.getName());
+                        }
+                }
             }
 
             this.info(session, I_LOG_8);
 
-//            INITIAL_LOGGER.info(session + I_SYS_2.getFullMsg(LOGGER_CONFIG.COMPONENT_NAME));
             this.info(session, I_SYS_2, componentName);
         } catch (Exception ex) {
             this.error(session, ex, E_SYS_1, componentName, ex.getMessage());
-//            FAILURE_LOGGER.error(session + E_SYS_1.getFullMsg(LOGGER_CONFIG.COMPONENT_NAME, ex.getMessage()), ex);
             throw new IllegalStateException(session + E_SYS_1.getFullMsg(componentName, ex.getMessage()));
         }
     }
-
-    private static final Boolean USE_DEFAULT_LOGGER = false;
-    private static final Boolean USE_AM_LOGGER_APP = false;
 
     private AMApplication loadInternalConfig(AppSession appSession, AMApplication externalLogConfig) throws Exception{
         String METHOD = "loadInternalConfig";
@@ -248,8 +260,156 @@ public class AppLogger implements Serializable{
         return appLogConfig;
     }
 
-    private List<AMApplication> loadExternalConfig(AppSession appSession) throws Exception{
-        String METHOD = "loadExternalConfig";
+    private List<AMApplication> loadAllAppExternalConfig(AppSession appSession) throws Exception {
+        String METHOD = "loadAllAppExternalConfig";
+        AppSession session = appSession.updateSession(CLASS, METHOD);
+        try {
+            this.startDebug(session);
+            this.info(session, I_LOG_9, APP_NAME);
+            AMApplication amLogConfig = null;
+//            AMApplication appLogConfig = null;
+
+            try {
+                AMLogger appLoggerConfig = ConfigUtils.readRemoteXMLFile(session, this, AMLogger.class, ConfigParam.LOGGER_CONFIG.FN_PATH);
+                this.info(session, I_LOG_2);
+
+                List<AMApplication> applicationList = appLoggerConfig.getAMApplication();
+
+                if(applicationList.size() == 0) {
+                    this.warn(session, W_LOG_2);
+//                    amLogConfig = loadInternalConfig(session, null);
+//                    appLogConfig = createAppLoggerConfig(session, amLogConfig);
+                }else {
+
+                    //Check for the AM-Resources Application Tag
+                    for (AMApplication app : applicationList) {
+                        if (app.getName().equals(AM_RESOURCE_NAME)) {
+//                            amLogConfig = app;
+                            app = loadInternalConfig(session, app);
+                            amLogConfig = app;
+                            break;
+                        }
+                    }
+
+                    for (AMApplication app : applicationList) {
+                        if (!app.getName().equals(AM_RESOURCE_NAME)) {
+                            AMLoggerConfig appConfig = app.getAMLoggerConfig();
+
+                            if (appConfig == null)
+                                app.setAMLoggerConfig(amLogConfig.getAMLoggerConfig());
+                            else {
+                                //Check if there is missing configuration
+                                for (LoggerProperty amProperty : amLogConfig.getAMLoggerConfig().getLoggerProperty()) {
+                                    boolean found = true;
+
+                                    for (LoggerProperty fileProperty : appConfig.getLoggerProperty()) {
+                                        if (fileProperty.equals(amProperty)) {
+                                            found = true;
+
+                                            LogConfigProp logConfigProp = LogConfigProp.getLogConfigProp(amProperty.getName());
+                                            if (!fileProperty.getValue().matches(logConfigProp.getRegex())) {
+                                                this.warn(session, W_LOG_8, fileProperty.getValue(), fileProperty.getName(), logConfigProp.getDefaultValue());
+                                                fileProperty.setValue(logConfigProp.getDefaultValue());
+                                            } else
+                                                this.info(session, I_LOG_14, fileProperty.getName());
+
+                                            break;
+                                        }
+                                    }
+
+                                    if (!found) {
+                                        this.warn(session, W_LOG_7, amProperty.getName());
+                                        appConfig.getLoggerProperty().add(new LoggerProperty(amProperty));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+//                    amLogConfig = loadInternalConfig(session, amLogConfig);
+
+                    //Check for the Application Tag
+//                    for (AMApplication app : applicationList) {
+//                        if (app.getName().equals(APP_NAME)) {
+//                            appLogConfig = app;
+//                            break;
+//                        }
+//                    }
+//
+//                    if (appLogConfig == null) {
+//                        this.warn(session, W_LOG_2, APP_NAME);
+//                        appLogConfig = createAppLoggerConfig(session, amLogConfig);
+//                    }else{
+//                        AMLoggerConfig appConfig = appLogConfig.getAMLoggerConfig();
+//
+//                        if(appConfig == null)
+//                            appLogConfig.setAMLoggerConfig(amLogConfig.getAMLoggerConfig());
+//                        else{
+//                            //Check if there is missing configuration
+//                            for (LoggerProperty amProperty :amLogConfig.getAMLoggerConfig().getLoggerProperty()) {
+//                                boolean found = true;
+//
+//                                for (LoggerProperty fileProperty :appConfig.getLoggerProperty()) {
+//                                    if(fileProperty.equals(amProperty)) {
+//                                        found = true;
+//
+//                                        LogConfigProp logConfigProp = LogConfigProp.getLogConfigProp(amProperty.getName());
+//                                        if(!fileProperty.getValue().matches(logConfigProp.getRegex())){
+//                                            this.warn(session, W_LOG_8, fileProperty.getValue(), fileProperty.getName(), logConfigProp.getDefaultValue());
+//                                            fileProperty.setValue(logConfigProp.getDefaultValue());
+//                                        }else
+//                                            this.info(session, I_LOG_14, fileProperty.getName());
+//
+//                                        break;
+//                                    }
+//                                }
+//
+//                                if(!found){
+//                                    this.warn(session, W_LOG_7, amProperty.getName());
+//                                    appConfig.getLoggerProperty().add(new LoggerProperty(amProperty));
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+            }catch (GeneralException exc){
+                if(exc.getErrorCode().equals(E_IO_3)) {
+                    this.warn(session, W_LOG_1);
+//                    amLogConfig = loadInternalConfig(session, null);
+//                    appLogConfig = createAppLoggerConfig(session, amLogConfig);
+                }else
+                    throw exc;
+            }
+
+            LoggerProperty property = amLogConfig.getAMLoggerConfig().getLoggerProperty(LOG_LEVEL_FOR_ALL.getName());
+            if(property != null & !property.getValue().equals(LOG_LEVEL_FOR_ALL.getDefaultValue()))
+                for (LoggerGroup group :amLogConfig.getLoggerGroup())
+                    for (LoggerData logger : group.getLoggerData())
+                        logger.setLevel(property.getValue());
+
+            property = appLogConfig.getAMLoggerConfig().getLoggerProperty(LOG_LEVEL_FOR_ALL.getName());
+            if(property != null & !property.getValue().equals(LOG_LEVEL_FOR_ALL.getDefaultValue()))
+                for (LoggerGroup group :appLogConfig.getLoggerGroup())
+                    for (LoggerData logger : group.getLoggerData())
+                        logger.setLevel(property.getValue());
+
+            List<AMApplication> applicationList = new ArrayList<>();
+            applicationList.add(amLogConfig);
+            applicationList.add(appLogConfig);
+
+            this.info(session, I_LOG_10, APP_NAME);
+            this.endDebug(session, applicationList);
+            return applicationList;
+        }catch (Exception ex){
+            if(ex instanceof GeneralException)
+                throw ex;
+            else
+                throw new GeneralException(session, ex, E_LOG_1, APP_NAME);
+        }
+    }
+
+    private List<AMApplication> loadAppExternalConfig(AppSession appSession) throws Exception{
+        String METHOD = "loadAppExternalConfig";
         AppSession session = appSession.updateSession(CLASS, METHOD);
         try {
             this.startDebug(session);

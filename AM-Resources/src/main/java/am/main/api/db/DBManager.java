@@ -14,8 +14,8 @@ import javax.validation.ConstraintViolationException;
 import java.io.Serializable;
 import java.util.*;
 
-import static am.main.data.enums.impl.IEC.*;
-import static am.main.data.enums.impl.IIC.*;
+import static am.main.data.enums.impl.AME.*;
+import static am.main.data.enums.impl.AMI.*;
 
 
 /**

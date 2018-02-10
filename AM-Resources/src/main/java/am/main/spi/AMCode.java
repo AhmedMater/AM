@@ -54,9 +54,9 @@ public abstract class AMCode {
     public String getFullCode(){
         String type = "";
         switch (CODE_TYPE){
-            case INFO: type = "I-";
-            case ERROR: type = "E-";
-            case WARN: type = "W-";
+            case INFO: type = "I-"; break;
+            case ERROR: type = "E-"; break;
+            case WARN: type = "W-"; break;
         }
         return (!PREFIX.isEmpty() ? PREFIX + "-" : "") + type + CODE_NAME + (CODE_ID != -1 ? "-" + CODE_ID : "");
     }

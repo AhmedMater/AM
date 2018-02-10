@@ -10,8 +10,8 @@ import java.io.*;
 import java.nio.file.InvalidPathException;
 import java.util.Properties;
 
-import static am.main.data.enums.impl.IEC.*;
-import static am.main.data.enums.impl.IIC.*;
+import static am.main.data.enums.impl.AME.*;
+import static am.main.data.enums.impl.AMI.*;
 
 /**
  * Created by ahmed.motair on 9/7/2017.

@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static am.main.data.enums.impl.IEC.E_DB_16;
+import static am.main.data.enums.impl.AME.E_DB_16;
 
 /**
  * Created by ahmed.motair on 1/20/2018.

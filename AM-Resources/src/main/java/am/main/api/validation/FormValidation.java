@@ -2,7 +2,7 @@ package am.main.api.validation;
 
 import am.main.api.AppLogger;
 import am.main.common.RegExp;
-import am.main.data.enums.impl.IEC;
+import am.main.data.enums.impl.AME;
 import am.main.exception.BusinessException;
 import am.main.exception.GeneralException;
 import am.main.session.AppSession;
@@ -18,9 +18,9 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 import static am.main.api.validation.groups.FormValidation.*;
-import static am.main.data.enums.impl.IEC.*;
-import static am.main.data.enums.impl.IIC.I_VAL_1;
-import static am.main.data.enums.impl.IIC.I_VAL_2;
+import static am.main.data.enums.impl.AME.*;
+import static am.main.data.enums.impl.AMI.I_VAL_1;
+import static am.main.data.enums.impl.AMI.I_VAL_2;
 
 /**
  * Created by ahmed.motair on 11/20/2017.
@@ -51,7 +51,7 @@ public class FormValidation<T> implements Serializable{
 
             this.formErrors = new ArrayList<>();
             for (ConstraintViolation<T> error : errors) {
-                AMCode errorCode = IEC.getCodeByFullCode(error.getMessage());
+                AMCode errorCode = AME.getCodeByFullCode(error.getMessage());
                 if(errorCode == null)
                     throw new GeneralException(session, E_VAL_20, error.getMessage());
 

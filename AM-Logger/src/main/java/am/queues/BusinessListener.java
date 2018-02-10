@@ -18,7 +18,7 @@ import javax.jms.ObjectMessage;
 import static am.common.LoggerParam.BUS_LOG_QUEUE;
 import static am.common.LoggerParam.SOURCE;
 import static am.data.enums.ALP.BUSINESS_LOG;
-import static am.main.data.enums.impl.IEC.E_JMS_5;
+import static am.main.data.enums.impl.AME.E_JMS_5;
 
 
 /**
