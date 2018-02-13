@@ -17,6 +17,15 @@ public class AMI extends AMCode {
     private static final String SECURITY = "SEC";
     private static final String CONFIG = "CFG";
     private static final String VALIDATION = "VAL";
+    private static final String XML_HANDLER = "XML";
+
+    public static AMI I_XML_1 = new AMI(1, XML_HANDLER, "Start parsing XML String ....");
+    public static AMI I_XML_2 = new AMI(2, XML_HANDLER, "XML String is parsed successfully");
+    public static AMI I_XML_3 = new AMI(3, XML_HANDLER, "Start composing JAXB Object into XML");
+    public static AMI I_XML_4 = new AMI(4, XML_HANDLER, "XML is composed successfully from JAXB Object");
+    public static AMI I_XML_5 = new AMI(5, XML_HANDLER, "Start validating XML String against XSD Schema");
+    public static AMI I_XML_6 = new AMI(6, XML_HANDLER, "XML is validated successfully against the XSD Schema");
+
 
     public static AMI I_VAL_1 = new AMI(1, VALIDATION, "Start validating ''{0}'' data");
     public static AMI I_VAL_2 = new AMI(2, VALIDATION, "''{0}'' is validated successfully");

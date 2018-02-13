@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import static am.main.data.enums.Operators.LIKE;
+import static am.main.data.enums.impl.AMP.QUERY_BUILDER;
 
 /**
  * Created by ahmed.motair on 12/24/2017.
@@ -62,8 +63,8 @@ public class QueryBuilder<T> {
     }
 
     public String constructWhere() {
-        String FN_NAME = "constructWhere";
-        session = session.updateSession(FN_NAME);
+        String METHOD = "constructWhere";
+        session = session.updateSession(QUERY_BUILDER, CLASS, METHOD);
         logger.startDebug(session);
 
         if(this.conditions.size()>0) {
@@ -118,8 +119,8 @@ public class QueryBuilder<T> {
     }
 
     public void addCondition(HQLCondition condition) {
-        String FN_NAME = "addCondition";
-        session = session.updateSession(FN_NAME);
+        String METHOD = "addCondition";
+        session = session.updateSession(QUERY_BUILDER, CLASS, METHOD);
         logger.startDebug(session, condition);
 
         if(condition.getApplicable()) {
@@ -140,8 +141,8 @@ public class QueryBuilder<T> {
 
     @Transactional
     public void executeQuery(EntityManager em){
-        String FN_NAME = "executeQuery";
-        session = session.updateSession(FN_NAME);
+        String METHOD = "executeQuery";
+        session = session.updateSession(QUERY_BUILDER, CLASS, METHOD);
         logger.startDebug(session, em);
 
         this.constructWhere();
@@ -174,8 +175,8 @@ public class QueryBuilder<T> {
     }
 
     private <E> TypedQuery<E> addParameters(TypedQuery<E> query){
-        String FN_NAME = "addParameters";
-        session = session.updateSession(FN_NAME);
+        String METHOD = "addParameters";
+        session = session.updateSession(QUERY_BUILDER, CLASS, METHOD);
         logger.startDebug(session, query);
 
         for (HQLCondition condition : conditions) {

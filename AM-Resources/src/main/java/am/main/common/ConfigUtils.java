@@ -36,7 +36,7 @@ public class ConfigUtils {
         String FN_NAME = "readRemoteXMLFile";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         String xmlFile = readFile(session, logger, false, filePath);
-        return XMLHandler.parse(xmlFile, className);
+        return XMLHandler.parse(session, logger, xmlFile, className);
     }
 
     /**
@@ -56,7 +56,7 @@ public class ConfigUtils {
         String FN_NAME = "readResourceXMLFile";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         String xmlFile = readFile(session, logger, true, filePath);
-        return XMLHandler.parse(xmlFile, className);
+        return XMLHandler.parse(session, logger, xmlFile, className);
     }
 
     private static String readFile(AppSession session, AppLogger logger, Boolean isResourceFile, String filePath) throws Exception{

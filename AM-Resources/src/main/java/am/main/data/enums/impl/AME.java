@@ -15,8 +15,16 @@ public class AME extends AMCode {
     private static final String DB = "DB";
     private static final String SECURITY = "SEC";
     private static final String MSG_HANDLER = "MH";
+    private static final String XML_HANDLER = "XML";
     private static final String CONFIG = "CFG";
     private static final String VALIDATION = "VAL";
+
+    public static AME E_XML_1 = new AME(1, XML_HANDLER, "XML String can''t be null or empty");
+    public static AME E_XML_2 = new AME(2, XML_HANDLER, "Failed while parsing XML String: ''{0}''");
+    public static AME E_XML_3 = new AME(3, XML_HANDLER, "Failed while composing JAXB Object: ''{0}''");
+    public static AME E_XML_4 = new AME(4, XML_HANDLER, "Failed while validating XML String: ''{0}'' against XSD Schema");
+    public static AME E_XML_5 = new AME(5, XML_HANDLER, "JAXB Object can''t be null");
+    public static AME E_XML_6 = new AME(6, XML_HANDLER, "XSD Schema can''t be null");
 
     public static AME E_VAL_0 = new AME(0, VALIDATION, "{0} Form validation failed");
     public static AME E_VAL_1 = new AME(1, VALIDATION, "Field: ''{0}'' is a Mandatory field");

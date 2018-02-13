@@ -215,7 +215,7 @@ public class AppLogger implements Serializable{
             this.startDebug(session, log4j2);
             this.info(session, I_IO_5, LOG4J2_FILE_NAME);
 
-            String xml = XMLHandler.compose(log4j2, Configuration.class);
+            String xml = XMLHandler.compose(session, this, log4j2, Configuration.class);
 
             try {
                 PrintWriter writer = new PrintWriter(AppLogger.class.getResource(LOG4J2_FILE_NAME).getPath(), UTF_8.displayName());
@@ -277,7 +277,7 @@ public class AppLogger implements Serializable{
         if(session == null || session.getPHASE() == null || session.getSOURCE() == null)
             logData.logMsg(null, this, FAILURE_LOGGER);
         else{
-            if(session.getPHASE().equals(AM_INITIALIZATION))
+            if(session.getINTERFACE().value().equals(INITIALIZING_COMPONENT.value()))
                 logData.logMsg(session.getMessageHandler(), this, INITIAL_LOGGER);
             else if(session.getPHASE().equals(JMS_MANAGER))
                 logData.logMsg(session.getMessageHandler(), this, JMS_LOGGER);

@@ -16,6 +16,7 @@ import java.util.*;
 
 import static am.main.data.enums.impl.AME.*;
 import static am.main.data.enums.impl.AMI.*;
+import static am.main.data.enums.impl.AMP.DB_MANAGER;
 
 
 /**
@@ -53,7 +54,7 @@ public class DBManager implements Serializable {
     @Transactional
     public <T> T persist(AppSession appSession, T toBeInserted, Boolean usingCache) throws Exception {
         String METHOD = "persist";
-        AppSession session = appSession.updateSession(METHOD);
+        AppSession session = appSession.updateSession(DB_MANAGER, CLASS, METHOD);
         EntityManager em = null;
 
         try {
@@ -104,7 +105,7 @@ public class DBManager implements Serializable {
 
     public <T> T find(AppSession appSession, Class<T> className, Object identifier, Boolean usingCache)throws DBException {
         String METHOD = "find";
-        AppSession session = appSession.updateSession(METHOD);
+        AppSession session = appSession.updateSession(DB_MANAGER, CLASS, METHOD);
         EntityManager em = null;
 
         try {
@@ -140,7 +141,7 @@ public class DBManager implements Serializable {
     }
     public <T> List<T> findAll(AppSession appSession, Class<T> className, Boolean usingCache)throws DBException {
         String METHOD = "findAll";
-        AppSession session = appSession.updateSession(METHOD);
+        AppSession session = appSession.updateSession(DB_MANAGER, CLASS, METHOD);
         EntityManager em = null;
 
         try {
@@ -179,7 +180,7 @@ public class DBManager implements Serializable {
     @Transactional
     public <T> T merge(AppSession appSession, T toBeUpdated, Boolean usingCache)throws DBException{
         String METHOD = "merge";
-        AppSession session = appSession.updateSession(METHOD);
+        AppSession session = appSession.updateSession(DB_MANAGER, CLASS, METHOD);
         EntityManager em = null;
         try {
             logger.startDebug(session, toBeUpdated);
@@ -229,7 +230,7 @@ public class DBManager implements Serializable {
     @Transactional
     public void remove(AppSession appSession, Object toBeRemoved, Boolean usingCache)throws DBException {
         String METHOD = "remove";
-        AppSession session = appSession.updateSession(METHOD);
+        AppSession session = appSession.updateSession(DB_MANAGER, CLASS, METHOD);
         EntityManager em = null;
         try {
             logger.startDebug(session, toBeRemoved);
@@ -280,7 +281,7 @@ public class DBManager implements Serializable {
     public boolean checkIsFound(AppSession appSession, Boolean usingCache, String selectAttribute,
                 Class entity, String conditionAttribute, String value) throws DBException {
         String METHOD = "checkIsFound";
-        AppSession session = appSession.updateSession(METHOD);
+        AppSession session = appSession.updateSession(DB_MANAGER, CLASS, METHOD);
         EntityManager em = null;
         try {
             logger.startDebug(session);
@@ -356,7 +357,7 @@ public class DBManager implements Serializable {
     public <T> T getSingleResult(AppSession appSession, Boolean usingCache,
                                  Class<T> entity, Map<String, Object> parameters) throws Exception {
         String METHOD = "getSingleResult";
-        AppSession session = appSession.updateSession(METHOD);
+        AppSession session = appSession.updateSession(DB_MANAGER, CLASS, METHOD);
         EntityManager em = null;
         try {
             logger.startDebug(session, usingCache, entity.getSimpleName(), parameters);
@@ -419,7 +420,7 @@ public class DBManager implements Serializable {
     public <T> List<T> getList(AppSession appSession, Boolean usingCache,
                                  Class<T> entity, Map<String, Object> parameters) throws Exception {
         String METHOD = "getList";
-        AppSession session = appSession.updateSession(METHOD);
+        AppSession session = appSession.updateSession(DB_MANAGER, CLASS, METHOD);
         EntityManager em = null;
         try {
             logger.startDebug(session, usingCache, entity.getSimpleName(), parameters);
@@ -475,7 +476,7 @@ public class DBManager implements Serializable {
 
     private Map<String, Object> constructQuery(AppSession appSession, Class entity, Map<String, Object> parameters) throws Exception{
         String METHOD = "constructQuery";
-        AppSession session = appSession.updateSession(METHOD);
+        AppSession session = appSession.updateSession(DB_MANAGER, CLASS, METHOD);
         try {
             logger.startDebug(session, entity.getSimpleName(), parameters);
             String queryStr = "FROM " + entity.getSimpleName() + " WHERE ";
@@ -514,4 +515,25 @@ public class DBManager implements Serializable {
                 throw new DBException(session, ex, E_DB_25);
         }
     }
+
+//    public <T> T insertIfNotFound(AppSession appSession, Class<T> entity, Object id, String idAttr) throws Exception{
+//        String METHOD = "insertIfNotFound";
+//        AppSession session = appSession.updateSession(DB_MANAGER, CLASS, METHOD);
+//        logger.startDebug(session, entity, id, idAttr);
+//
+//        Map<String, Object> parameters = new HashMap<>();
+//        parameters.put(idAttr, id);
+//
+//        T obj = null;
+//        try {
+//            obj = getSingleResult(session, true, entity, parameters);
+//        }catch (DBException ex){
+//            if(ex.getCode().equals(E_DB_16)){
+//                persist(session, )
+//            }
+//        }
+//        logger.endDebug(session, obj);
+//        return obj;
+//    }
+
 }

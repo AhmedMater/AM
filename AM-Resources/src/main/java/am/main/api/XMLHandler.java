@@ -1,5 +1,7 @@
 package am.main.api;
 
+import am.main.exception.GeneralException;
+import am.main.session.AppSession;
 import org.xml.sax.SAXParseException;
 
 import javax.xml.bind.JAXBContext;
@@ -17,37 +19,80 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import static am.main.data.enums.impl.AME.*;
+import static am.main.data.enums.impl.AMI.*;
+import static am.main.data.enums.impl.AMP.XML_HANDLER;
+
 /**
  * Created by ahmed.motair on 11/17/2017.
  */
 public class XMLHandler {
-    public static <T> T parse(String xml, Class<T> className) throws Exception {
-        InputStream inputStream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
-        Reader reader = new InputStreamReader(inputStream);
+    private static final String CLASS = XMLHandler.class.getSimpleName();
 
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLStreamReader streamReader = factory.createXMLStreamReader(reader);
+    public static <T> T parse(AppSession appSession, AppLogger logger, String xml, Class<T> className) throws Exception {
+        String METHOD = "parse";
+        AppSession session = appSession.updateSession(XML_HANDLER, CLASS, METHOD);
+        logger.startDebug(session, xml, className);
+        try {
+            if (xml == null || xml.trim().isEmpty())
+                throw new GeneralException(session, E_XML_1);
 
-        JAXBContext jaxbContext = JAXBContext.newInstance(className);
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            logger.info(session, I_XML_1);
 
-        return jaxbUnmarshaller.unmarshal(streamReader, className).getValue();
+            InputStream inputStream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+            Reader reader = new InputStreamReader(inputStream);
+
+            XMLInputFactory factory = XMLInputFactory.newInstance();
+            XMLStreamReader streamReader = factory.createXMLStreamReader(reader);
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(className);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+
+            T obj = jaxbUnmarshaller.unmarshal(streamReader, className).getValue();
+
+            logger.info(session, I_XML_2);
+            logger.endDebug(session, obj);
+            return obj;
+        }catch (GeneralException ex){
+            throw ex;
+        }catch (Exception ex){
+            throw new GeneralException(session, E_XML_2, xml);
+        }
     }
 
-    public static String compose(Object obj, Class className) throws Exception {
-        // Create JAXB context and initializing Marshaller
-        JAXBContext jaxbContext = JAXBContext.newInstance(className);
-        Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+    public static String compose(AppSession appSession, AppLogger logger, Object obj, Class className) throws Exception {
+        String METHOD = "compose";
+        AppSession session = appSession.updateSession(XML_HANDLER, CLASS, METHOD);
+        logger.startDebug(session, obj, className);
+        try{
+            if (obj == null)
+                throw new GeneralException(session, E_XML_5);
 
-        // For getting nice formatted output
-        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+            logger.info(session, I_XML_3);
 
-        //Specify the location and name of xml file to be created
-        Writer writer = new CharArrayWriter();
-        jaxbMarshaller.marshal(obj, writer);
+            // Create JAXB context and initializing Marshaller
+            JAXBContext jaxbContext = JAXBContext.newInstance(className);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
-        return writer.toString();
+            // For getting nice formatted output
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+            //Specify the location and name of xml file to be created
+            Writer writer = new CharArrayWriter();
+            jaxbMarshaller.marshal(obj, writer);
+
+            String xml = writer.toString();
+
+            logger.info(session, I_XML_4);
+            logger.endDebug(session, xml);
+
+            return xml;
+        }catch (GeneralException ex){
+            throw ex;
+        }catch (Exception ex){
+            throw new GeneralException(session, E_XML_3, obj);
+        }
     }
 
     /**
@@ -55,20 +100,35 @@ public class XMLHandler {
      *
      * @param xml XML Message
      */
-    public static List<String> xsdValidate(String xml, Schema xmlSchema) throws Exception {
-        if (xml == null || xml.equals(""))
-            throw new Exception("XML Message String is empty or null");
+    public static List<String> xsdValidate(AppSession appSession, AppLogger logger, String xml, Schema xmlSchema) throws Exception {
+        String METHOD = "xsdValidate";
+        AppSession session = appSession.updateSession(XML_HANDLER, CLASS, METHOD);
+        logger.startDebug(session, xml, xmlSchema);
+        try {
+            logger.info(session, I_XML_5);
 
-        if (xmlSchema == null)
-            throw new Exception("The XSD Scheme isn't loaded in the System");
+            if (xml == null || xml.trim().isEmpty())
+                throw new GeneralException(session, E_XML_1);
 
-        Validator validator = xmlSchema.newValidator();
-        XMLErrorHandler xmlErrorHandler = new XMLErrorHandler();
-        validator.setErrorHandler(xmlErrorHandler);
-        Source xmlFile = new StreamSource(new StringReader(xml));
+            if (xmlSchema == null)
+                throw new GeneralException(session, E_XML_6);
 
-        validator.validate(xmlFile);
-        return xmlErrorHandler.getErrors();
+            Validator validator = xmlSchema.newValidator();
+            XMLErrorHandler xmlErrorHandler = new XMLErrorHandler();
+            validator.setErrorHandler(xmlErrorHandler);
+            Source xmlFile = new StreamSource(new StringReader(xml));
+
+            validator.validate(xmlFile);
+            List<String> errors = xmlErrorHandler.getErrors();
+
+            logger.info(session, I_XML_6);
+            logger.endDebug(session, errors);
+            return errors;
+        }catch (GeneralException ex){
+            throw ex;
+        }catch (Exception ex){
+            throw new GeneralException(session, E_XML_4, xml);
+        }
     }
 
     public static class XMLErrorHandler implements org.xml.sax.ErrorHandler {

@@ -28,7 +28,6 @@ public class ConfigManager {
     private static final String CLASS = ConfigManager.class.getSimpleName();
 
     private static Properties APP_CONFIGURATION = new Properties();
-//    private static Properties AM_CONFIGURATION = new Properties();
 
     private static ConfigManager instance;
     private static final AppSession appSession = new AppSession(AM, CONFIG_MANAGER, CLASS);
@@ -57,9 +56,6 @@ public class ConfigManager {
         try {
             logger.info(session, I_SYS_1, componentName);
 
-//            AM_CONFIGURATION = ConfigUtils.readResourcePropertyFiles(session, logger, );
-//            logger.info(session, I_MH_1);
-
             APP_CONFIGURATION = ConfigUtils.readRemotePropertyFiles(session, logger, MAIN_APP_CONFIG.FN_PATH);
             logger.info(session, I_CFG_1);
 
@@ -72,7 +68,7 @@ public class ConfigManager {
 
     public <T> T getConfigValue(AppSession appSession, AMCode amCode, Class<T> className) throws Exception {
         String METHOD = "getConfigValue";
-        AppSession session = appSession.updateSession(CLASS, METHOD);
+        AppSession session = appSession.updateSession(CONFIG_MANAGER, CLASS, METHOD);
         try {
             logger.startDebug(session, amCode, className.getSimpleName());
 
@@ -112,7 +108,7 @@ public class ConfigManager {
 
     public boolean updateConfigValue(AppSession appSession, AMCode amCode, String newValue) throws Exception {
         String METHOD = "updateConfigValue";
-        AppSession session = appSession.updateSession(CLASS, METHOD);
+        AppSession session = appSession.updateSession(CONFIG_MANAGER, CLASS, METHOD);
         try {
             logger.startDebug(session, amCode, newValue);
 
@@ -123,13 +119,6 @@ public class ConfigManager {
 
             String value = ConfigUtils.readValueFromPropertyFile(session, logger, APP_CONFIGURATION,
                     amCode.getFullCode(), "Application Configuration");
-
-//            if(systemProperty == null || systemProperty.toString() == null || systemProperty.toString().isEmpty())
-//                throw new GeneralException(session, AME.SYS_007, "App Config Property");
-//            else if(APP_CONFIGURATION == null || APP_CONFIGURATION.isEmpty())
-//                throw new GeneralException(session, AME.IO_005, APP_CONFIG_FN);
-//            else if(value == null)
-//                throw new GeneralException(session, AME.SYS_016);
 
             Object retValue = APP_CONFIGURATION.replace(amCode.getFullCode(), value);
 
@@ -145,35 +134,4 @@ public class ConfigManager {
                 throw new GeneralException(session, ex, E_CFG_4, amCode.getFullCode());
         }
     }
-//
-//    public String getConfigValue(AM_CC code){
-//        String METHOD = "getConfigValue";
-//        AppSession session = appSession.updateSession(METHOD);
-//        try {
-//            logger.startDebug(session, code);
-//
-//            if(code == null || code.toString() == null || code.toString().isEmpty()) {
-//                load();
-//                throw new GeneralException(session, AME.SYS_007, "AM Config Property");
-//            }else if(AM_CONFIGURATION == null || AM_CONFIGURATION.isEmpty())
-//                throw new GeneralException(session, AME.IO_005, ConfigParam.FILE.AM_CONFIG_PROPERTIES);
-//
-//            String value = AM_CONFIGURATION.getProperty(code.value());
-//
-//            logger.info(session, AMI.IO_003, "AM Config Property", code.toString());
-//            logger.endDebug(session, value);
-//            return value;
-//        }catch (Exception ex){
-//            logger.error(session, ex, AME.IO_008, "AM Config Property", code);
-//            return "";
-//        }
-//    }
-
-//    public Properties getAM_CONFIGURATION() {
-//        return AM_CONFIGURATION;
-//    }
-//    public void setAM_CONFIGURATION(Properties AM_CONFIGURATION) {
-//        AM_CONFIGURATION = AM_CONFIGURATION;
-//    }
-
 }
