@@ -279,14 +279,18 @@ public class AppLogger implements Serializable{
         else{
             if(session.getPHASE().equals(AM_INITIALIZATION))
                 logData.logMsg(session.getMessageHandler(), this, INITIAL_LOGGER);
+            else if(session.getPHASE().equals(JMS_MANAGER))
+                logData.logMsg(session.getMessageHandler(), this, JMS_LOGGER);
             else if(session.getSOURCE().equals(AM_LOGGER)) {
                 Logger logger = loggers.get(logData.getPHASE());
                 logger = (logger == null) ? loggers.get(APP_NAME) : logger;
+
                 logData.logMsg(session.getMessageHandler(), this,
                         (logger != null ? logger : FAILURE_LOGGER));
-            } else if(session.getPHASE().equals(JMS_MANAGER)) {
-                logData.logMsg(session.getMessageHandler(), this, JMS_LOGGER);
-            } else {
+
+                if(logger == null)
+                    throw new IllegalStateException("Invalid Logger Selected");
+            }else {
                 try {
                     jmsManager.get().sendObjMessage(session, AMQ.FILE_LOG, logData);
                 } catch (Exception exc) {
