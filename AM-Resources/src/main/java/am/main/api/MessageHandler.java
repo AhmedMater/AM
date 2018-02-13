@@ -1,6 +1,8 @@
 package am.main.api;
 
 import am.main.common.ConfigUtils;
+import am.main.data.enums.Interface;
+import am.main.data.enums.impl.AMS;
 import am.main.exception.GeneralException;
 import am.main.session.AppSession;
 import am.main.spi.AMCode;
@@ -9,20 +11,17 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static am.main.common.ConfigParam.*;
 import static am.main.data.enums.Interface.INITIALIZING_COMPONENT;
+import static am.main.data.enums.impl.AME.*;
+import static am.main.data.enums.impl.AMI.*;
 import static am.main.data.enums.impl.AMP.AM_INITIALIZATION;
 import static am.main.data.enums.impl.AMP.MESSAGE_HANDLER;
 import static am.main.data.enums.impl.AMS.AM;
-import static am.main.data.enums.impl.AME.*;
-import static am.main.data.enums.impl.AMI.*;
 
 /**
  * Created by ahmed.motair on 1/8/2018.
@@ -31,7 +30,7 @@ import static am.main.data.enums.impl.AMI.*;
 public class MessageHandler {
     @Inject private AppLogger logger;
     private static final String CLASS = MessageHandler.class.getSimpleName();
-
+    private final AppSession appSession = new AppSession(AMS.AM, Interface.REST, MESSAGE_HANDLER);
     private static MessageHandler instance;
 
     private MessageHandler() {
@@ -77,9 +76,16 @@ public class MessageHandler {
         }
     }
 
-    public String getMsg(AppSession appSession, AMCode amCode, Object ... args) {
+    public String getMsg(AMCode amCode, Object ... args){
+        List<String> argList = new ArrayList<>();
+        for (Object arg :args)
+            argList.add(arg.toString());
+        return getMsg(amCode, argList);
+    }
+
+    public String getMsg(AMCode amCode, List<String> args) {
         String METHOD = "getMsg";
-        AppSession session = appSession.updateSession(MESSAGE_HANDLER, METHOD);
+        AppSession session = appSession.updateSession(MESSAGE_HANDLER, CLASS, METHOD);
         try {
             logger.startDebug(session, amCode);
 
@@ -101,7 +107,7 @@ public class MessageHandler {
 
     public String getRawMsg(AppSession appSession, AMCode amCode){
         String METHOD = "getRawMsg";
-        AppSession session = appSession.updateSession(MESSAGE_HANDLER, METHOD);
+        AppSession session = appSession.updateSession(MESSAGE_HANDLER, CLASS, METHOD);
         try {
             logger.startDebug(session, amCode);
 
@@ -134,9 +140,9 @@ public class MessageHandler {
         }
     }
 
-    private String formatMsg(AppSession appSession, String message, Object ... args) throws Exception{
+    private String formatMsg(AppSession appSession, String message, List<String> args) throws Exception{
         String METHOD = "formatMsg";
-        AppSession session = appSession.updateSession(MESSAGE_HANDLER, METHOD);
+        AppSession session = appSession.updateSession(MESSAGE_HANDLER, CLASS, METHOD);
         try {
             logger.startDebug(session, message, args);
             logger.info(session, I_MH_6);
@@ -149,12 +155,12 @@ public class MessageHandler {
                 placeHolders.add(matcher.group());
 
             if (placeHolders.size() == 0) {
-                if (args == null || args.length == 0)
+                if (args == null || args.size() == 0)
                     _message = message;
                 else
                     throw new GeneralException(session, E_MH_2);
-            } else if(args == null  || placeHolders.size() != args.length)
-                throw new GeneralException(session, E_MH_4, (args != null ? Arrays.toString(args) : "Null"), placeHolders.size());
+            } else if(args == null  || placeHolders.size() != args.size())
+                throw new GeneralException(session, E_MH_4, (args != null ? args.toString() : "Null"), placeHolders.size());
             else
                 _message = MessageFormat.format(message, args);
 

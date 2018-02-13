@@ -14,8 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static am.main.data.enums.impl.AME.E_JMS_4;
+import static am.main.data.enums.impl.AMI.I_JMS_3;
+import static am.main.data.enums.impl.AMI.I_JMS_4;
 import static am.main.data.enums.impl.AMP.JMS_MANAGER;
-import static am.main.data.enums.impl.AMS.AM;
 
 /**
  * Created by mohamed.elewa on 26/06/2017.
@@ -32,7 +33,7 @@ public class JMSManager {
     public static JMSManager instance;
     private Logger INITIAL_LOGGER = LogManager.getLogger("Initial");
     private Logger FAILURE_LOGGER = LogManager.getLogger("Failure");
-    private static final AppSession appSession = new AppSession(AM, JMS_MANAGER, CLASS);
+//    private static final AppSession appSession = new AppSession(AM, JMS_MANAGER, CLASS);
 
     public JMSManager() {
 //        load();
@@ -116,16 +117,16 @@ public class JMSManager {
 
     private void sendMessage(AppSession appSession, JMSQueues queue, Serializable object, Long deliveryDelay, boolean isText) throws Exception{
         String METHOD = "sendMessage";
-        AppSession session = appSession.updateSession(METHOD);
+        AppSession session = appSession.updateSession(JMS_MANAGER, CLASS, METHOD);
 
         QueueConnection queueConn = null;
         QueueSession queueSession = null;
         MessageProducer sender = null;
 
         try {
-//            logger.startDebug(session, queue.getQueueName(), object.toString(), deliveryDelay, isText);
+            logger.startDebug(session, queue.getQueueName(), object.toString(), deliveryDelay, isText);
 
-//            logger.info(session, I_JMS_3, object.toString(), queue.description());
+            logger.info(session, I_JMS_3, object.toString(), queue.description());
 
             queueConn = ((QueueConnectionFactory) new InitialContext().
                     lookup(queue.getConnectionFactory())).createQueueConnection();
@@ -134,16 +135,6 @@ public class JMSManager {
             queueSession = queueConn.createQueueSession(true, Session.SESSION_TRANSACTED);
 
             Queue jmsQueue = (Queue) new InitialContext().lookup(queue.getQueueName());
-
-//            QueueSession queueSession = sessions.get(queue.getQueueName());
-//            if (queueSession == null)
-//                throw new GeneralException(session, E_JMS_2, queue.getQueueName());
-//
-//
-//            MessageProducer sender = senders.get(queue.getQueueName());
-//
-//            if (sender == null)
-//                throw new GeneralException(session, E_JMS_3, queue.getQueueName());
 
             sender = queueSession.createProducer(jmsQueue);
             sender.setDeliveryDelay(deliveryDelay);
@@ -160,9 +151,8 @@ public class JMSManager {
             queueSession.close();
             sender.close();
 
-//            logger.info(session, I_JMS_4, object.toString(), queue.description());
-
-//            logger.endDebug(session);
+            logger.info(session, I_JMS_4, object.toString(), queue.description());
+            logger.endDebug(session);
         } catch (Exception ex){
             if(ex instanceof GeneralException)
                 throw ex;

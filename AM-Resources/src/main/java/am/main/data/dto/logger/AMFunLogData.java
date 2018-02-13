@@ -3,6 +3,7 @@ package am.main.data.dto.logger;
 import am.main.api.AppLogger;
 import am.main.api.MessageHandler;
 import am.main.data.dto.LoginData;
+import am.main.data.enums.CodeTypes;
 import am.main.data.enums.logger.LoggerLevels;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;
@@ -27,8 +28,10 @@ public class AMFunLogData implements Serializable{
 
     private LoginData loginData;
 
-    private LoggerLevels LEVEL;
     private String fullCode;
+    private Boolean internalCode;
+
+    private LoggerLevels LEVEL;
     private List<String> args = new ArrayList<>();
     private Date currentTimeStamp;
     private Exception ex;
@@ -55,9 +58,9 @@ public class AMFunLogData implements Serializable{
         setSession(session);
         switch (level){
             case WARN: case INTERNAL_INFO: case INFO: case ERROR_MSG: case INTERNAL_ERROR_MSG:
-                this.fullCode = code.getFullCode(); break;
+                this.fullCode = code.getFullCode(); internalCode = code.isInternal(); break;
             case ERROR_MSG_EX:  case INTERNAL_ERROR_MSG_EX:
-                setEx(ex); this.fullCode = code.getFullCode(); break;
+                setEx(ex); this.fullCode = code.getFullCode(); internalCode = code.isInternal(); break;
             case ERROR_EX:
                 setEx(ex); break;
         }
@@ -116,13 +119,13 @@ public class AMFunLogData implements Serializable{
         this.LEVEL = LEVEL;
     }
 
-    public Object[] getArgs() {
-        return args.toArray();
+    public List<String> getArgs() {
+        return args;
     }
     public void setEndDebugArgs(Object result) {
         this.args.add((result != null ? result.toString() : "Null"));
     }
-    public void setArgs(Object[] args) {
+    public void setArgs(Object ... args) {
         if(args != null)
             for (Object arg : args)
                 this.args.add(arg.toString());
@@ -252,7 +255,25 @@ public class AMFunLogData implements Serializable{
             case ERROR_EX:
                 break;
             default:
-                AMCode code = AMCode.getCodeByFullCode(fullCode);
+                AMCode code;
+                if(internalCode)
+                    code = AMCode.getCodeByFullCode(fullCode);
+                else {
+                    String[] codeParts = fullCode.split("-");
+                    CodeTypes type = null;
+                    switch (LEVEL){
+                        case WARN: type = CodeTypes.WARN; break;
+                        case INFO: type = CodeTypes.INFO; break;
+                        case ERROR_MSG_EX: case ERROR_MSG: type = CodeTypes.ERROR; break;
+                    }
+                    code = new AMCode(type, false, Integer.parseInt(codeParts[2]),
+                            codeParts[1], null, codeParts[0]) {
+                        @Override
+                        public CodeTypes getCodeType() {
+                            return super.getCodeType();
+                        }
+                    };
+                }
                 fullMsg += code.getFullMsg(messageHandler, getArgs());
         }
 
@@ -294,35 +315,43 @@ public class AMFunLogData implements Serializable{
     private String generateHeader() {
         String st = "[" + sdtf.format(currentTimeStamp) + "] ";
 
-        if(THREAD_NAME != null)
-            st += "[Thread: " + THREAD_NAME;
-        else
-            st += "[ThreadID: ";
+        st += (THREAD_NAME != null) ? ("[Thread: " + THREAD_NAME +
+                (THREAD_ID != null ? "::" + THREAD_ID + "] \n" : "]")) :
+                (THREAD_ID != null ? "[Thread-ID: " + THREAD_ID + "] \n" : "");
 
-        if(THREAD_ID != null)
-            st += "::" + THREAD_ID + "] \n";
-        else
-            st += "] \n";
+        st += (SOURCE != null) ? "[Source: " + SOURCE + "] " : "";
+        st += (INTERFACE != null) ? "[Interface: " + INTERFACE + "] " : "";
+        st += (PHASE != null) ? "[Phase: " + PHASE + "] \n" : "";
 
-        if(SOURCE != null)
-            st += "[Source: " + SOURCE;
+        st += (IP != null) ? "[IP: " + IP + "] " : "";
+        st += (username != null) ? "[User: " + username + "] " : "";
+        st += (interfaceRelatedID != null) ? "[ID: " + interfaceRelatedID + "] \n" : "";
 
-        if(INTERFACE != null)
-            st += "] [Interface: " + INTERFACE;
-
-        if(PHASE != null)
-            st += "] [Phase: " + PHASE;
-
-        if(IP != null)
-            st += "]\n [IP: " + IP;
-
-        if(username != null)
-            st += "] [User: " + username;
-
-        if(interfaceRelatedID !=null)
-            st += "] [ID: " + interfaceRelatedID;
-
-        st += "]\n " + CLASS + "." + METHOD + "(): ";
+        st += "[" + CLASS + "." + METHOD + "()] ";
         return st;
+    }
+
+    @Override
+    public String toString() {
+        return "AMFunLogData{" +
+                "loginData = " + loginData +
+                ", fullCode = " + fullCode +
+                ", internalCode = " + internalCode +
+                ", LEVEL = " + LEVEL +
+                ", args = " + args +
+                ", currentTimeStamp = " + currentTimeStamp +
+                ", ex = " + ex +
+                ", PHASE = " + PHASE +
+                ", INTERFACE = " + INTERFACE +
+                ", SOURCE = " + SOURCE +
+                ", THREAD_ID = " + THREAD_ID +
+                ", THREAD_NAME = " + THREAD_NAME +
+                ", CLASS = " + CLASS +
+                ", METHOD = " + METHOD +
+                ", interfaceRelatedID = " + interfaceRelatedID +
+                ", username = " + username +
+                ", IP = " + IP +
+                ", fullMsg = " + fullMsg +
+                "}\n";
     }
 }

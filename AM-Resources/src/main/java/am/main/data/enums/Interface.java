@@ -10,7 +10,8 @@ public enum Interface {
     JOB("Job-Interface"),
     QUARTZ("Quartz"),
     ARQUILLIAN("Arquillian"),
-    INITIALIZING_COMPONENT("Init-Component");
+    INITIALIZING_COMPONENT("Init-Component"),
+    INTERNAL_PROC("Internal-Processing");
 
     private String value;
 

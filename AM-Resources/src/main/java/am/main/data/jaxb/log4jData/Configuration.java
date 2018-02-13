@@ -2,6 +2,7 @@
 package am.main.data.jaxb.log4jData;
 
 import am.main.api.AppLogger;
+import am.main.data.jaxb.am.logger.AMApplication;
 import am.main.data.jaxb.am.logger.AMLoggerConfig;
 import am.main.data.jaxb.am.logger.LoggerData;
 import am.main.data.jaxb.am.logger.LoggerGroup;
@@ -12,6 +13,7 @@ import java.text.MessageFormat;
 import java.util.List;
 
 import static am.main.data.enums.impl.AMI.I_LOG_3;
+import static am.main.data.enums.impl.AMI.I_LOG_4;
 import static am.main.data.enums.logger.LogConfigProp.MAIN_LOG_PATH;
 import static am.main.data.enums.logger.LogConfigProp.MAX_FILE_SIZE;
 
@@ -246,38 +248,42 @@ public class Configuration implements Cloneable{
         this.status = value;
     }
 
-    private static final String LOGGER_FILE_NAME = "{0}/{1}/{2}.log";
-    private static final String LOGGER_FILE_PATTERN = "{0}/{1}/{2}/{2}-%i-%d'{yyyy-MM-dd HH-mm-ss.SSS'}.log";
+    private static final String LOGGER_FILE_NAME = "{0}/{1}/{2}/{3}.log";
+    private static final String LOGGER_FILE_PATTERN = "{0}/{1}/{2}/{2}/{3}-%i-%d'{yyyy-MM-dd HH-mm-ss.SSS'}.log";
 
-    public void addNewLogger(AppSession appSession, AppLogger logger, LoggerGroup group, AMLoggerConfig config, Logger templateLogger, RollingFile templateRolling, String globalLogLevel) throws Exception{
+    public void addNewLogger(AppSession appSession, AppLogger logger, AMApplication application, AMLoggerConfig config, Logger templateLogger, RollingFile templateRolling, String globalLogLevel) throws Exception{
         String METHOD = "addNewLogger";
         AppSession session = appSession.updateSession(getClass().getSimpleName(), METHOD);
-        logger.startDebug(session, group, config, templateLogger, templateRolling, globalLogLevel);
+        logger.startDebug(session, application, config, templateLogger, templateRolling, globalLogLevel);
 
-        String groupName = group.getName();
+        String appName = application.getName();
         String mainPath = config.getLoggerProperty(MAIN_LOG_PATH.getName()).getValue();
         String maxFileLogSize = config.getLoggerProperty(MAX_FILE_SIZE.getName()).getValue();
 
-        List<LoggerData> loggerDataList = group.getLoggerData();
-        for (LoggerData loggerData : loggerDataList) {
-            if(!globalLogLevel.isEmpty())
-                loggerData.setLevel(globalLogLevel);
+        for (LoggerGroup group : application.getLoggerGroup()) {
+            String groupName = group.getName();
+            List<LoggerData> loggerDataList = group.getLoggerData();
+            for (LoggerData loggerData : loggerDataList) {
+                if (!globalLogLevel.isEmpty())
+                    loggerData.setLevel(globalLogLevel);
 
-            RollingFile newRollingFile = templateRolling.clone();
+                RollingFile newRollingFile = templateRolling.clone();
 
-            newRollingFile.setName(loggerData.getName());
-            newRollingFile.setFileName(MessageFormat.format(LOGGER_FILE_NAME, mainPath, groupName, loggerData.getName()));
-            newRollingFile.setFilePattern(MessageFormat.format(LOGGER_FILE_PATTERN, mainPath, groupName, loggerData.getName()));
-            this.getAppenders().getRollingFile().add(newRollingFile);
+                newRollingFile.setName(loggerData.getName());
+                newRollingFile.setFileName(MessageFormat.format(LOGGER_FILE_NAME, mainPath, appName, groupName, loggerData.getName()));
+                newRollingFile.setFilePattern(MessageFormat.format(LOGGER_FILE_PATTERN, mainPath, appName, groupName, loggerData.getName()));
+                this.getAppenders().getRollingFile().add(newRollingFile);
 
-            Logger newLogger = templateLogger.clone();
+                Logger newLogger = templateLogger.clone();
 
-            newLogger.setName(loggerData.getName());
-            newLogger.setLevel(loggerData.getLevel());
-            newLogger.getAppenderRefList().add(new AppenderRef(loggerData.getName()));
-            newLogger.getAppenderRefList().add(new AppenderRef("Console"));
-            this.getLoggers().getLogger().add(newLogger);
-            logger.info(session, I_LOG_3, loggerData.getName(), group.getName());
+                newLogger.setName(loggerData.getName());
+                newLogger.setLevel(loggerData.getLevel());
+                newLogger.getAppenderRefList().add(new AppenderRef(loggerData.getName()));
+                newLogger.getAppenderRefList().add(new AppenderRef("Console"));
+                this.getLoggers().getLogger().add(newLogger);
+                logger.info(session, I_LOG_3, loggerData.getName(), group.getName());
+            }
+            logger.info(session, I_LOG_4, group.getName());
         }
         logger.endDebug(session);
     }
@@ -317,5 +323,22 @@ public class Configuration implements Cloneable{
                 ", loggers = " + loggers +
                 ", status = " + status +
                 "}\n";
+    }
+
+    public void removeTemplate(String template) {
+        for (RollingFile rollingFile :getAppenders().getRollingFile()) {
+            if(rollingFile.getName().equals(template)){
+                getAppenders().getRollingFile().remove(rollingFile);
+                break;
+            }
+        }
+
+        for (Logger logger :getLoggers().getLogger()) {
+            if(logger.getName().equals(template)){
+                getLoggers().getLogger().remove(logger);
+                break;
+            }
+        }
+
     }
 }

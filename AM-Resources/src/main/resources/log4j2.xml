@@ -2,29 +2,37 @@
 <configuration status="WARN">
     <appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%-5level] [%logger{36}] - %msg%n"/>
+            <PatternLayout pattern="[%level] [%logger{36}] - %msg%n"/>
         </Console>
 
-        <RollingFile name="Template" fileName="C:/_Payara-Logs/AM-Logs/AM/Template.log" immediateFlush="true"
-                     filePattern="C:/_Payara-Logs/AM-Logs/AM/Template/Template-%i-%d{yyyy-MM-dd-HH-mm-ss}.log">
-            <PatternLayout pattern="[%-5level] [%logger{36}] - %msg%n"/>
+        <RollingFile name="Template" fileName="C:/_Payara-Logs/AM-Resources/Template.log" immediateFlush="true"
+                     filePattern="C:/_Payara-Logs/AM-Resources/Template/Template-%i-%d{yyyy-MM-dd-HH-mm-ss}.log">
+            <PatternLayout pattern="[%level] [%logger{36}] - %msg%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="40 MB"/>
             </Policies>
 
         </RollingFile>
 
-        <RollingFile name="Failure" fileName="C:/_Payara-Logs/AM-Logs/AM/Failure.log" immediateFlush="true"
-                     filePattern="C:/_Payara-Logs/AM-Logs/AM/Failure/Failure-%i-%d{yyyy-MM-dd-HH-mm-ss}.log">
-            <PatternLayout pattern="[%-5level] [%logger{36}] - %msg%n"/>
+        <RollingFile name="Failure" fileName="C:/_Payara-Logs/AM-Resources/Failure.log" immediateFlush="true"
+                     filePattern="C:/_Payara-Logs/AM-Resources/Failure/Failure-%i-%d{yyyy-MM-dd-HH-mm-ss}.log">
+            <PatternLayout pattern="[%level] [%logger{36}] - %msg%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="40 MB"/>
             </Policies>
 
         </RollingFile>
-        <RollingFile name="Initial" fileName="C:/_Payara-Logs/AM-Logs/AM/Initial.log" immediateFlush="true"
-                     filePattern="C:/_Payara-Logs/AM-Logs/AM/Initial/Initial-%i-%d{yyyy-MM-dd-HH-mm-ss}.log">
-            <PatternLayout pattern="[%-5level] [%logger{36}] - %msg%n"/>
+        <RollingFile name="Initial" fileName="C:/_Payara-Logs/AM-Resources/Initial.log" immediateFlush="true"
+                     filePattern="C:/_Payara-Logs/AM-Resources/Initial/Initial-%i-%d{yyyy-MM-dd-HH-mm-ss}.log">
+            <PatternLayout pattern="[%level] [%logger{36}] - %msg%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="40 MB"/>
+            </Policies>
+
+        </RollingFile>
+        <RollingFile name="JMS-Msg-Log" fileName="C:/_Payara-Logs/AM-Resources/JMS-Msg.log" immediateFlush="true"
+                     filePattern="C:/_Payara-Logs/AM-Resources/JMS-Msg/JMS-Msg-%i-%d{yyyy-MM-dd-HH-mm-ss}.log">
+            <PatternLayout pattern="[%level] [%logger{36}] - %msg%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="40 MB"/>
             </Policies>
@@ -45,6 +53,10 @@
         <Logger name="Initial" level="debug">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="Initial"/>
+        </Logger>
+        <Logger name="JMS-Msg" level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="JMS-Msg"/>
         </Logger>
     </Loggers>
 </configuration>

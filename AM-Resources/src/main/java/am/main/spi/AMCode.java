@@ -1,13 +1,10 @@
 package am.main.spi;
 
+import am.main.api.MessageHandler;
 import am.main.data.enums.CodeTypes;
-import am.main.session.AppSession;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,20 +50,22 @@ public abstract class AMCode {
 
     public String getFullCode(){
         String type = "";
-        switch (CODE_TYPE){
-            case INFO: type = "I-"; break;
-            case ERROR: type = "E-"; break;
-            case WARN: type = "W-"; break;
+        if(isInternal()) {
+            switch (CODE_TYPE) {
+                case INFO:  type = "I-"; break;
+                case ERROR: type = "E-"; break;
+                case WARN:  type = "W-"; break;
+            }
         }
         return (!PREFIX.isEmpty() ? PREFIX + "-" : "") + type + CODE_NAME + (CODE_ID != -1 ? "-" + CODE_ID : "");
     }
-    public AMCode getCode(String fullCode) throws Exception{
-        for (String code : ALL_CODES.keySet()) {
-            if (code.equals(fullCode))
-                return ALL_CODES.get(code);
-        }
-        throw new Exception("Invalid Code ID " + fullCode);
-    }
+//    public AMCode getCode(String fullCode) throws Exception{
+//        for (String code : ALL_CODES.keySet()) {
+//            if (code.equals(fullCode))
+//                return ALL_CODES.get(code);
+//        }
+//        throw new Exception("Invalid Code ID " + fullCode);
+//    }
 
     /**
      * Retrieves the AMCode Object associated with the Full Code
@@ -86,10 +85,29 @@ public abstract class AMCode {
     }
 
     public String getFullMsg(Object ... args) throws IllegalArgumentException {
-        return getFullMsg(null, args);
+        List<String> argList = new ArrayList<>();
+
+        if(args.length == 1 && args[0] instanceof List)
+            argList = (List<String>) args[0];
+        else {
+            for (Object arg : args)
+                argList.add(arg.toString());
+        }
+        return getFullMsg(null,  argList);
+    }
+    public String getFullMsg(MessageHandler messageHandler, Object ... args) throws IllegalArgumentException {
+        List<String> argList = new ArrayList<>();
+
+        if(args.length == 1 && args[0] instanceof List)
+            argList = (List<String>) args[0];
+        else {
+            for (Object arg : args)
+                argList.add(arg.toString());
+        }
+        return getFullMsg(messageHandler,  argList);
     }
 
-    public String getFullMsg(AppSession appSession, Object ... args) throws IllegalArgumentException{
+    private String getFullMsg(MessageHandler messageHandler, List<String> args) throws IllegalArgumentException{
         if(isInternal()) {
             Matcher matcher = Pattern.compile("\\{[0-9]+\\}").matcher(INTERNAL_MSG);
             String _message = "";
@@ -98,16 +116,20 @@ public abstract class AMCode {
             while (matcher.find())
                 placeholders.add(matcher.group());
 
-            if(args.length != 0 && args[1] instanceof Object[])
-                args = (Object[]) args[1];
+//            if(args.length != 0 && args[1] instanceof Object[])
+//                args = (Object[]) args[1];
 
-            if(placeholders.size() != args.length)
+            if(placeholders.size() != args.size())
                 throw new IllegalArgumentException(getFullCode() + " Code needs " +
-                        placeholders.size() + " Placeholders, and arguments provided are " + args.length + " Args, Which are " + Arrays.toString(args));
+                        placeholders.size() + " Placeholders, and arguments provided are " + args.size() + " Args, Which are " + args.toString());
 
-            return getFullCode() + ": " + MessageFormat.format(INTERNAL_MSG, args);
-        } else
-            return getFullCode() + ": " + appSession.getMessageHandler().getMsg(appSession, this, args);
+            return getFullCode() + ": " + MessageFormat.format(INTERNAL_MSG, args.toArray());
+        } else {
+            if(messageHandler == null)
+                throw new IllegalArgumentException("Session can't be null for External Codes");
+            else
+                return getFullCode() + ": " + messageHandler.getMsg(this, args);
+        }
     }
     public void setInternalMsg(String INTERNAL_MSG) {
         this.INTERNAL_MSG = INTERNAL_MSG;

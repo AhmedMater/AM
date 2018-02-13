@@ -41,8 +41,8 @@ public class AMI extends AMCode {
 
     public static AMI I_IO_1 = new AMI(1, IO, "Start reading File: ''{0}''");
     public static AMI I_IO_2 = new AMI(2, IO, "File: ''{0}'' is read successfully");
-    public static AMI I_IO_3 = new AMI(3, IO, "Start reading Property: ''{0}'' from File: ''{0}''");
-    public static AMI I_IO_4 = new AMI(4, IO, "Property: ''{0}'' from File: ''{0}'' is read successfully");
+    public static AMI I_IO_3 = new AMI(3, IO, "Start reading Property: ''{0}'' from File: ''{1}''");
+    public static AMI I_IO_4 = new AMI(4, IO, "Property: ''{0}'' from File: ''{1}'' is read successfully");
     public static AMI I_IO_5 = new AMI(5, IO, "Start writing File: ''{0}''");
     public static AMI I_IO_6 = new AMI(6, IO, "File: ''{0}'' is wrote successfully");
 

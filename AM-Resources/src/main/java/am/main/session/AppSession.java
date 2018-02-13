@@ -6,6 +6,8 @@ import am.main.spi.AMPhase;
 import am.main.spi.AMSource;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by mohamed.elewa on 13/05/2017.
@@ -75,35 +77,6 @@ public class AppSession implements Serializable{
         session.messageHandler = null;
         return session;
     }
-//    public String getErrorMsg(AMCode code, Object ... args) {
-//        try {
-//            return messageHandler.getMsg(code, args);
-//        } catch (Exception e) {
-//            return MessageFormat.format(AME.SYS_012.value(), "Error", code.toString());
-//        }
-//    }
-
-//    public String getErrorMsg(EC code, Object ... args) {
-//        try {
-//            return messageHandler.getMsg(code, args);
-//        } catch (Exception e) {
-//            return MessageFormat.format(AME.SYS_012.value(), "Error", code.toString());
-//        }
-//    }
-//    public String getInfoMsg(IC code, Object ... args) {
-//        try {
-//            return messageHandler.getMsg(code, args);
-//        } catch (Exception e) {
-//            return MessageFormat.format(AME.SYS_012.value(), "Info", code.toString());
-//        }
-//    }
-//    public String getWarnMsg(WC code, Object ... args) {
-//        try {
-//            return messageHandler.getMsg(code, args);
-//        } catch (Exception e) {
-//            return MessageFormat.format(AME.SYS_012.value(), "Warn", code.toString());
-//        }
-//    }
 
     public String getCLASS() {
         return CLASS;
@@ -161,41 +134,22 @@ public class AppSession implements Serializable{
         this.THREAD_NAME = THREAD_NAME;
     }
 
-    public AppSession updateSession(AMSource SOURCE, AMPhase PHASE, String CLASS, String METHOD) {
-        AppSession session = new AppSession();
-        session.PHASE = PHASE;
-        session.CLASS = CLASS;
-        session.METHOD = METHOD;
-        session.SOURCE = SOURCE;
-        session.INTERFACE = this.INTERFACE;
-        session.username = this.username;
-        session.id = this.id;
-        session.messageHandler = this.messageHandler;
-        return session;
-    }
     public AppSession updateSession(AMPhase PHASE, String CLASS, String METHOD) {
-        AppSession session = new AppSession();
+        AppSession session = this.clone();
         session.PHASE = PHASE;
         session.CLASS = CLASS;
         session.METHOD = METHOD;
-        session.SOURCE = this.SOURCE;
-        session.INTERFACE = this.INTERFACE;
-        session.username = this.username;
-        session.id = this.id;
-        session.messageHandler = this.messageHandler;
+//        session.SOURCE = this.SOURCE;
+//        session.INTERFACE = this.INTERFACE;
+//        session.username = this.username;
+//        session.id = this.id;
+//        session.THREAD_ID = this.THREAD_ID;
+//        session.THREAD_NAME = this.THREAD_NAME;
+//        session.messageHandler = this.messageHandler;
         return session;
     }
     public AppSession updateSession(AMPhase PHASE, String METHOD) {
-        AppSession session = new AppSession();
-        session.PHASE = PHASE;
-        session.METHOD = METHOD;
-        session.CLASS = this.CLASS;
-        session.SOURCE = this.SOURCE;
-        session.INTERFACE = this.INTERFACE;
-        session.username = this.username;
-        session.id = this.id;
-        session.messageHandler = this.messageHandler;
-        return session;
+        return updateSession(PHASE, this.CLASS, METHOD);
     }
     public AppSession updateSession(String METHOD) {
         return updateSession(this.PHASE, this.CLASS, METHOD);
@@ -216,39 +170,28 @@ public class AppSession implements Serializable{
         session.username = this.username;
         session.CLASS = this.CLASS;
         session.METHOD = this.METHOD;
+        session.THREAD_ID = this.THREAD_ID;
+        session.THREAD_NAME = this.THREAD_NAME;
         return session;
     }
 
     @Override
     public String toString() {
-        String st = "";
+        String st = "[" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()) + "] ";
 
-        if(THREAD_NAME != null)
-            st += "[Thread: " + THREAD_NAME;
-        else
-            st += "[ThreadID: ";
+        st += (THREAD_NAME != null) ? ("[Thread: " + THREAD_NAME +
+                (THREAD_ID != null ? "::" + THREAD_ID + "] \n" : "]")) :
+                (THREAD_ID != null ? "[Thread-ID: " + THREAD_ID + "] \n" : "");
 
-        if(THREAD_ID != null)
-            st += "::" + THREAD_ID + "] \n";
-        else
-            st += "] \n";
+        st += (SOURCE != null) ? "[Source: " + SOURCE.getName() + "] " : "";
+        st += (INTERFACE != null) ? "[Interface: " + INTERFACE.value() + "] " : "";
+        st += (PHASE != null) ? "[Phase: " + PHASE.getName() + "] \n" : "";
 
-        if(SOURCE != null)
-            st += "[Source: " + SOURCE.getName();
+        st += (ip != null) ? "[IP: " + ip + "] " : "";
+        st += (username != null) ? "[User: " + username + "] " : "";
+        st += (id != null) ? "[ID: " + id + "] \n" : "";
 
-        if(INTERFACE != null)
-            st += "] [Interface: " + INTERFACE.value();
-
-        if(ip != null)
-            st += "] [IP: " + ip;
-
-        if(username != null)
-            st += "] [User: " + username;
-
-        if(id !=null)
-            st += "] [ID: " + id;
-
-        st += "]\n " + CLASS + "." + METHOD + "(): ";
+        st += "[" + CLASS + "." + METHOD + "()] ";
         return st;
     }
 }

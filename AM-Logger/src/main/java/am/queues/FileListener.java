@@ -35,6 +35,7 @@ public class FileListener implements MessageListener {
     @Override
     public void onMessage(Message message) {
         AppSession session = new AppSession(SOURCE, Interface.JMS, FILE_LOG, CLASS, "onMessage");
+        session.setMessageHandler(messageHandler);
         try {
             String jmsID = message.getJMSMessageID();
 
@@ -42,21 +43,10 @@ public class FileListener implements MessageListener {
                 if (message.isBodyAssignableTo(AMFunLogData.class)){
                     AMFunLogData logData = message.getBody(AMFunLogData.class);
                     logger.log(session, logData);
-                    //                logData.get().setMessageHandler(messageHandler);
                 }else
                     logger.error(session, E_JMS_5, FILE_LOG_QUEUE, AMFunLogData.class.getSimpleName(), message.getJMSType());
             }else
                 logger.error(session, E_JMS_5, FILE_LOG_QUEUE, AMFunLogData.class.getSimpleName(), message.getJMSType());
-
-//            if (message instanceof ObjectMessage) {
-//                AMFunLogData logData = ((ObjectMessage) message).getBody(AMFunLogData.class);
-//
-////                logData.getSession().setMessageHandler(messageHandler);
-//                logger.log(session, logData);
-//
-////                jmsManager.sendMessage(JMSQueues.PERFORMANCE, logData);
-//            }else
-//                logger.error(session, E_JMS_5, FILE_LOG_QUEUE, AMFunLogData.class.getSimpleName(), message.getJMSType());
 
         }catch (Exception ex){
             logger.error(session, ex);
