@@ -50,6 +50,7 @@ public class AME extends AMCode {
     public static AME E_LOG_4 = new AME(4, LOGGER, "AM-Resources Application Tag isn't found in the Internal Logger Configuration");
     public static AME E_LOG_5 = new AME(5, LOGGER, "Failed while validating AM-Resources Application Tag");
     public static AME E_LOG_6 = new AME(6, LOGGER, "External Configuration isn't found");
+    public static AME E_LOG_7 = new AME(7, LOGGER, "Failed to send the FunLogData Object to Function Logger Queue");
 
     public static AME E_CFG_1 = new AME(1, CONFIG, "Value's type is null");
     public static AME E_CFG_2 = new AME(2, CONFIG, "''{0}'' isn''t a supported as a Value Type");

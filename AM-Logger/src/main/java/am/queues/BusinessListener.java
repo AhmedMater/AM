@@ -42,13 +42,10 @@ public class BusinessListener implements MessageListener {
             if (message instanceof ObjectMessage) {
                 if (message.isBodyAssignableTo(AMBusLogData.class)){
                     AMBusLogData logData = message.getBody(AMBusLogData.class);
-//                logData.get().setMessageHandler(messageHandler);
                 }else
                     logger.error(session, E_JMS_5, BUS_LOG_QUEUE, AMBusLogData.class.getSimpleName(), message.getJMSType());
             }else
                 logger.error(session, E_JMS_5, BUS_LOG_QUEUE, AMBusLogData.class.getSimpleName(), message.getJMSType());
-//                throw new GeneralException(session, EC.AMT_0050, BUS_LOG_QUEUE);
-
         }catch (Exception ex){
             logger.error(session, ex);
             context.setRollbackOnly();

@@ -38,25 +38,13 @@ public class FunctionListener implements MessageListener{
         try {
             String jmsID = message.getJMSMessageID();
 
-
             if (message instanceof ObjectMessage) {
                 if (message.isBodyAssignableTo(AMFunLogData.class)){
                     AMFunLogData logData = message.getBody(AMFunLogData.class);
-    //                logData.get().setMessageHandler(messageHandler);
                 }else
                     logger.error(session, E_JMS_5, FUN_LOG_QUEUE, AMFunLogData.class.getSimpleName(), message.getJMSType());
             }else
             logger.error(session, E_JMS_5, FUN_LOG_QUEUE, AMFunLogData.class.getSimpleName(), message.getJMSType());
-//                throw new GeneralException(session, EC.AMT_0050, BUS_LOG_QUEUE);
-
-
-//            if (message instanceof ObjectMessage) {
-//                AMFunLogData logData = ((ObjectMessage) message).getBody(AMFunLogData.class);
-//
-//                performanceService.processLogPerformance(session, logData);
-//            }else
-//                throw new GeneralException(session, EC.AMT_0050, FUN_LOG_QUEUE);
-
         }catch (Exception ex){
             logger.error(session, ex);
             context.setRollbackOnly();

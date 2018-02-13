@@ -1,5 +1,6 @@
 package am.queues;
 
+import am.data.enums.ALQ;
 import am.main.api.AppLogger;
 import am.main.api.JMSManager;
 import am.main.api.MessageHandler;
@@ -19,6 +20,7 @@ import static am.common.LoggerParam.FILE_LOG_QUEUE;
 import static am.common.LoggerParam.SOURCE;
 import static am.data.enums.ALP.FILE_LOG;
 import static am.main.data.enums.impl.AME.E_JMS_5;
+import static am.main.data.enums.impl.AME.E_LOG_7;
 
 /**
  * Created by ahmed.motair on 1/5/2018.
@@ -43,6 +45,14 @@ public class FileListener implements MessageListener {
                 if (message.isBodyAssignableTo(AMFunLogData.class)){
                     AMFunLogData logData = message.getBody(AMFunLogData.class);
                     logger.log(session, logData);
+
+                    if(logger.getUsePerformanceLogger()){
+                        try {
+                            jmsManager.sendObjMessage(session, ALQ.FUNCTION_LOG, logData);
+                        } catch (Exception exc) {
+                            logger.error(session, exc, E_LOG_7);
+                        }
+                    }
                 }else
                     logger.error(session, E_JMS_5, FILE_LOG_QUEUE, AMFunLogData.class.getSimpleName(), message.getJMSType());
             }else

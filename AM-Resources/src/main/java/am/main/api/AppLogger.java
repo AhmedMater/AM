@@ -296,4 +296,11 @@ public class AppLogger implements Serializable{
             }
         }
     }
+
+    public Boolean getUsePerformanceLogger() {
+        return USE_PERFORMANCE_LOGGER;
+    }
+    public void setUsePerformanceLogger(Boolean USE_PERFORMANCE_LOGGER) {
+        this.USE_PERFORMANCE_LOGGER = USE_PERFORMANCE_LOGGER;
+    }
 }

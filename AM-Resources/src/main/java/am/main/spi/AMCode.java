@@ -59,13 +59,6 @@ public abstract class AMCode {
         }
         return (!PREFIX.isEmpty() ? PREFIX + "-" : "") + type + CODE_NAME + (CODE_ID != -1 ? "-" + CODE_ID : "");
     }
-//    public AMCode getCode(String fullCode) throws Exception{
-//        for (String code : ALL_CODES.keySet()) {
-//            if (code.equals(fullCode))
-//                return ALL_CODES.get(code);
-//        }
-//        throw new Exception("Invalid Code ID " + fullCode);
-//    }
 
     /**
      * Retrieves the AMCode Object associated with the Full Code
@@ -115,9 +108,6 @@ public abstract class AMCode {
             Set<String> placeholders = new HashSet<>();
             while (matcher.find())
                 placeholders.add(matcher.group());
-
-//            if(args.length != 0 && args[1] instanceof Object[])
-//                args = (Object[]) args[1];
 
             if(placeholders.size() != args.size())
                 throw new IllegalArgumentException(getFullCode() + " Code needs " +
